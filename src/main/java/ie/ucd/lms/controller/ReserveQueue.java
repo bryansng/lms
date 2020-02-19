@@ -7,17 +7,16 @@ import javax.persistence.*;
 public class ReserveQueue {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long positionInQueue;
 	private String isbn;
 	private Long memberId;
-	private Long positionInQueue;
 
-	public Long getId() {
-		return id;
+	public Long getPositionInQueue() {
+		return positionInQueue;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setPositionInQueue(Long positionInQueue) {
+		this.positionInQueue = positionInQueue;
 	}
 
 	public String getIsbn() {
@@ -34,13 +33,5 @@ public class ReserveQueue {
 
 	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
-	}
-
-	public Long getPositionInQueue() {
-		return positionInQueue;
-	}
-
-	public void setPositionInQueue(Long positionInQueue) {
-		this.positionInQueue = positionInQueue;
 	}
 }

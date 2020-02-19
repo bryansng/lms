@@ -5,6 +5,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "login")
 public class Login {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String email;
 	private String hash;
 

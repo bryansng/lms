@@ -1,10 +1,12 @@
 #!/bin/bash
 
 find . -name "desktop.ini" -type f -delete		# remove all desktop.ini files.
-docker stop project_project_1
-docker rm project_project_1
-docker stop project_db_1
-docker rm project_db_1
+docker stop project
+docker rm project
+docker stop lms_project_1
+docker rm lms_project_1
+docker stop lms_db_1
+docker rm lms_db_1
 if [ "$1" == "dev" ]; then
 	docker-compose up --build
 elif [ "$1" == "reset_mysql" ]; then
@@ -23,6 +25,13 @@ else
 	# create JAR file, where docker will install Java in a container to run it.
 	# mvn package
 	# docker-compose up --build
+
+	# mvn package
+	# docker build -t spring-boot-app .
+	# docker run --name project spring-boot-app:latest
+
+	# docker-compose up --build
+
 	mvn spring-boot:run
 fi
 
