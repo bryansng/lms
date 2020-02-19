@@ -7,6 +7,7 @@ docker stop lms_project_1
 docker rm lms_project_1
 docker stop lms_db_1
 docker rm lms_db_1
+
 if [ "$1" == "dev" ]; then
 	docker-compose up --build
 elif [ "$1" == "reset_mysql" ]; then
@@ -26,14 +27,8 @@ else
 	# mvn package
 	# docker-compose up --build
 
-	# mvn package
-	# docker build -t spring-boot-app .
-	# docker run --name project spring-boot-app:latest
-
-	# docker-compose up --build
-
 	mvn spring-boot:run
 fi
 
 ## Go into db container with bash.
-# docker exec -it project_db_1 bash
+# docker exec -it lms_db_1 bash

@@ -1,10 +1,8 @@
-#logo {
-    height:80px;
+.navbar {
+    height: 60px;
 }
-.header {
-    background-color: #fff;
-    border-bottom:1px solid #000
-}
-.navbar div p {
-    font-style: italic;
+
+.logo {
+    height: 90%;
+    object-fit: contain;
 }
