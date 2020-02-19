@@ -1,0 +1,34 @@
+version: '3.6'
+
+services:
+  project:
+    image: spring-boot-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/library
+  #     SPRING_DATASOURCE_USERNAME: root
+  #     SPRING_DATASOURCE_PASSWORD: root
+  # db:
+  #   image: mysql:latest
+  #   # command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --default-authentication-plugin=mysql_native_password
+  #   # command: --default-authentication-plugin=mysql_native_password
+  #   environment:
+  #     MYSQL_DATABASE: library
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_USER: test
+  #     MYSQL_PASSWORD: test
+  #   volumes:
+  #     - ./dump/schema.sql:/docker-entrypoint-initdb.d/init.sql:ro
+  #     # - ./db_data:/var/lib/mysql:rw
+
+## To configure docker-compose with springboot, mysql, and docker-compose.
+# https://www.callicoder.com/spring-boot-mysql-react-docker-compose-example/
+
+## Add schema.sql to mysql.
+# https://stackoverflow.com/questions/29145370/how-can-i-initialize-a-mysql-database-with-schema-in-a-docker-container

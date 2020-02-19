@@ -1,11 +1,6 @@
-### Java Spring template project
+# Project
 
-This project is based on a GitLab [Project Template](https://docs.gitlab.com/ee/gitlab-basics/create-project.html).
-
-Improvements can be proposed in the [original project](https://gitlab.com/gitlab-org/project-templates/spring).
-
-### CI/CD with Auto DevOps
-
-This template is compatible with [Auto DevOps](https://docs.gitlab.com/ee/topics/autodevops/).
-
-If Auto DevOps is not already enabled for this project, you can [turn it on](https://docs.gitlab.com/ee/topics/autodevops/#enabling-auto-devops) in the project settings.
+## Setting up environment
+1. Install Docker-Compose.
+2. Run run&#46;sh (i.e. `./run.sh`) (It uses docker-compose to run the two images (MySQL and spring-boot images))
+3. Go to your browser, access [localhost:8080](localhost:8080)
