@@ -14,21 +14,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ArtifactController {
-  @Autowired ArtifactRepository noteRepository;
+  @Autowired
+  ArtifactRepository noteRepository;
 
   int count = 0;
+
   @GetMapping("/greeting")
-  public String greeting(@RequestParam(name="name") String name, Model model) {
+  public String greeting(@RequestParam(name = "name") String name, Model model) {
     model.addAttribute("name", name);
     model.addAttribute("count", count++);
     return "hello.html";
   }
 
   @PostMapping("/create")
-  public String create(
-                  @RequestParam(name="title") String title,
-                  @RequestParam(name="note") String note, Model model
-                ) {
+  public String create(@RequestParam(name = "title") String title, @RequestParam(name = "note") String note,
+      Model model) {
     Artifact noteObj = note(title, note);
     if (!noteRepository.exists(Example.of(noteObj))) {
       System.out.println("exists");
@@ -37,16 +37,19 @@ public class ArtifactController {
     printAll();
     return "index.html";
   }
+
   private Artifact note(String title, String note) {
     Artifact noteObj = new Artifact();
     noteObj.setTitle(title);
     noteObj.setArtifact(note);
     return noteObj;
   }
+
   private void printAll() {
     for (Artifact note : noteRepository.findAll()) {
       System.out.println(note);
-    };
+    }
+    ;
   }
 
   @GetMapping("/")
@@ -66,7 +69,7 @@ public class ArtifactController {
   }
 
   @GetMapping("/view")
-  public String viewArtifact(@RequestParam(name="id") Long id, Model model) {
+  public String viewArtifact(@RequestParam(name = "id") Long id, Model model) {
     Optional<Artifact> opArtifact = noteRepository.findById(id);
     if (opArtifact.isPresent()) {
       model.addAttribute("note", opArtifact.get());

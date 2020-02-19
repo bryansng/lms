@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 
 services:
   project:
@@ -8,8 +8,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    depends_on:
-      - db
+  #   depends_on:
+  #     - db
   #   environment:
   #     SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/library
   #     SPRING_DATASOURCE_USERNAME: root
@@ -26,7 +26,6 @@ services:
   #   volumes:
   #     - ./dump/schema.sql:/docker-entrypoint-initdb.d/init.sql:ro
   #     # - ./db_data:/var/lib/mysql:rw
-
 ## To configure docker-compose with springboot, mysql, and docker-compose.
 # https://www.callicoder.com/spring-boot-mysql-react-docker-compose-example/
 
