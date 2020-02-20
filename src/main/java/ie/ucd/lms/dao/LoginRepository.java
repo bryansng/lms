@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface LoginRepository extends JpaRepository<Login, Long> {
     String getPasswordByEmail(String email);
 
-    boolean isEmailExist(String email);
+    String getEmailByEmail(String email);
 }
