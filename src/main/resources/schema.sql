@@ -29,11 +29,12 @@ CREATE TABLE members (
 	full_name VARCHAR(255),
 	gender VARCHAR(255),
 	mobile_number VARCHAR(20),
+	address TEXT,
 	born_on DATETIME,
 	joined_on DATETIME DEFAULT CURRENT_TIMESTAMP,
 	last_active_on DATETIME,
 	bio TEXT,
-	is_librarian BOOLEAN DEFAULT FALSE
+	type VARCHAR(255) DEFAULT 'member'
 );
 
 CREATE TABLE login (
@@ -72,8 +73,10 @@ INSERT INTO artifacts(isbn, type, genre, authors, title, original_title, subtitl
 	('9780751532715', 'book', 'Personal Finance', 'Robert T. Kiyosaki, Sharon L. Lechter', 'Rich Dad, Poor Dad', 'Rich Dad, Poor Dad', 'What the Rich Teach Their Kids about Money - that the Poor and Middle Class Do Not!', 'Taking to heart the message that the poor and middle class work for money, but the rich have money work for them, the authors lay out a financial philosophy based on the principle that income-generating assets always provide healthier bottom-line results.', 'Time Warner Books UK', PARSEDATETIME('2000','yyyy','en'), 10.00, 2, '69'),
 	('9780671723651', 'book', 'Business & Economics', 'Dale Carnegie', 'How To Win Friends And Influence People', 'How To Win Friends And Influence People', '', 'You can go after the job you want...and get it! You can take the job you have...and improve it! You can take any situation you''re in...and make it work for you! For over 50 years the rock-solid, time-tested advice in this book has carried thousands of now famous people up the ladder of success in their business and personal lives. Now this phenomenal book has been revised and updated to help readers achieve their maximum potential in the complex and competitive 90s! Learn: The six ways to make people like you The twelve ways to win people to your way of thinking The nine ways to change people without arousing resentment and much, much more!', 'Simon and Schuster', PARSEDATETIME('1982','yyyy','en'), 10.00, 2, '6954');
 
-INSERT INTO members(full_name, email, mobile_number, is_librarian) VALUES
-	('Bryan Sng', 'hong.sng@ucdconnect.ie', '17205050', TRUE);
+INSERT INTO members(full_name, email, mobile_number, address, type) VALUES
+	('Bryan Sng', 'hong.sng@ucdconnect.ie', '17205050', 'Mountbrook', 'librarian'),
+	('James Bond', 'bond.james@ucdconnect.ie', '007', 'MI6', 'member'),
+	('Steve Jobs', 'jobs.steve@ucdconnect.ie', '1234', 'Silicon Valley', 'member');
 
 INSERT INTO login(email, hash) VALUES
 	('hong.sng@ucdconnect.ie', 'root');

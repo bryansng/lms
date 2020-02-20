@@ -12,11 +12,12 @@ public class Member {
 	private String email;
 	private String fullName;
 	private String mobileNumber;
+	private String address;
 	private LocalDateTime bornOn;
 	private LocalDateTime joinedOn = LocalDateTime.now();
 	private LocalDateTime lastActiveOn;
 	private String bio;
-	private Boolean isLibrarian = false;
+	private String type = "member";
 
 	public Long getId() {
 		return id;
@@ -48,6 +49,14 @@ public class Member {
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public LocalDateTime getBornOn() {
@@ -82,11 +91,16 @@ public class Member {
 		this.bio = bio;
 	}
 
-	public Boolean getIsLibrarian() {
-		return isLibrarian;
+	public String getType() {
+		return type;
 	}
 
-	public void setIsLibrarian(Boolean isLibrarian) {
-		this.isLibrarian = isLibrarian;
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String toString() {
+		String buf = " - ";
+		return id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type;
 	}
 }

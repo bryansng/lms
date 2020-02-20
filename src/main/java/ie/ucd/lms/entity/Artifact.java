@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.time.*;
+import ie.ucd.lms.service.admin.Common;
 
 @Entity
 @Table(name = "artifacts")
@@ -14,6 +15,7 @@ public class Artifact {
 	private String isbn;
 	private String type;
 	private String genre;
+	// private String edition;
 	private Blob pdf;
 	private String authors;
 	private String title;
@@ -26,6 +28,21 @@ public class Artifact {
 	private BigDecimal itemPrice = BigDecimal.valueOf(10.00);
 	private Integer quantity;
 	private String rackLocation;
+
+	public void setAll(String isbn, String type, String genre, String authors, String title, String description,
+			String publishers, String publishedOn, String itemPrice, String quantity, String rackLocation) {
+		setIsbn(isbn);
+		setType(type);
+		setGenre(genre);
+		setAuthors(authors);
+		setTitle(title);
+		setDescription(description);
+		setPublishers(publishers);
+		setPublishedOn(Common.convertStringDateToDateTime(publishedOn));
+		setItemPrice(Common.convertStringToBigDecimal(itemPrice));
+		setQuantity(Common.convertStringToInteger(quantity));
+		setRackLocation(rackLocation);
+	}
 
 	public Long getId() {
 		return id;
@@ -153,5 +170,10 @@ public class Artifact {
 
 	public void setRackLocation(String rackLocation) {
 		this.rackLocation = rackLocation;
+	}
+
+	public String toString() {
+		String buf = " - ";
+		return id + buf + isbn + buf + title + buf + authors + buf + type;
 	}
 }
