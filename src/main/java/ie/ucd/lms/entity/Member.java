@@ -2,6 +2,7 @@ package ie.ucd.lms.entity;
 
 import javax.persistence.*;
 import java.time.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "members")
@@ -9,6 +10,7 @@ public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String email;
 	private String fullName;
 	private String mobileNumber;
@@ -18,6 +20,12 @@ public class Member {
 	private LocalDateTime lastActiveOn;
 	private String bio;
 	private String type = "member";
+
+	@OneToMany(mappedBy = "member")
+	private Set<LoanHistory> loanHistories;
+
+	@OneToMany(mappedBy = "member")
+	private Set<ReserveQueue> reserveQueues;
 
 	public Long getId() {
 		return id;

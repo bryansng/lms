@@ -4,6 +4,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.time.*;
+import java.util.Set;
+
 import ie.ucd.lms.service.admin.Common;
 
 @Entity
@@ -12,6 +14,7 @@ public class Artifact {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String isbn;
 	private String type;
 	private String genre;
@@ -29,13 +32,21 @@ public class Artifact {
 	private Integer quantity;
 	private String rackLocation;
 
-	public void setAll(String isbn, String type, String genre, String authors, String title, String description,
-			String publishers, String publishedOn, String itemPrice, String quantity, String rackLocation) {
+	@OneToMany(mappedBy = "artifact")
+	private Set<LoanHistory> loanHistories;
+
+	@OneToMany(mappedBy = "artifact")
+	private Set<ReserveQueue> reserveQueues;
+
+	public void setAll(String isbn, String type, String genre, String authors, String title, String subtitle,
+			String description, String publishers, String publishedOn, String itemPrice, String quantity,
+			String rackLocation) {
 		setIsbn(isbn);
 		setType(type);
 		setGenre(genre);
 		setAuthors(authors);
 		setTitle(title);
+		setSubtitle(subtitle);
 		setDescription(description);
 		setPublishers(publishers);
 		setPublishedOn(Common.convertStringDateToDateTime(publishedOn));

@@ -11,6 +11,14 @@ public class ReserveQueue {
 	private String isbn;
 	private Long memberId;
 
+	@ManyToOne
+	@JoinColumn(name = "isbn", insertable = false, updatable = false)
+	private Artifact artifact;
+
+	@ManyToOne
+	@JoinColumn(name = "id", insertable = false, updatable = false)
+	private Member member;
+
 	public Long getPositionInQueue() {
 		return positionInQueue;
 	}

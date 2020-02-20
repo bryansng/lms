@@ -3,6 +3,7 @@ package ie.ucd.lms.entity;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.*;
+import java.util.List;
 
 @Entity
 @Table(name = "loan_history")
@@ -10,6 +11,7 @@ public class LoanHistory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String isbn;
 	private Long memberId;
 	private LocalDateTime issuedOn = LocalDateTime.now();
@@ -19,6 +21,14 @@ public class LoanHistory {
 	private Boolean wasLost;
 	private BigDecimal fine;
 	private String status;
+
+	@ManyToOne
+	@JoinColumn(name = "isbn", insertable = false, updatable = false)
+	private Artifact artifact;
+
+	@ManyToOne
+	@JoinColumn(name = "id", insertable = false, updatable = false)
+	private Member member;
 
 	public Long getId() {
 		return id;
