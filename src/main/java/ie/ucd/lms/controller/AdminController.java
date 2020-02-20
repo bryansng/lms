@@ -5,19 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ArtifactController {
+public class AdminController {
   @Autowired
-  ArtifactRepository artifactRepository;
 
-  @GetMapping("/")
+  @GetMapping("/admin/dashboard")
   public String indexView() {
-    return "index.html";
-  }
-
-  private void printAll() {
-    for (Artifact artifact : artifactRepository.findAll()) {
-      System.out.println(artifact);
-    }
-    ;
+    return "admin/index.html";
   }
 }

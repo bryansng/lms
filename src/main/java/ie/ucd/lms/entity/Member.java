@@ -1,4 +1,4 @@
-package ie.ucd.lms.controller;
+package ie.ucd.lms.entity;
 
 import javax.persistence.*;
 import java.time.*;

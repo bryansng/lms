@@ -1,8 +1,7 @@
-package ie.ucd.lms.controller;
+package ie.ucd.lms.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.time.*;
 
 @Entity
