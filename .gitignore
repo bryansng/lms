@@ -37,3 +37,6 @@ desktop.ini
 ### All files that start with . ###
 .*
 !.gitignore
+
+### MacOS ###
+Icon$'\r'
