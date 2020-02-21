@@ -9,4 +9,6 @@ public interface LoginService {
     boolean exists(Login login);
 
     void save(Login login);
+
+    Login createLogin(String email, String password);
 }

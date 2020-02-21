@@ -11,8 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 
 @Controller
 public class DefaultController {
@@ -22,13 +20,10 @@ public class DefaultController {
   @Autowired
   private MemberServiceImpl memberServiceImpl;
 
-  @Autowired
-  // private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-  
 
 
   private static final Logger logger = LoggerFactory.getLogger(DefaultController.class);
+
   @GetMapping("/")
   public String indexView() {
     return "index.html";
@@ -39,12 +34,9 @@ public class DefaultController {
     return "member/login.html";
   }
 
-  @PostMapping("/login") 
-  public String loginMember(@RequestParam(name = "email") String email, @RequestParam(name = "password") String password) {
-
-    if (loginServiceImpl.exists(createLogin(email, password))) {
-      return "index.html";
-    }
+  @PostMapping("/login")
+  public String loginMember(@RequestParam(name = "email") String email,
+      @RequestParam(name = "password") String password) {
 
     return "member/login.html";
   }
@@ -56,35 +48,12 @@ public class DefaultController {
 
   @PostMapping("/register")
   public String registerMember(@RequestParam(name = "email") String email,
-      @RequestParam(name = "password") String password) {    
-    Login login = createLogin(email, password);
-    Member member = createMember(email);
+      @RequestParam(name = "password") String password) {
+    Login login = loginServiceImpl.createLogin(email, password);
+    Member member = memberServiceImpl.createMember(email);
 
-    logger.info(email);
-    
-    login.setMember(member);
-    member.setLogin(login);
+    memberServiceImpl.save(member, login);
 
-    memberServiceImpl.save(member);
-    // loginServiceImpl.save(login);
-   
-    
     return "index.html";
-  }
-  
-  public Login createLogin(String email, String password) {
-    Login login = new Login();
-    login.setEmail(email);
-    // login.setHash(bCryptPasswordEncoder.encode(password));
-    login.setHash(password);
-
-    return login;
-  }
-
-  private Member createMember(String email) {
-    Member member = new Member();
-    member.setEmail(email);
-    
-    return member;
   }
 }

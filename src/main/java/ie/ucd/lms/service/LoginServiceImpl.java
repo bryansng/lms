@@ -4,18 +4,18 @@ import ie.ucd.lms.dao.LoginRepository;
 import ie.ucd.lms.entity.Login;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
-
-
 @Service
 public class LoginServiceImpl implements LoginService {
     @Autowired
     private LoginRepository loginRepository;
 
- 
-    
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Override
     public void validate(Login login, Errors errors) {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty");
@@ -27,7 +27,7 @@ public class LoginServiceImpl implements LoginService {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
 
         String password = login.getHash();
-        
+
         if (password.length() < 8) {
             errors.rejectValue("password", "Size.loginForm.password");
         }
@@ -45,5 +45,14 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public void save(Login login) {
         loginRepository.save(login);
+    }
+
+    @Override
+    public Login createLogin(String email, String password) {
+        Login login = new Login();
+        login.setEmail(email);
+        login.setHash(bCryptPasswordEncoder.encode(password));
+
+        return login;
     }
 }
