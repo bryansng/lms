@@ -3,9 +3,11 @@ package ie.ucd.lms.service;
 import ie.ucd.lms.dao.LoginRepository;
 import ie.ucd.lms.entity.Login;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
+
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -31,5 +33,15 @@ public class LoginServiceImpl implements LoginService {
         if (!password.equals(loginRepository.getPasswordByEmail(login.getEmail()))) {
             errors.rejectValue("wrongPassword", "Wrong.loginForm.wrongPassword");
         }
+    }
+
+    @Override
+    public boolean exists(Login login) {
+        return loginRepository.exists(Example.of(login));
+    }
+
+    @Override
+    public void save(Login login) {
+        loginRepository.save(login);
     }
 }

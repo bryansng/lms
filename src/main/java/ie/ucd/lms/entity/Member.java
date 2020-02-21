@@ -1,14 +1,18 @@
 package ie.ucd.lms.entity;
 
-import javax.persistence.*;
 import java.time.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "members")
 public class Member {
+
+	public Member() {}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(name = "email")
 	private String email;
 	private String fullName;
 	private String mobileNumber;
@@ -17,6 +21,9 @@ public class Member {
 	private LocalDateTime lastActiveOn;
 	private String bio;
 	private Boolean isLibrarian = false;
+
+	@OneToOne(mappedBy = "member")
+	private Login login;
 
 	public Long getId() {
 		return id;
@@ -88,5 +95,13 @@ public class Member {
 
 	public void setIsLibrarian(Boolean isLibrarian) {
 		this.isLibrarian = isLibrarian;
+	}
+
+	public Login getLogin() {
+		return this.login;
+	}
+
+	public void setLogin(Login login) {
+		this.login = login;
 	}
 }
