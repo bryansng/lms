@@ -13,6 +13,8 @@ import org.springframework.validation.ValidationUtils;
 public class LoginServiceImpl implements LoginService {
     @Autowired
     private LoginRepository loginRepository;
+
+ 
     
     @Override
     public void validate(Login login, Errors errors) {

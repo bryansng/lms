@@ -2,21 +2,31 @@ package ie.ucd.lms.entity;
 
 import javax.persistence.*;
 
-
 @Entity
 @Table(name = "login")
 public class Login {
 
-	public Login() {}
-	
+	public Login() {
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	Long id;
+
+	@Column(name = "email")
 	private String email;
 	private String hash;
 
-	@OneToOne(optional = false, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "email", nullable = false, referencedColumnName = "email")
+	@OneToOne(mappedBy = "login")
 	private Member member;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getEmail() {
 		return email;

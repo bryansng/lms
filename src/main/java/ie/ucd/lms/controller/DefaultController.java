@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @Controller
@@ -20,6 +21,11 @@ public class DefaultController {
 
   @Autowired
   private MemberServiceImpl memberServiceImpl;
+
+  @Autowired
+  // private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+  
 
 
   private static final Logger logger = LoggerFactory.getLogger(DefaultController.class);
@@ -50,26 +56,26 @@ public class DefaultController {
 
   @PostMapping("/register")
   public String registerMember(@RequestParam(name = "email") String email,
-      @RequestParam(name = "password") String password) {
-
+      @RequestParam(name = "password") String password) {    
     Login login = createLogin(email, password);
     Member member = createMember(email);
 
     logger.info(email);
-    logger.info(password);
-
+    
     login.setMember(member);
     member.setLogin(login);
 
-    // loginServiceImpl.save(login);
     memberServiceImpl.save(member);
+    // loginServiceImpl.save(login);
+   
     
     return "index.html";
   }
   
-  private Login createLogin(String email, String password) {
+  public Login createLogin(String email, String password) {
     Login login = new Login();
     login.setEmail(email);
+    // login.setHash(bCryptPasswordEncoder.encode(password));
     login.setHash(password);
 
     return login;

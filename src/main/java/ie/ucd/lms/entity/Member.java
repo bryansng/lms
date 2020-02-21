@@ -7,11 +7,13 @@ import javax.persistence.*;
 @Table(name = "members")
 public class Member {
 
-	public Member() {}
+	public Member() {
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@Column(name = "email")
 	private String email;
 	private String fullName;
@@ -22,7 +24,8 @@ public class Member {
 	private String bio;
 	private Boolean isLibrarian = false;
 
-	@OneToOne(mappedBy = "member")
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(referencedColumnName = "email")
 	private Login login;
 
 	public Long getId() {
