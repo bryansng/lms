@@ -36,7 +36,6 @@ public class ArtifactService {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (artifactRepository.existsById(id)) {
-			System.out.println("exists");
 			Artifact artifact = artifactRepository.getOne(id);
 			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
 					quantity, rackLocation);
@@ -50,7 +49,6 @@ public class ArtifactService {
 			String description, String publishers, String publishedOn, String itemPrice, String quantity,
 			String rackLocation) {
 		if (!artifactRepository.existsByIsbn(isbn)) {
-			System.out.println("does not exists");
 			Artifact artifact = new Artifact();
 			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
 					quantity, rackLocation);

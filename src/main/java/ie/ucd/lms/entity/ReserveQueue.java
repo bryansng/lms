@@ -1,30 +1,39 @@
 package ie.ucd.lms.entity;
 
 import javax.persistence.*;
+import ie.ucd.lms.service.admin.Common;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reserve_queue")
 public class ReserveQueue {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long positionInQueue;
+	private Long id;
 	private String isbn;
 	private Long memberId;
+	private LocalDateTime expiredOn;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "isbn", insertable = false, updatable = false)
 	private Artifact artifact;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id", insertable = false, updatable = false)
 	private Member member;
 
-	public Long getPositionInQueue() {
-		return positionInQueue;
+	public void setAll(String isbn, String memberId, String expiredOn) {
+		setIsbn(isbn);
+		setMemberId(Common.convertStringToLong(memberId));
+		setExpiredOn(Common.convertStringDateToDateTime(expiredOn));
 	}
 
-	public void setPositionInQueue(Long positionInQueue) {
-		this.positionInQueue = positionInQueue;
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getIsbn() {
@@ -41,5 +50,13 @@ public class ReserveQueue {
 
 	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
+	}
+
+	public LocalDateTime getExpiredOn() {
+		return expiredOn;
+	}
+
+	public void setExpiredOn(LocalDateTime expiredOn) {
+		this.expiredOn = expiredOn;
 	}
 }

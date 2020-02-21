@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 
 public class Common {
 	public static int PAGINATION_ROWS = 10;
+	public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	public static Long convertStringToLong(String str) {
 		Long val;
@@ -32,15 +34,40 @@ public class Common {
 		return LocalDate.parse(date).atStartOfDay();
 	}
 
+	public static LocalDateTime convertStringToDateTime(String dateTime) {
+		return LocalDateTime.parse(dateTime);
+	}
+
 	public static Integer convertStringToInteger(String str) {
 		return Integer.valueOf(str);
 	}
 
 	// https://stackoverflow.com/questions/22463062/how-to-parse-format-dates-with-localdatetime-java-8
 	public static LocalDateTime toLocalDateTime(String strDateTime) {
-		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDateTime dateTime = LocalDateTime.parse(strDateTime, formatter);
+		LocalDateTime dateTime = LocalDateTime.parse(strDateTime, dateTimeFormatter);
 		return dateTime;
+	}
+
+	public static String getStringCurrentLocalDate() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		return LocalDateTime.now().format(formatter);
+	}
+
+	public static LocalDateTime getLowerBoundOfDate(String fromDate) {
+		if (fromDate.isEmpty()) {
+			// return LocalDateTime.parse(LocalDateTime.MIN.toString(), dateTimeFormatter);
+			// return LocalDateTime.MIN;	// does not work for some reason.
+			return convertStringDateToDateTime("-9999-01-01");
+		}
+		return convertStringDateToDateTime(fromDate);
+	}
+
+	public static LocalDateTime getUpperBoundOfDate(String toDate) {
+		if (toDate.isEmpty()) {
+			// return LocalDateTime.parse(LocalDateTime.MAX.toString(), dateTimeFormatter);
+			// return LocalDateTime.MAX;	// does not work for some reason.
+			return convertStringDateToDateTime("9999-01-01");
+		}
+		return convertStringDateToDateTime(toDate).plusHours(23).plusMinutes(59).plusSeconds(59);
 	}
 }

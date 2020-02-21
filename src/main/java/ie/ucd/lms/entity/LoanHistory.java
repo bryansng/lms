@@ -1,9 +1,9 @@
 package ie.ucd.lms.entity;
 
 import javax.persistence.*;
+import ie.ucd.lms.service.admin.Common;
 import java.math.BigDecimal;
-import java.time.*;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "loan_history")
@@ -15,6 +15,7 @@ public class LoanHistory {
 	private String isbn;
 	private Long memberId;
 	private LocalDateTime issuedOn = LocalDateTime.now();
+	private LocalDateTime returnOn;
 	private LocalDateTime returnedOn;
 	private LocalDateTime finedOn;
 	private LocalDateTime lostOn;
@@ -22,13 +23,21 @@ public class LoanHistory {
 	private BigDecimal fine;
 	private String status;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "isbn", insertable = false, updatable = false)
 	private Artifact artifact;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id", insertable = false, updatable = false)
 	private Member member;
+
+	public void setAll(String isbn, String memberId, String returnOn, String fine, String status) {
+		setIsbn(isbn);
+		setMemberId(Common.convertStringToLong(memberId));
+		setReturnOn(Common.convertStringDateToDateTime(returnOn));
+		setFine(Common.convertStringToBigDecimal(fine));
+		setStatus(status);
+	}
 
 	public Long getId() {
 		return id;
@@ -60,6 +69,14 @@ public class LoanHistory {
 
 	public void setIssuedOn(LocalDateTime issuedOn) {
 		this.issuedOn = issuedOn;
+	}
+
+	public LocalDateTime getReturnOn() {
+		return returnOn;
+	}
+
+	public void setReturnOn(LocalDateTime returnOn) {
+		this.returnOn = returnOn;
 	}
 
 	public LocalDateTime getReturnedOn() {
