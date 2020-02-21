@@ -19,8 +19,9 @@ public class LoanHistoryService {
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
-		List<LoanHistory> res = loanHistoryRepository.findByIssuedOnBetweenOrReturnOnBetweenAndStatusNot(fromDateTime,
-				toDateTime, fromDateTime, toDateTime, "lost", pRequest);
+		List<LoanHistory> res = loanHistoryRepository
+				.findByIssuedOnBetweenAndStatusNotIgnoreCaseOrReturnOnBetweenAndStatusNotIgnoreCase(fromDateTime, toDateTime,
+						"lost", fromDateTime, toDateTime, "lost", pRequest);
 		return res;
 	}
 
@@ -31,9 +32,11 @@ public class LoanHistoryService {
 
 		switch (dateType.toLowerCase()) {
 			case "issued date":
-				return loanHistoryRepository.findByIssuedOnBetweenAndStatusNot(fromDateTime, toDateTime, "lost", pRequest);
+				return loanHistoryRepository.findByIssuedOnBetweenAndStatusNotIgnoreCase(fromDateTime, toDateTime, "lost",
+						pRequest);
 			case "return date":
-				return loanHistoryRepository.findByReturnOnBetweenAndStatusNot(fromDateTime, toDateTime, "lost", pRequest);
+				return loanHistoryRepository.findByReturnOnBetweenAndStatusNotIgnoreCase(fromDateTime, toDateTime, "lost",
+						pRequest);
 			default:
 		}
 		return new ArrayList<LoanHistory>(); // return empty list.
@@ -44,8 +47,8 @@ public class LoanHistoryService {
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
-		List<LoanHistory> res = loanHistoryRepository.findByIssuedOnBetweenAndStatus(fromDateTime, toDateTime, "lost",
-				pRequest);
+		List<LoanHistory> res = loanHistoryRepository.findByIssuedOnBetweenAndStatusIgnoreCase(fromDateTime, toDateTime,
+				"lost", pRequest);
 		return res;
 	}
 
@@ -78,6 +81,18 @@ public class LoanHistoryService {
 
 		if (loanHistoryRepository.existsById(id)) {
 			loanHistoryRepository.deleteById(id);
+			return true;
+		}
+		return false;
+	}
+
+	public Boolean restocked(String stringId) {
+		Long id = Common.convertStringToLong(stringId);
+
+		if (loanHistoryRepository.existsById(id)) {
+			LoanHistory loanHistory = loanHistoryRepository.getOne(id);
+			loanHistory.setStatus("restocked");
+			loanHistoryRepository.save(loanHistory);
 			return true;
 		}
 		return false;

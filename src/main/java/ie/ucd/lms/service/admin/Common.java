@@ -7,8 +7,14 @@ import java.time.format.DateTimeFormatter;
 
 public class Common {
 	public static int PAGINATION_ROWS = 10;
+	public static int DAYS_TILL_EXPIRED = 3;
+	public static int DAYS_TILL_RETURNED = 7;
+
 	public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+	public static String nowDate = LocalDateTime.now().format(dateFormatter);
+	public static String nowPlus3Date = LocalDateTime.now().plusDays(3).format(dateFormatter);
 
 	public static Long convertStringToLong(String str) {
 		Long val;
@@ -69,5 +75,10 @@ public class Common {
 			return convertStringDateToDateTime("9999-01-01");
 		}
 		return convertStringDateToDateTime(toDate).plusHours(23).plusMinutes(59).plusSeconds(59);
+	}
+
+	// String(daysToLoan) -> String(LocalDate.now() + daysToLoan)
+	public static String getStringNowPlusDays(String daysToLoan) {
+		return LocalDate.now().plusDays(Long.parseLong(daysToLoan)).format(dateFormatter);
 	}
 }

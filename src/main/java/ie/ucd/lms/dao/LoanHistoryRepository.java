@@ -9,23 +9,25 @@ import java.time.LocalDateTime;
 
 @Repository
 public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Long> {
-	List<LoanHistory> findByIssuedOnBetweenAndStatus(LocalDateTime issuedOnFrom, LocalDateTime issuedOnTo, String status,
-			Pageable pageable);
-
-	List<LoanHistory> findByIssuedOnBetweenAndStatusNot(LocalDateTime issuedOnFrom, LocalDateTime issuedOnTo,
+	List<LoanHistory> findByIssuedOnBetweenAndStatusIgnoreCase(LocalDateTime issuedOnFrom, LocalDateTime issuedOnTo,
 			String status, Pageable pageable);
 
-	List<LoanHistory> findByReturnOnBetweenAndStatus(LocalDateTime returnOnFrom, LocalDateTime returnOnTo, String status,
-			Pageable pageable);
-
-	List<LoanHistory> findByReturnOnBetweenAndStatusNot(LocalDateTime returnOnFrom, LocalDateTime returnOnTo,
+	List<LoanHistory> findByIssuedOnBetweenAndStatusNotIgnoreCase(LocalDateTime issuedOnFrom, LocalDateTime issuedOnTo,
 			String status, Pageable pageable);
 
-	List<LoanHistory> findByIssuedOnBetweenOrReturnOnBetweenAndStatus(LocalDateTime issuedOnFrom,
-			LocalDateTime issuedOnTo, LocalDateTime returnOnFrom, LocalDateTime returnOnTo, String status, Pageable pageable);
+	List<LoanHistory> findByReturnOnBetweenAndStatusIgnoreCase(LocalDateTime returnOnFrom, LocalDateTime returnOnTo,
+			String status, Pageable pageable);
 
-	List<LoanHistory> findByIssuedOnBetweenOrReturnOnBetweenAndStatusNot(LocalDateTime issuedOnFrom,
-			LocalDateTime issuedOnTo, LocalDateTime returnOnFrom, LocalDateTime returnOnTo, String status, Pageable pageable);
+	List<LoanHistory> findByReturnOnBetweenAndStatusNotIgnoreCase(LocalDateTime returnOnFrom, LocalDateTime returnOnTo,
+			String status, Pageable pageable);
+
+	List<LoanHistory> findByIssuedOnBetweenAndStatusIgnoreCaseOrReturnOnBetweenAndStatusIgnoreCase(
+			LocalDateTime issuedOnFrom, LocalDateTime issuedOnTo, String status1, LocalDateTime returnOnFrom,
+			LocalDateTime returnOnTo, String status2, Pageable pageable);
+
+	List<LoanHistory> findByIssuedOnBetweenAndStatusNotIgnoreCaseOrReturnOnBetweenAndStatusNotIgnoreCase(
+			LocalDateTime issuedOnFrom, LocalDateTime issuedOnTo, String status1, LocalDateTime returnOnFrom,
+			LocalDateTime returnOnTo, String status2, Pageable pageable);
 
 	boolean existsByIsbnAndMemberId(String isbn, Long memberId);
 }

@@ -19,7 +19,7 @@ public class LoanHistory {
 	private LocalDateTime returnedOn;
 	private LocalDateTime finedOn;
 	private LocalDateTime lostOn;
-	private Boolean wasLost;
+	private Boolean wasLost = false;
 	private BigDecimal fine;
 	private String status;
 
@@ -125,5 +125,10 @@ public class LoanHistory {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String toString() {
+		String buf = " - ";
+		return id + buf + isbn + buf + memberId + buf + issuedOn + buf + fine + buf + status;
 	}
 }

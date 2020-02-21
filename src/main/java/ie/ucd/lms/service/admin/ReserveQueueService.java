@@ -7,11 +7,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ie.ucd.lms.dao.ReserveQueueRepository;
 import ie.ucd.lms.entity.ReserveQueue;
+import ie.ucd.lms.entity.LoanHistory;
 
 @Service
 public class ReserveQueueService {
 	@Autowired
 	ReserveQueueRepository reserveQueueRepository;
+
+	@Autowired
+	LoanHistoryService loanHistoryService;
 
 	public List<ReserveQueue> search(String fromDate, String toDate, int pageNum) {
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
@@ -50,6 +54,19 @@ public class ReserveQueueService {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (reserveQueueRepository.existsById(id)) {
+			reserveQueueRepository.deleteById(id);
+			return true;
+		}
+		return false;
+	}
+
+	public Boolean loan(String stringId, String daysToLoan) {
+		Long id = Common.convertStringToLong(stringId);
+
+		if (reserveQueueRepository.existsById(id)) {
+			ReserveQueue rQ = reserveQueueRepository.getOne(id);
+			loanHistoryService.create(rQ.getIsbn(), Long.toString(rQ.getMemberId()), Common.getStringNowPlusDays(daysToLoan),
+					"0.0", "issued");
 			reserveQueueRepository.deleteById(id);
 			return true;
 		}
