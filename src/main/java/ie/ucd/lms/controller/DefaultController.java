@@ -41,7 +41,7 @@ public class DefaultController {
   public String loginMember(@Valid Login login, BindingResult bindingResult, Model model) {
 
     if (bindingResult.hasErrors() || !loginServiceImpl.exists(login)) {
-      model.addAttribute("logError", "logError");
+      model.addAttribute("loginError", true);
       return "member/login";
     }
 
@@ -54,16 +54,20 @@ public class DefaultController {
   }
 
   @PostMapping("/register")
-  public String registerMember(@Valid Login login, BindingResult bindingResult) {
-    if (bindingResult.hasErrors() || loginServiceImpl.exists(login)) {
-      return "member/register";
+  public String registerMember(@Valid Login login, BindingResult bindingResult, Model model) {
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("invalidLogin", true);
+    } else if (loginServiceImpl.exists(login)) {
+      model.addAttribute("emailExists", true);
+    } else {
+      Login newLogin = loginServiceImpl.createLogin(login);
+      Member member = memberServiceImpl.createMember(login);
+
+      memberServiceImpl.save(member, newLogin);
+
+      return "redirect:/";
     }
 
-    Login newLogin = loginServiceImpl.createLogin(login);
-    Member member = memberServiceImpl.createMember(login);
-
-    memberServiceImpl.save(member, newLogin);
-
-    return "redirect:/";
+    return "member/register";
   }
 }

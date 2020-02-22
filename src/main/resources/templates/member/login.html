@@ -40,11 +40,11 @@
     <!-- Login Form -->
     <form method="POST" action="#" th:action="@{/login}" th:object="${login}">
       <input type="text" th:field="*{email}" class="fadeIn second" placeholder="email">
-      <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email invalid</p> 
+     <!-- <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email invalid</p> -->
 
       <input type="text" th:field="*{hash}" class="fadeIn third" placeholder="password">
-      <p th:if="${#fields.hasErrors('hash')}" th:errors="*{hash}">Password invalid</p> 
-      {% comment %} <p th:if="${loginError != null}">Wrong user or password</p> {% endcomment %}
+     <!-- <p th:if="${#fields.hasErrors('hash')}" th:errors="*{hash}">Password invalid</p> -->
+      <span th:if="${loginError}">Wrong user or password</span>
       <input type="submit" class="fadeIn fourth" value="Log In">
       
     </form>

@@ -41,6 +41,7 @@
     <form method="POST" action="#" th:action="@{/register}" th:object="${login}" modelAttribute="login">
       <input type="text" id="email" class="fadeIn second" name="email" placeholder="email">
       <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email invalid</p> 
+      <span th:if="${emailExists}">Email exists</span>
 
       <input type="text" th:field="*{hash}" class="fadeIn third" placeholder="password">
       <p th:if="${#fields.hasErrors('hash')}" th:errors="*{hash}">Password invalid</p> 
