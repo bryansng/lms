@@ -21,11 +21,23 @@ public class Member {
 	private String bio;
 	private String type = "member";
 
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(referencedColumnName = "email")
+	private Login login;
+
 	@OneToMany(mappedBy = "member")
 	private Set<LoanHistory> loanHistories;
 
 	@OneToMany(mappedBy = "member")
 	private Set<ReserveQueue> reserveQueues;
+
+	public Login getLogin() {
+		return this.login;
+	}
+
+	public void setLogin(Login login) {
+		this.login = login;
+	}
 
 	public Long getId() {
 		return id;

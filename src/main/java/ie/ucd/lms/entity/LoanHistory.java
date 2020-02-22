@@ -13,6 +13,8 @@ public class LoanHistory {
 	private Long id;
 
 	private String isbn;
+
+	@Column(name = "member_id", insertable = false, updatable = false)
 	private Long memberId;
 	private LocalDateTime issuedOn = LocalDateTime.now();
 	private LocalDateTime returnOn;
@@ -24,19 +26,38 @@ public class LoanHistory {
 	private String status;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "isbn", insertable = false, updatable = false)
+	// @JoinColumn(name = "isbn", insertable = false, updatable = false)
 	private Artifact artifact;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", insertable = false, updatable = false)
+	// @JoinColumn(name = "id", insertable = false, updatable = false)
 	private Member member;
 
-	public void setAll(String isbn, String memberId, String returnOn, String fine, String status) {
+	public void setAll(String isbn, String memberId, String returnOn, String fine, String status, Artifact artifact,
+			Member member) {
 		setIsbn(isbn);
 		setMemberId(Common.convertStringToLong(memberId));
 		setReturnOn(Common.convertStringDateToDateTime(returnOn));
 		setFine(Common.convertStringToBigDecimal(fine));
 		setStatus(status);
+		setArtifact(artifact);
+		setMember(member);
+	}
+
+	public Artifact getArtifact() {
+		return artifact;
+	}
+
+	public void setArtifact(Artifact artifact) {
+		this.artifact = artifact;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
 	}
 
 	public Long getId() {
@@ -129,6 +150,6 @@ public class LoanHistory {
 
 	public String toString() {
 		String buf = " - ";
-		return id + buf + isbn + buf + memberId + buf + issuedOn + buf + fine + buf + status;
+		return id + buf + isbn + buf + memberId + buf + issuedOn + buf + fine + buf + status + "\n" + artifact + '\n';
 	}
 }

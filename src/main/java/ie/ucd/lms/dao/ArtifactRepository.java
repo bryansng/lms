@@ -15,4 +15,6 @@ public interface ArtifactRepository extends JpaRepository<Artifact, Long> {
 			String title, String isbn, String authors, String type, Pageable pageable);
 
 	boolean existsByIsbn(String isbn);
+
+	Artifact findByIsbn(String isbn);
 }

@@ -32,13 +32,13 @@ public class ArtifactService {
 
 	public Boolean update(String stringId, String isbn, String type, String genre, String authors, String title,
 			String subtitle, String description, String publishers, String publishedOn, String itemPrice, String quantity,
-			String rackLocation) {
+			String totalQuantity, String rackLocation) {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (artifactRepository.existsById(id)) {
 			Artifact artifact = artifactRepository.getOne(id);
 			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
-					quantity, rackLocation);
+					quantity, totalQuantity, rackLocation);
 			artifactRepository.save(artifact);
 			return true;
 		}
@@ -47,11 +47,11 @@ public class ArtifactService {
 
 	public Boolean create(String isbn, String type, String genre, String authors, String title, String subtitle,
 			String description, String publishers, String publishedOn, String itemPrice, String quantity,
-			String rackLocation) {
+			String totalQuantity, String rackLocation) {
 		if (!artifactRepository.existsByIsbn(isbn)) {
 			Artifact artifact = new Artifact();
 			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
-					quantity, rackLocation);
+					quantity, totalQuantity, rackLocation);
 			artifactRepository.save(artifact);
 			return true;
 		}

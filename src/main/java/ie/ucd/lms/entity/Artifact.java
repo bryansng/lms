@@ -20,27 +20,37 @@ public class Artifact {
 	private String genre;
 	// private String edition;
 	private Blob pdf;
+
+	@Column(length = 512)
 	private String authors;
+
 	private String title;
 	private String originalTitle;
+
+	@Column(length = 65535)
 	private String subtitle;
+
+	@Column(length = 65535)
 	private String description;
+
+	@Column(length = 512)
 	private String publishers;
 	private LocalDateTime publishedOn;
 	private LocalDateTime createdOn = LocalDateTime.now();
 	private BigDecimal itemPrice = BigDecimal.valueOf(10.00);
 	private Integer quantity;
+	private Integer totalQuantity;
 	private String rackLocation;
 
-	@OneToMany(mappedBy = "artifact")
+	@OneToMany(mappedBy = "artifact", cascade = CascadeType.ALL)
 	private Set<LoanHistory> loanHistories;
 
-	@OneToMany(mappedBy = "artifact")
+	@OneToMany(mappedBy = "artifact", cascade = CascadeType.ALL)
 	private Set<ReserveQueue> reserveQueues;
 
 	public void setAll(String isbn, String type, String genre, String authors, String title, String subtitle,
 			String description, String publishers, String publishedOn, String itemPrice, String quantity,
-			String rackLocation) {
+			String totalQuantity, String rackLocation) {
 		setIsbn(isbn);
 		setType(type);
 		setGenre(genre);
@@ -52,7 +62,12 @@ public class Artifact {
 		setPublishedOn(Common.convertStringDateToDateTime(publishedOn));
 		setItemPrice(Common.convertStringToBigDecimal(itemPrice));
 		setQuantity(Common.convertStringToInteger(quantity));
+		setTotalQuantity(Common.convertStringToInteger(totalQuantity));
 		setRackLocation(rackLocation);
+	}
+
+	public boolean inStock() {
+		return quantity != 0;
 	}
 
 	public Long getId() {
@@ -173,6 +188,22 @@ public class Artifact {
 
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+
+	public void incrementQuantity() {
+		this.quantity += 1;
+	}
+
+	public void decrementQuantity() {
+		this.quantity -= 1;
+	}
+
+	public Integer getTotalQuantity() {
+		return totalQuantity;
+	}
+
+	public void setTotalQuantity(Integer totalQuantity) {
+		this.totalQuantity = totalQuantity;
 	}
 
 	public String getRackLocation() {

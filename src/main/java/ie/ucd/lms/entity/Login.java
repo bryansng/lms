@@ -7,8 +7,30 @@ import javax.persistence.*;
 public class Login {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	Long id;
+
+	@Column(name = "email")
 	private String email;
 	private String hash;
+
+	@OneToOne(mappedBy = "login")
+	private Member member;
+
+	public Member getMember() {
+		return this.member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getEmail() {
 		return email;

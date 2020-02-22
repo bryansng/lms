@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Common {
 	public static int PAGINATION_ROWS = 10;
-	public static int DAYS_TILL_EXPIRED = 3;
+	public static int DAYS_TILL_EXPIRED = 4;
 	public static int DAYS_TILL_RETURNED = 7;
 
 	public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -15,6 +15,7 @@ public class Common {
 
 	public static String nowDate = LocalDateTime.now().format(dateFormatter);
 	public static String nowPlus3Date = LocalDateTime.now().plusDays(3).format(dateFormatter);
+	public static String DEFAULT_EXPIRED_ON = LocalDateTime.now().plusDays(DAYS_TILL_EXPIRED).format(dateFormatter);
 
 	public static Long convertStringToLong(String str) {
 		Long val;
@@ -29,7 +30,7 @@ public class Common {
 	public static BigDecimal convertStringToBigDecimal(String str) {
 		BigDecimal val;
 		try {
-			val = BigDecimal.valueOf(convertStringToLong(str));
+			val = new BigDecimal(str);
 		} catch (NumberFormatException e) {
 			val = BigDecimal.valueOf(0.0);
 		}

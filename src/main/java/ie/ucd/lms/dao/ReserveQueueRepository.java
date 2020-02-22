@@ -11,5 +11,11 @@ import java.time.LocalDateTime;
 public interface ReserveQueueRepository extends JpaRepository<ReserveQueue, Long> {
 	List<ReserveQueue> findByExpiredOnBetween(LocalDateTime expiredOnFrom, LocalDateTime expiredOnTo, Pageable pageable);
 
+	ReserveQueue findFirstByIsbnOrderById(String isbn);
+
 	boolean existsByIsbnAndMemberId(String isbn, Long memberId);
+
+	boolean existsByIsbn(String isbn);
+
+	boolean existsByArtifactId(String artifactId);
 }
