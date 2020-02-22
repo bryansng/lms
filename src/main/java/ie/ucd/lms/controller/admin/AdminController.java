@@ -1,5 +1,7 @@
 package ie.ucd.lms.controller.admin;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -10,6 +12,7 @@ import ie.ucd.lms.service.admin.Common;
 import ie.ucd.lms.service.admin.MemberService;
 import ie.ucd.lms.service.admin.LoanHistoryService;
 import ie.ucd.lms.service.admin.ReserveQueueService;
+import ie.ucd.lms.service.admin.ReportService;
 
 @Controller
 public class AdminController {
@@ -24,6 +27,9 @@ public class AdminController {
 
 	@Autowired
 	ReserveQueueService reserveQueueService;
+
+	@Autowired
+	ReportService reportService;
 
 	@GetMapping("/admin/dashboard")
 	public String indexView() {
@@ -50,6 +56,7 @@ public class AdminController {
 		testLostFunctionInLoanHistoryService();
 		testOnCreateWillAddToReserveQueue();
 		testNextInLineFunctionInReserveQueueService();
+		testReportService();
 		System.out.println("\n\nTests completed.\n\n");
 	}
 
@@ -212,9 +219,46 @@ public class AdminController {
 	}
 
 	public void testNextInLineFunctionInReserveQueueService() {
-		ReserveQueue rQ = reserveQueueService.nextInLine("9780307353139");
-		Assert.isTrue(rQ.getId().intValue() == 2, " reserveQueueService nextInLine() method incorrect.");
-		Assert.isTrue(rQ.getIsbn().equals("9780307353139"), " reserveQueueService nextInLine() method incorrect.");
-		Assert.isTrue(rQ.getMemberId().intValue() == 1, " reserveQueueService nextInLine() method incorrect.");
+		loanHistoryService.create("9780062301239", "3", Common.nowPlus3Date, "0.0", "issued");
+		Assert.isTrue(loanHistoryService.searchAll("", "", "issued", 0).size() == 2,
+				" loanHistoryService create() method incorrect.");
+		Assert.isTrue(reserveQueueService.search("", "", 0).size() == 5, " loanHistoryService create() method incorrect.");
+	}
+
+	public void testReportService() {
+		Assert.isTrue(reportService.fine(reportService.today).equals(new BigDecimal("30.00")),
+				" reportService fine() method for today incorrect.");
+		Assert.isTrue(reportService.fine(reportService.thisMonth).equals(new BigDecimal("30.00")),
+				" reportService fine() method for this month incorrect.");
+		Assert.isTrue(reportService.fine(reportService.thisYear).equals(new BigDecimal("30.00")),
+				" reportService fine() method for this year incorrect.");
+
+		Assert.isTrue(reportService.totalArtifacts(reportService.today) == 6,
+				" reportService totalArtifacts() method for today incorrect.");
+		Assert.isTrue(reportService.totalArtifacts(reportService.thisMonth) == 6,
+				" reportService totalArtifacts() method for this month incorrect.");
+		Assert.isTrue(reportService.totalArtifacts(reportService.thisYear) == 6,
+				" reportService totalArtifacts() method for this year incorrect.");
+
+		Assert.isTrue(reportService.artifactsIssued(reportService.today) == 6,
+				" reportService artifactsIssued() method for today incorrect.");
+		Assert.isTrue(reportService.artifactsIssued(reportService.thisMonth) == 6,
+				" reportService artifactsIssued() method for this month incorrect.");
+		Assert.isTrue(reportService.artifactsIssued(reportService.thisYear) == 6,
+				" reportService artifactsIssued() method for this year incorrect.");
+
+		Assert.isTrue(reportService.artifactsReturned(reportService.today) == 1,
+				" reportService artifactsReturned() method for today incorrect.");
+		Assert.isTrue(reportService.artifactsReturned(reportService.thisMonth) == 1,
+				" reportService artifactsReturned() method for this month incorrect.");
+		Assert.isTrue(reportService.artifactsReturned(reportService.thisYear) == 1,
+				" reportService artifactsReturned() method for this year incorrect.");
+
+		Assert.isTrue(reportService.artifactsLost(reportService.today) == 1,
+				" reportService artifactsLost() method for today incorrect.");
+		Assert.isTrue(reportService.artifactsLost(reportService.thisMonth) == 1,
+				" reportService artifactsLost() method for this month incorrect.");
+		Assert.isTrue(reportService.artifactsLost(reportService.thisYear) == 1,
+				" reportService artifactsLost() method for this year incorrect.");
 	}
 }

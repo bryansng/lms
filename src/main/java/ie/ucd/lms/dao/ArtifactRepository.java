@@ -1,5 +1,6 @@
 package ie.ucd.lms.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,6 @@ public interface ArtifactRepository extends JpaRepository<Artifact, Long> {
 	boolean existsByIsbn(String isbn);
 
 	Artifact findByIsbn(String isbn);
+
+	Integer countByCreatedOnAfter(LocalDateTime createdOn);
 }

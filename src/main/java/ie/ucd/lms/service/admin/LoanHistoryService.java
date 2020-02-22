@@ -184,6 +184,7 @@ public class LoanHistoryService {
 		if (loanHistoryRepository.existsById(id)) {
 			LoanHistory loanHistory = loanHistoryRepository.getOne(id);
 			loanHistory.setFine(loanHistory.getFine().add(loanHistory.getArtifact().getItemPrice()));
+			loanHistory.setFinedOn(LocalDateTime.now());
 			loanHistory.setLostOn(LocalDateTime.now());
 			loanHistory.setStatus("lost");
 			loanHistory.setWasLost(true);
