@@ -20,8 +20,6 @@ public class DefaultController {
   @Autowired
   private MemberServiceImpl memberServiceImpl;
 
-
-
   private static final Logger logger = LoggerFactory.getLogger(DefaultController.class);
 
   @GetMapping("/")
@@ -54,6 +52,6 @@ public class DefaultController {
 
     memberServiceImpl.save(member, login);
 
-    return "index.html";
+    return "redirect:/";
   }
 }

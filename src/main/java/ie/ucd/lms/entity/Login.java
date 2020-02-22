@@ -6,8 +6,8 @@ import javax.persistence.*;
 @Table(name = "login")
 public class Login {
 
-	public Login() {
-	}
+	// public Login() {
+	// }
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
