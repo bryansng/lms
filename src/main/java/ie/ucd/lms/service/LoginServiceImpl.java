@@ -4,11 +4,9 @@ import ie.ucd.lms.configuration.LoginConfig;
 import ie.ucd.lms.dao.LoginRepository;
 import ie.ucd.lms.entity.Login;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -18,30 +16,21 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private LoginConfig loginConfig;
 
-    // @Override
-    // public void validate(Login login, Errors errors) {
-    //     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty");
-
-    //     if (loginRepository.getEmailByEmail(login.getEmail()) == null) {
-    //         errors.rejectValue("email", "Duplicate.loginForm.email");
-    //     }
-
-    //     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
-
-    //     String password = login.getHash();
-
-    //     if (password.length() < 8) {
-    //         errors.rejectValue("password", "Size.loginForm.password");
-    //     }
-
-    //     if (!password.equals(loginRepository.getPasswordByEmail(login.getEmail()))) {
-    //         errors.rejectValue("wrongPassword", "Wrong.loginForm.wrongPassword");
-    //     }
-    // }
+    // Debugging purposes
+    // private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
     @Override
     public boolean exists(Login login) {
-        return loginRepository.exists(Example.of(login));
+        String email = login.getEmail();
+        String password = login.getHash();
+
+        Login aLogin = loginRepository.findByEmail(email);
+
+        if (aLogin == null) {
+            return false;
+        }
+
+        return loginConfig.getEncoder().matches(password, aLogin.getHash());
     }
 
     @Override
@@ -50,11 +39,8 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public Login createLogin(String email, String password) {
-        Login login = new Login();
-        login.setEmail(email);
-        // login.setHash(password);
-        login.setHash(loginConfig.getEncoder().encode(password));
+    public Login createLogin(Login login) {
+        login.setHash(loginConfig.getEncoder().encode(login.getHash()));
 
         return login;
     }

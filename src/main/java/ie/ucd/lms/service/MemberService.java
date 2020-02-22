@@ -8,5 +8,5 @@ public interface MemberService {
 
     Member findByEmail(String email);
 
-    Member createMember(String member);
+    Member createMember(Login login);
 }

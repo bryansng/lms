@@ -25,9 +25,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member createMember(String email) {
+    public Member createMember(Login login) {
         Member member = new Member();
-        member.setEmail(email);
+        member.setEmail(login.getEmail());
 
         return member;
     }

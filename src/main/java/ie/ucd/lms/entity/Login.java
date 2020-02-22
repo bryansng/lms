@@ -1,32 +1,40 @@
 package ie.ucd.lms.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "login")
 public class Login {
 
-	// public Login() {
-	// }
+	public Login() {
+	}
+
+	// @Id
+	// @GeneratedValue(strategy = GenerationType.AUTO)
+	// Long id;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
-
-	@Column(name = "email")
+	@NotEmpty
+	@Column(name = "email", nullable = false, unique = true)
 	private String email;
+
+	@NotEmpty
+	@Size(min = 4)
 	private String hash;
 
 	@OneToOne(mappedBy = "login")
 	private Member member;
 
-	public Long getId() {
-		return id;
-	}
+	// public Long getId() {
+	// 	return id;
+	// }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+	// public void setId(Long id) {
+	// 	this.id = id;
+	// }
 
 	public String getEmail() {
 		return email;

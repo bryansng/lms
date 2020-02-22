@@ -38,16 +38,16 @@
     <!-- Icon -->
 
     <!-- Login Form -->
-    <form method="POST" action="login">
-      <input type="text" id="email" class="fadeIn second" name="email" placeholder="email">
-      <input type="text" id="password" class="fadeIn third" name="password" placeholder="password">
-      <input type="submit" class="fadeIn fourth" value="Log In">
-    </form>
+    <form method="POST" action="#" th:action="@{/login}" th:object="${login}">
+      <input type="text" th:field="*{email}" class="fadeIn second" placeholder="email">
+      <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email invalid</p> 
 
-    <!-- Remind Passowrd -->
-    <div id="formFooter">
-      <a class="underlineHover" href="#">Forgot Password?</a>
-    </div>
+      <input type="text" th:field="*{hash}" class="fadeIn third" placeholder="password">
+      <p th:if="${#fields.hasErrors('hash')}" th:errors="*{hash}">Password invalid</p> 
+      {% comment %} <p th:if="${loginError != null}">Wrong user or password</p> {% endcomment %}
+      <input type="submit" class="fadeIn fourth" value="Log In">
+      
+    </form>
 
   </div>
 </div>
