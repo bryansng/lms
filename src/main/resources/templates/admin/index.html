@@ -3,39 +3,175 @@
 
 <head>
   <!-- Required meta tags -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
 
   <!-- Import CSS -->
-  <link rel="stylesheet" th:href="@{../css/common.css}">
+  <link rel="stylesheet" th:href="@{../css/common.css}" />
+  <link rel="stylesheet" th:href="@{../css/admin/dashboard.css}" />
   <title>Home | Wet LMS</title>
 </head>
 
 <body class="m-0">
   <header>
-    <nav class="navbar navbar-expand-lg navbar-light border-dark p-0" style="border-bottom: 2px solid;">
-      <a class="navbar-brand m-0 p-0 h-100" href="#">
+    <nav class="navbar navbar-expand-lg navbar-light border-dark p-0 shadow px-2">
+      <div class="d-flex flex-row justify-content-between align-items-center h-100 w-100">
+        <a class="navbar-brand m-0 p-0 h-100" th:href="@{/admin/dashboard}">
+          <div class="d-flex flex-row justify-content-between align-items-center h-100">
+            <img src="../static/images/logo/logo.png" th:src="@{../images/logo/logo.png}" class="logo" />
+            <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
+              <h4 class="mb-0">Wet LMS</h4>
+            </div>
+          </div>
+        </a>
         <div class="d-flex flex-row justify-content-between align-items-center h-100">
-          <img src="../static/images/logo/logo.png" th:src="@{../images/logo/logo.png}" class="logo" />
-          <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
-            <h4 class="mb-0">Wet LMS</h4>
+          <div
+            class="d-sm-none d-md-none d-lg-flex d-xl-flex flex-row justify-content-between align-items-center nav-a-tag-list h-100">
+            <a th:href="@{/admin/dashboard}" class="navbar-a navbar-hover px-3 py-2 mx-1">Dashboard</a>
+            <a th:href="@{/admin/laons}" class="navbar-a navbar-hover px-3 py-2 mx-1">Loans</a>
+            <a th:href="@{/admin/reserves}" class="navbar-a navbar-hover px-3 py-2 mx-1">Reserves</a>
+            <a th:href="@{/admin/losts}" class="navbar-a navbar-hover px-3 py-2 mx-1">Lost</a>
+            <a th:href="@{/admin/artifacts}" class="navbar-a navbar-hover px-3 py-2 mx-1">Artifacts</a>
+            <a th:href="@{/admin/members}" class="navbar-a navbar-hover px-3 py-2 mx-1">Members</a>
+          </div>
+          <div class="d-flex flex-row justify-content-between align-items-center h-100 dropdown mx-3 px-2">
+            <img src=" ../static/images/profile/user64px.png" th:src="@{../images/profile/user64px.png}"
+              class="profile-img hover" />
+            <div class="dropdown-content">
+              <div class="">
+                <a href="#" class="px-4 py-2 dropdown-hover">Profile</a>
+                <a th:href="@{/admin/dashboard}" class="px-4 py-2 dropdown-hover">Dashboard</a>
+                <a th:href="@{/admin/laons}" class="px-4 py-2 dropdown-hover">Loans</a>
+                <a th:href="@{/admin/reserves}" class="px-4 py-2 dropdown-hover">Reserves</a>
+                <a th:href="@{/admin/losts}" class="px-4 py-2 dropdown-hover">Lost</a>
+                <a th:href="@{/admin/artifacts}" class="px-4 py-2 dropdown-hover">Artifacts</a>
+                <a th:href="@{/admin/members}" class="px-4 py-2 dropdown-hover">Members</a>
+                <div class="mx-3 divider"></div>
+                <a href="#" class="px-4 py-2 dropdown-hover">Logout</a>
+              </div>
+            </div>
           </div>
         </div>
-      </a>
+      </div>
     </nav>
   </header>
 
   <main>
-    It works
+    <div class="w-sm-100 w-md-100 w-75 my-4 mx-auto d-flex flex-column justify-content-between align-items-center">
+      <div class="w-100 mb-5 pb-5">
+        <h3>Today's Reports</h3>
+        <div class="d-flex flex-row justify-content-between align-items-center">
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4>&euro;<span th:text="${todayFine}"></span></h4>
+              <h5>Total Fine</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${todayArtifacts}"></h4>
+              <h5>Total Artifacts</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${todayIssued}"></h4>
+              <h5>Artifacts Issued</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${todayReturned}"></h4>
+              <h5>Artifacts Returned</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${todayLost}"></h4>
+              <h5>Artifacts Lost</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="w-100 mb-5 pb-5">
+        <h3>Current Month's Reports</h3>
+        <div class="d-flex flex-row justify-content-between align-items-center">
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4>&euro;<span th:text="${monthFine}"></span></h4>
+              <h5>Total Fine</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${monthArtifacts}"></h4>
+              <h5>Total Artifacts</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${monthIssued}"></h4>
+              <h5>Artifacts Issued</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${monthReturned}"></h4>
+              <h5>Artifacts Returned</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${monthLost}"></h4>
+              <h5>Artifacts Lost</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="w-100 mb-5">
+        <h3>Current Year's Reports</h3>
+        <div class="d-flex flex-row justify-content-between align-items-center">
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4>&euro;<span th:text="${yearFine}"></span></h4>
+              <h5>Total Fine</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${yearArtifacts}"></h4>
+              <h5>Total Artifacts</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${yearIssued}"></h4>
+              <h5>Artifacts Issued</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${yearReturned}"></h4>
+              <h5>Artifacts Returned</h5>
+            </div>
+          </div>
+          <div class="bg-light shadow" style="width: 18%">
+            <div class="my-4 ml-3 position-relative">
+              <h4 th:text="${yearLost}"></h4>
+              <h5>Artifacts Lost</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
-  <footer>
-  </footer>
+  <footer></footer>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->

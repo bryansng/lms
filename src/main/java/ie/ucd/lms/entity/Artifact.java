@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.time.*;
-import java.util.Set;
-
+import java.util.ArrayList;
+import java.util.List;
 import ie.ucd.lms.service.admin.Common;
 
 @Entity
@@ -43,10 +43,10 @@ public class Artifact {
 	private String rackLocation;
 
 	@OneToMany(mappedBy = "artifact", cascade = CascadeType.ALL)
-	private Set<LoanHistory> loanHistories;
+	private List<LoanHistory> loanHistories = new ArrayList<>();
 
 	@OneToMany(mappedBy = "artifact", cascade = CascadeType.ALL)
-	private Set<ReserveQueue> reserveQueues;
+	private List<ReserveQueue> reserveQueues;
 
 	public void setAll(String isbn, String type, String genre, String authors, String title, String subtitle,
 			String description, String publishers, String publishedOn, String itemPrice, String quantity,
@@ -217,5 +217,23 @@ public class Artifact {
 	public String toString() {
 		String buf = " - ";
 		return id + buf + isbn + buf + title + buf + authors + buf + type;
+	}
+
+	public String toStringWithLoanHistory() {
+		String buf = " - ";
+		String res = id + buf + isbn + buf + title + buf + authors + buf + type + "\n";
+		for (LoanHistory loanHistory : loanHistories) {
+			res += "\t" + loanHistory.toStringWithoutArtifact() + "\n";
+		}
+		return res;
+	}
+
+	public String toStringWithReserveQueue() {
+		String buf = " - ";
+		String res = id + buf + isbn + buf + title + buf + authors + buf + type + "\n";
+		for (ReserveQueue reserveQueue : reserveQueues) {
+			res += "\t" + reserveQueue.toStringWithoutArtifact() + "\n";
+		}
+		return res;
 	}
 }

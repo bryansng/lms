@@ -152,4 +152,9 @@ public class LoanHistory {
 		String buf = " - ";
 		return id + buf + isbn + buf + memberId + buf + issuedOn + buf + fine + buf + status + "\n" + artifact + '\n';
 	}
+
+	public String toStringWithoutArtifact() {
+		String buf = " - ";
+		return id + buf + isbn + buf + memberId + buf + issuedOn + buf + fine + buf + status;
+	}
 }

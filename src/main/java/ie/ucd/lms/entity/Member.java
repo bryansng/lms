@@ -2,7 +2,7 @@ package ie.ucd.lms.entity;
 
 import javax.persistence.*;
 import java.time.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "members")
@@ -26,10 +26,10 @@ public class Member {
 	private Login login;
 
 	@OneToMany(mappedBy = "member")
-	private Set<LoanHistory> loanHistories;
+	private List<LoanHistory> loanHistories;
 
 	@OneToMany(mappedBy = "member")
-	private Set<ReserveQueue> reserveQueues;
+	private List<ReserveQueue> reserveQueues;
 
 	public Login getLogin() {
 		return this.login;
@@ -122,5 +122,23 @@ public class Member {
 	public String toString() {
 		String buf = " - ";
 		return id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type;
+	}
+
+	public String toStringWithLoanHistory() {
+		String buf = " - ";
+		String res = id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type + "\n";
+		for (LoanHistory loanHistory : loanHistories) {
+			res += "\t" + loanHistory.toStringWithoutArtifact() + "\n";
+		}
+		return res;
+	}
+
+	public String toStringWithReserveQueue() {
+		String buf = " - ";
+		String res = id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type + "\n";
+		for (ReserveQueue reserveQueue : reserveQueues) {
+			res += "\t" + reserveQueue.toStringWithoutArtifact() + "\n";
+		}
+		return res;
 	}
 }

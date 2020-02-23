@@ -67,4 +67,28 @@ public class ArtifactService {
 		}
 		return false;
 	}
+
+	public void printAll() {
+		System.out.println("\n\nPrinting search result:");
+		for (Artifact artifact : artifactRepository.findAll()) {
+			System.out.println(artifact);
+		}
+		;
+	}
+
+	public void printAllWithLoanHistory() {
+		System.out.println("\n\nPrinting search result:");
+		for (Artifact artifact : artifactRepository.findAll()) {
+			System.out.println(artifact.toStringWithLoanHistory());
+		}
+		;
+	}
+
+	public void printAllWithReserveQueue() {
+		System.out.println("\n\nPrinting search result:");
+		for (Artifact artifact : artifactRepository.findAll()) {
+			System.out.println(artifact.toStringWithReserveQueue());
+		}
+		;
+	}
 }

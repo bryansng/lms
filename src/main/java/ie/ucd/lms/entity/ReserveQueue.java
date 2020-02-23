@@ -84,4 +84,9 @@ public class ReserveQueue {
 		String buf = " - ";
 		return id + buf + isbn + buf + memberId + "\n" + artifact + '\n';
 	}
+
+	public String toStringWithoutArtifact() {
+		String buf = " - ";
+		return id + buf + isbn + buf + memberId;
+	}
 }

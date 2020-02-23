@@ -43,7 +43,7 @@ public class MemberService {
 		return false;
 	}
 
-	private void printMe(List<Member> arr) {
+	public void printMe(List<Member> arr) {
 		System.out.println("\n\nPrinting search result:");
 		for (Member member : arr) {
 			System.out.println(member);
@@ -51,10 +51,26 @@ public class MemberService {
 		;
 	}
 
-	private void printAll() {
+	public void printAll() {
 		System.out.println("\n\nPrinting all:");
 		for (Member member : memberRepository.findAll()) {
 			System.out.println(member);
+		}
+		;
+	}
+
+	public void printAllWithLoanHistory() {
+		System.out.println("\n\nPrinting search result:");
+		for (Member member : memberRepository.findAll()) {
+			System.out.println(member.toStringWithLoanHistory());
+		}
+		;
+	}
+
+	public void printAllWithReserveQueue() {
+		System.out.println("\n\nPrinting search result:");
+		for (Member member : memberRepository.findAll()) {
+			System.out.println(member.toStringWithReserveQueue());
 		}
 		;
 	}
