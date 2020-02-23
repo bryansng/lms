@@ -145,11 +145,22 @@ u {
 
 
 .table-img {
-	width: 90%;
+	height: 1.5rem;
 	object-fit: contain;
 }
 
 .table-img:hover {
+	opacity: 0.6;
+}
+
+
+
+.create-new-img {
+	height: 4rem;
+	object-fit: contain;
+}
+
+.create-new-img:hover {
 	opacity: 0.6;
 }
 
@@ -187,6 +198,10 @@ table.divtable thead th:first-child {
 
 table.divtable tbody td {
 	border-left: 1px solid #C6C6C6;
+}
+
+table.divtable tbody td:first-child {
+	border-left: none;
 }
 
 table.divtable tfoot {

@@ -13,14 +13,144 @@
 
   <!-- Import CSS -->
   <link rel="stylesheet" th:href="@{~/css/common.css}" />
-  <title>Home | Wet LMS</title>
+  <title>View Loans | Wet LMS</title>
 </head>
 
 <body class="m-0">
   <header th:replace="admin/fragments/header.html"></header>
 
   <main>
-    It works
+    <div class="w-100 w-lg-75 my-4 mx-auto container">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <h3 class="mb-4">Loans</h3>
+        <a th:href="@{~/admin/loans/create}" class="d-flex flex-column justify-content-center align-items-center">
+          <img th:src="@{~/images/add_v1.png}" class="create-new-img" />
+        </a>
+      </div>
+      <div class="mb-5">
+        <form action="#" th:action="@{/admin/loans/view}" method="GET">
+          <div class="d-flex flex-row justify-content-between align-items-end">
+            <div class="w-50">
+              <label for="searchQuery" class="mb-2 font-weight-bold">Artifact ID / Name / ISBN / Authors:</label>
+              <input type="text" class="form-control border border-dark rounded-0 text-dark" name="searchQuery"
+                id="searchQuery" style="font-weight: 500;" placeholder="John Doe" th:value="${previousQuery}" />
+            </div>
+            <div style="width: 15%;">
+              <label for="searchQuery" class="mb-2 font-weight-bold">Artifact Type:</label>
+              <select id="type" name="type" class="form-control border border-dark rounded-0 text-dark">
+                <option value="issued date" th:selected="${#strings.isEmpty(previousType)}">Issued Date</option>
+                <option value="return date" th:selected="${previousType == 'book'}">Return date</option>
+                <option value="" th:selected="${previousType == 'cd'}">All</option>
+              </select>
+            </div>
+            <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Search</button>
+          </div>
+        </form>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-12">
+          <table class="w-100 divtable">
+            <col width="5%">
+            <col width="11%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="8%">
+            <col width="8%">
+            <col width="12%">
+            <col width="8%">
+            <col width="4%">
+            <col width="4%">
+            <thead class="border-top border-dark">
+              <tr>
+                <th class="py-2 px-2">ID</th>
+                <th class="py-2 px-2">Artifact</th>
+                <th class="py-2 px-2">ISBN</th>
+                <th class="py-2 px-2">Issued To</th>
+                <th class="py-2 px-2">Issued Date</th>
+                <th class="py-2 px-2">Return Date</th>
+                <th class="py-2 px-2">Fine</th>
+                <th class="py-2 px-2">Status</th>
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2"></th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <td colspan="13">
+                  <div class="links mt-4">
+                    <a th:href="@{~/admin/loans/view(page=1)}">&laquo;</a>
+                    <!-- <a th:href="@{~/admin/loans/view(page=${currentPage &gt; 1} ? ${currentPage-1})}">❮</a> -->
+                    <span th:each="pageNum: ${#numbers.sequence(currentPage-2, currentPage+2)}">
+                      <a th:if="${pageNum &gt;= 1 AND pageNum &lt;= totalPages}"
+                          th:class="${pageNum == currentPage} ? active"
+                          th:href="@{~/admin/loans/view(page=${pageNum})}"
+                          th:text=${pageNum}></a>
+                    </span>
+                    <!-- the below does not work -->
+                    <!-- <a th:href="@{~/admin/loans/view(page=${currentPage &lt; totalPages} ? ${currentPage+1})}">❯</a> -->
+                    <a th:href="@{~/admin/loans/view(page=${totalPages})}">&raquo;</a>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+            <tbody class="border-bottom border-dark">
+              <tr th:each="loan : ${loans}">
+                <td class="py-2 px-2" th:text="${loan.id}"></td>
+                <td class="py-2 px-2 text-capitalize" th:text="${loan.artifact.title}"></td>
+                <td class="py-2 px-2" th:text="${loan.isbn}"></td>
+                <td class="py-2 px-2 text-capitalize" th:text="${loan.member.fullName}"></td>
+                <td class="py-2 px-2" th:text="${loan.issuedOn}"></td>
+                <td class="py-2 px-2" th:text="${loan.returnOn}"></td>
+                <td class="py-2 px-2" th:text="${loan.fine}"></td>
+                <td class="py-2 px-2" th:text="${loan.status}"></td>
+                <td class="py-2 px-2">
+                  <a th:href="@{~/admin/loans/return(id=${loan.id})}">Return</a>
+                </td>
+                <td class="py-2 px-2">
+                  <a th:href="@{~/admin/loans/renew(id=${loan.id})}">Renew by ... days</a>
+                </td>
+                <td class="py-2 px-2">
+                  <a th:href="@{~/admin/loans/lost(id=${loan.id})}">Lost</a>
+                </td>
+                <td class="py-2 px-2">
+                  <a th:href="@{~/admin/loans/edit(id=${loan.id})}"
+                    class="d-flex flex-column justify-content-center align-items-center">
+                    <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
+                  </a>
+                </td>
+                <td class="py-2 px-2">
+                  <a th:href="@{~/admin/loans/delete(id=${loan.id})}"
+                    class="d-flex flex-column justify-content-center align-items-center">
+                    <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
+                  </a>
+                </td>
+              </tr>
+              <tr th:each="i: ${#numbers.sequence(1, totalEmptyRows)}">
+                <td class="py-2 px-2">&nbsp;</td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <footer></footer>

@@ -13,21 +13,13 @@ public class ArtifactService {
 	@Autowired
 	ArtifactRepository artifactRepository;
 
-	public Page<Artifact> search(String stringToSearch, int pageNum) {
-		Long id = Common.convertStringToLong(stringToSearch);
-
-		Page<Artifact> res = artifactRepository
-				.findByIdOrTitleContainsIgnoreCaseOrIsbnContainsIgnoreCaseOrAuthorsContainsIgnoreCase(id, stringToSearch,
-						stringToSearch, stringToSearch, PageRequest.of(pageNum, Common.PAGINATION_ROWS));
-		return res;
-	}
-
 	public Page<Artifact> search(String stringToSearch, String type, int pageNum) {
 		Long id = Common.convertStringToLong(stringToSearch);
 
 		Page<Artifact> res = artifactRepository
-				.findByIdOrTitleContainsIgnoreCaseOrIsbnContainsIgnoreCaseOrAuthorsContainsIgnoreCaseAndType(id, stringToSearch,
-						stringToSearch, stringToSearch, type, PageRequest.of(pageNum, Common.PAGINATION_ROWS));
+				.findByIdAndTypeContainsIgnoreCaseOrTitleContainsIgnoreCaseAndTypeContainsIgnoreCaseOrIsbnContainsIgnoreCaseAndTypeContainsIgnoreCaseOrAuthorsContainsIgnoreCaseAndTypeContainsIgnoreCase(
+						id, type, stringToSearch, type, stringToSearch, type, stringToSearch, type,
+						PageRequest.of(pageNum, Common.PAGINATION_ROWS));
 		return res;
 	}
 
@@ -67,6 +59,14 @@ public class ArtifactService {
 			return true;
 		}
 		return false;
+	}
+
+	public void printMe(List<Artifact> arr) {
+		System.out.println("\n\nPrinting search result:");
+		for (Artifact artifact : arr) {
+			System.out.println(artifact);
+		}
+		;
 	}
 
 	public void printAll() {

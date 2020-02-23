@@ -13,7 +13,7 @@
 
   <!-- Import CSS -->
   <link rel="stylesheet" th:href="@{~/css/common.css}" />
-  <title>Home | Wet LMS</title>
+  <title>View Members | Wet LMS</title>
 </head>
 
 <body class="m-0">
@@ -23,30 +23,30 @@
     <div class="w-100 w-lg-75 my-4 mx-auto container">
       <h3 class="mb-4">Members</h3>
       <div class="mb-5">
-        <form>
+        <form action="#" th:action="@{/admin/members/view}" method="GET">
           <div class="d-flex flex-row justify-content-between align-items-end">
             <div class="w-50">
-              <label for="query" class="mb-2 font-weight-bold">Member ID / Name / Email / Phone / Address /
+              <label for="searchQuery" class="mb-2 font-weight-bold">Member ID / Name / Email / Phone / Address /
                 Type:</label>
-              <input type="text" class="form-control border border-dark rounded-0 text-dark" id="query"
-                style="font-weight: 500;" placeholder="John Doe" />
+              <input type="text" class="form-control border border-dark rounded-0 text-dark" name="searchQuery"
+                id="searchQuery" style="font-weight: 500;" placeholder="John Doe" th:value="${previousQuery}" />
             </div>
-            <button type="button" class="px-4 py-2 btn border border-dark text-dark hover">Search</button>
+            <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Search</button>
           </div>
         </form>
       </div>
       <div class="row no-gutters">
         <div class="col-12">
-          <table class="w-100 border-top border-dark divtable">
+          <table class="w-100 divtable">
             <col width="5%">
-            <col width="20%">
-            <col width="20%">
+            <col width="17%">
+            <col width="23%">
             <col width="15%">
             <col width="25%">
             <col width="7%">
             <col width="4%">
             <col width="4%">
-            <thead>
+            <thead class="border-top border-dark">
               <tr>
                 <th class="py-2 px-2">ID</th>
                 <th class="py-2 px-2">Full Name</th>
@@ -61,24 +61,29 @@
             <tfoot>
               <tr>
                 <td colspan="8">
-                  <div class="links">
-                    <a href="#">&laquo;</a>
-                    <a class="active" href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">&raquo;</a>
+                  <div class="links mt-4">
+                    <a th:href="@{~/admin/members/view(page=1)}">&laquo;</a>
+                    <!-- <a th:href="@{~/admin/members/view(page=${currentPage &gt; 1} ? ${currentPage-1})}">❮</a> -->
+                    <span th:each="pageNum: ${#numbers.sequence(currentPage-2, currentPage+2)}">
+                      <a th:if="${pageNum &gt;= 1 AND pageNum &lt;= totalPages}"
+                          th:class="${pageNum == currentPage} ? active"
+                          th:href="@{~/admin/members/view(page=${pageNum})}"
+                          th:text=${pageNum}></a>
+                    </span>
+                    <!-- the below does not work -->
+                    <!-- <a th:href="@{~/admin/members/view(page=${currentPage &lt; totalPages} ? ${currentPage+1})}">❯</a> -->
+                    <a th:href="@{~/admin/members/view(page=${totalPages})}">&raquo;</a>
                   </div>
                 </td>
               </tr>
             </tfoot>
-            <tbody>
+            <tbody class="border-bottom border-dark">
               <tr th:each="member : ${members}">
                 <td class="py-2 px-2" th:text="${member.id}"></td>
                 <td class="py-2 px-2 text-capitalize" th:text="${member.fullName}"></td>
                 <td class="py-2 px-2" th:text="${member.email}"></td>
                 <td class="py-2 px-2" th:text="${member.mobileNumber}"></td>
-                <td class="py-2 px-2 text-capitalize" th:text="${member.address}"></td>
+                <td class="py-2 px-2 text-capitalize" th:text="${#strings.abbreviate(member.address, 70)}"></td>
                 <td class="py-2 px-2 text-capitalize" th:text="${member.type}"></td>
                 <td class="py-2 px-2">
                   <a th:href="@{~/admin/members/edit(id=${member.id})}"
@@ -92,6 +97,16 @@
                     <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
                   </a>
                 </td>
+              </tr>
+              <tr th:each="i: ${#numbers.sequence(1, totalEmptyRows)}">
+                <td class="py-2 px-2">&nbsp;</td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
               </tr>
             </tbody>
           </table>

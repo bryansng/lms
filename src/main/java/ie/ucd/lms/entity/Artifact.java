@@ -2,7 +2,6 @@ package ie.ucd.lms.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,8 @@ public class Artifact {
 	private String type;
 	private String genre;
 	// private String edition;
-	private Blob pdf;
+	@Column(length = 65535)
+	private String pdf;
 
 	@Column(length = 512)
 	private String authors;
@@ -102,11 +102,11 @@ public class Artifact {
 		this.genre = genre;
 	}
 
-	public Blob getPdf() {
+	public String getPdf() {
 		return pdf;
 	}
 
-	public void setPdf(Blob pdf) {
+	public void setPdf(String pdf) {
 		this.pdf = pdf;
 	}
 

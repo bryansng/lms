@@ -3,11 +3,15 @@ package ie.ucd.lms.controller.admin;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
+
+import ie.ucd.lms.entity.Artifact;
+import ie.ucd.lms.entity.Member;
 import ie.ucd.lms.service.admin.ArtifactService;
 import ie.ucd.lms.service.admin.Common;
 import ie.ucd.lms.service.admin.MemberService;
@@ -53,19 +57,57 @@ public class AdminController {
 	}
 
 	@GetMapping("/admin/members/view")
-	public String membersView(@RequestParam(defaultValue = "0", required = false) Integer page, Model model) {
-		model.addAttribute("totalRows", Common.PAGINATION_ROWS);
-		model.addAttribute("members", memberService.search("", page));
+	public String membersView(@RequestParam(defaultValue = "1", required = false) Integer page,
+			@RequestParam(defaultValue = "", required = false) String searchQuery, Model model) {
+		Page<Member> members = memberService.search(searchQuery, page - 1);
+		model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - members.getTotalElements());
+		model.addAttribute("totalPages", members.getTotalPages());
+		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("members", members);
+
+		model.addAttribute("previousQuery", searchQuery);
+		return "admin/memberView.html";
+	}
+
+	@GetMapping("/admin/members/edit")
+	public String membersEdit(@RequestParam(defaultValue = "1", required = false) Integer page,
+			@RequestParam(defaultValue = "", required = false) String searchQuery, Model model) {
+		return "admin/memberView.html";
+	}
+
+	@GetMapping("/admin/members/delete")
+	public String membersDelete(@RequestParam(defaultValue = "1", required = false) Integer page,
+			@RequestParam(defaultValue = "", required = false) String searchQuery, Model model) {
 		return "admin/memberView.html";
 	}
 
 	@GetMapping("/admin/artifacts/view")
-	public String artifactsView(Model model) {
+	public String artifactsView(@RequestParam(defaultValue = "1", required = false) Integer page,
+			@RequestParam(defaultValue = "", required = false) String searchQuery,
+			@RequestParam(defaultValue = "", required = false) String type, Model model) {
+		Page<Artifact> artifacts = artifactService.search(searchQuery, type, page - 1);
+		model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
+		model.addAttribute("totalPages", artifacts.getTotalPages());
+		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("artifacts", artifacts);
+
+		model.addAttribute("previousQuery", searchQuery);
+		model.addAttribute("previousType", type);
 		return "admin/artifactView.html";
 	}
 
 	@GetMapping("/admin/loans/view")
-	public String loansView(Model model) {
+	public String loansView(@RequestParam(defaultValue = "1", required = false) Integer page,
+			@RequestParam(defaultValue = "", required = false) String artifactQuery,
+			@RequestParam(defaultValue = "", required = false) String memberQuery,
+			@RequestParam(defaultValue = "", required = false) String fromDate,
+			@RequestParam(defaultValue = "", required = false) String toDate,
+			@RequestParam(defaultValue = "", required = false) String dateType, Model model) {
+		// Page<LoanHistory> loanHistories = loanHistoryService.search(searchQuery, page - 1);
+		// model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loanHistories.getTotalElements());
+		// model.addAttribute("totalPages", loanHistories.getTotalPages());
+		// model.addAttribute("currentPage", page + 1);
+		// model.addAttribute("loanHistories", loanHistories);
 		return "admin/loanView.html";
 	}
 
@@ -119,7 +161,7 @@ public class AdminController {
 	}
 
 	public void testArtifactService() {
-		Assert.isTrue(artifactService.search("kiyosaki", 0).getTotalElements() == 1,
+		Assert.isTrue(artifactService.search("kiyosaki", "", 0).getTotalElements() == 1,
 				" ArtifactService search() method incorrect.");
 		Assert.isTrue(artifactService.search("", "book", 0).getTotalElements() == 6,
 				" ArtifactService search() method with type incorrect.");
