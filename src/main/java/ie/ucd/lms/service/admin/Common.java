@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Common {
-	public static int PAGINATION_ROWS = 10;
+	public static int PAGINATION_ROWS = 15;
 	public static int DAYS_TILL_EXPIRED = 4;
 	public static int DAYS_TILL_RETURNED = 7;
 

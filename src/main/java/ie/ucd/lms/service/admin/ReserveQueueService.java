@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import ie.ucd.lms.dao.ReserveQueueRepository;
 import ie.ucd.lms.dao.ArtifactRepository;
@@ -26,12 +27,12 @@ public class ReserveQueueService {
 	@Autowired
 	LoanHistoryService loanHistoryService;
 
-	public List<ReserveQueue> search(String fromDate, String toDate, int pageNum) {
+	public Page<ReserveQueue> search(String fromDate, String toDate, int pageNum) {
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
-		List<ReserveQueue> res = reserveQueueRepository.findByExpiredOnBetween(fromDateTime, toDateTime, pRequest);
+		Page<ReserveQueue> res = reserveQueueRepository.findByExpiredOnBetween(fromDateTime, toDateTime, pRequest);
 		return res;
 	}
 

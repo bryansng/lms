@@ -3,6 +3,7 @@ package ie.ucd.lms.service.admin;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ie.ucd.lms.dao.MemberRepository;
@@ -13,10 +14,10 @@ public class MemberService {
 	@Autowired
 	MemberRepository memberRepository;
 
-	public List<Member> search(String stringToSearch, int pageNum) {
+	public Page<Member> search(String stringToSearch, int pageNum) {
 		Long id = Common.convertStringToLong(stringToSearch);
 
-		List<Member> res = memberRepository
+		Page<Member> res = memberRepository
 				.findByIdOrFullNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrMobileNumberContainsOrAddressContainsIgnoreCaseOrTypeIgnoreCaseContains(
 						id, stringToSearch, stringToSearch, stringToSearch, stringToSearch, stringToSearch,
 						PageRequest.of(pageNum, Common.PAGINATION_ROWS));

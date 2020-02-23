@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import ie.ucd.lms.dao.LoanHistoryRepository;
 import ie.ucd.lms.dao.ReserveQueueRepository;
@@ -31,29 +33,29 @@ public class LoanHistoryService {
 	@Autowired
 	ReserveQueueService reserveQueueService;
 
-	public List<LoanHistory> searchAll(String fromDate, String toDate, String status, int pageNum) {
+	public Page<LoanHistory> searchAll(String fromDate, String toDate, String status, int pageNum) {
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
-		List<LoanHistory> res = loanHistoryRepository
+		Page<LoanHistory> res = loanHistoryRepository
 				.findByIssuedOnBetweenAndStatusIgnoreCaseOrReturnOnBetweenAndStatusIgnoreCase(fromDateTime, toDateTime, status,
 						fromDateTime, toDateTime, status, pRequest);
 		return res;
 	}
 
-	public List<LoanHistory> searchAllButLost(String fromDate, String toDate, int pageNum) {
+	public Page<LoanHistory> searchAllButLost(String fromDate, String toDate, int pageNum) {
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
-		List<LoanHistory> res = loanHistoryRepository
+		Page<LoanHistory> res = loanHistoryRepository
 				.findByIssuedOnBetweenAndStatusNotIgnoreCaseOrReturnOnBetweenAndStatusNotIgnoreCase(fromDateTime, toDateTime,
 						"lost", fromDateTime, toDateTime, "lost", pRequest);
 		return res;
 	}
 
-	public List<LoanHistory> searchAllButLost(String fromDate, String toDate, String dateType, int pageNum) {
+	public Page<LoanHistory> searchAllButLost(String fromDate, String toDate, String dateType, int pageNum) {
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
@@ -67,15 +69,15 @@ public class LoanHistoryService {
 						pRequest);
 			default:
 		}
-		return new ArrayList<LoanHistory>(); // return empty list.
+		return new PageImpl<LoanHistory>(new ArrayList<LoanHistory>()); // return empty list.
 	}
 
-	public List<LoanHistory> searchLost(String fromDate, String toDate, int pageNum) {
+	public Page<LoanHistory> searchLost(String fromDate, String toDate, int pageNum) {
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
-		List<LoanHistory> res = loanHistoryRepository.findByIssuedOnBetweenAndStatusIgnoreCase(fromDateTime, toDateTime,
+		Page<LoanHistory> res = loanHistoryRepository.findByIssuedOnBetweenAndStatusIgnoreCase(fromDateTime, toDateTime,
 				"lost", pRequest);
 		return res;
 	}

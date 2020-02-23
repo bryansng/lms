@@ -3,6 +3,7 @@ package ie.ucd.lms.service.admin;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import ie.ucd.lms.dao.ArtifactRepository;
 import ie.ucd.lms.entity.Artifact;
@@ -12,19 +13,19 @@ public class ArtifactService {
 	@Autowired
 	ArtifactRepository artifactRepository;
 
-	public List<Artifact> search(String stringToSearch, int pageNum) {
+	public Page<Artifact> search(String stringToSearch, int pageNum) {
 		Long id = Common.convertStringToLong(stringToSearch);
 
-		List<Artifact> res = artifactRepository
+		Page<Artifact> res = artifactRepository
 				.findByIdOrTitleContainsIgnoreCaseOrIsbnContainsIgnoreCaseOrAuthorsContainsIgnoreCase(id, stringToSearch,
 						stringToSearch, stringToSearch, PageRequest.of(pageNum, Common.PAGINATION_ROWS));
 		return res;
 	}
 
-	public List<Artifact> search(String stringToSearch, String type, int pageNum) {
+	public Page<Artifact> search(String stringToSearch, String type, int pageNum) {
 		Long id = Common.convertStringToLong(stringToSearch);
 
-		List<Artifact> res = artifactRepository
+		Page<Artifact> res = artifactRepository
 				.findByIdOrTitleContainsIgnoreCaseOrIsbnContainsIgnoreCaseOrAuthorsContainsIgnoreCaseAndType(id, stringToSearch,
 						stringToSearch, stringToSearch, type, PageRequest.of(pageNum, Common.PAGINATION_ROWS));
 		return res;

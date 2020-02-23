@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+
+  <!-- Import CSS -->
+  <link rel="stylesheet" th:href="@{~/css/common.css}" />
+  <title>Home | Wet LMS</title>
+</head>
+
+<body class="m-0">
+  <header th:replace="admin/fragments/header.html"></header>
+
+  <main>
+    <div class="w-100 w-lg-75 my-4 mx-auto container">
+      <h3 class="mb-4">Members</h3>
+      <div class="mb-5">
+        <form>
+          <div class="d-flex flex-row justify-content-between align-items-end">
+            <div class="w-50">
+              <label for="query" class="mb-2 font-weight-bold">Member ID / Name / Email / Phone / Address /
+                Type:</label>
+              <input type="text" class="form-control border border-dark rounded-0 text-dark" id="query"
+                style="font-weight: 500;" placeholder="John Doe" />
+            </div>
+            <button type="button" class="px-4 py-2 btn border border-dark text-dark hover">Search</button>
+          </div>
+        </form>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-12">
+          <table class="w-100 border-top border-dark divtable">
+            <col width="5%">
+            <col width="20%">
+            <col width="20%">
+            <col width="15%">
+            <col width="25%">
+            <col width="7%">
+            <col width="4%">
+            <col width="4%">
+            <thead>
+              <tr>
+                <th class="py-2 px-2">ID</th>
+                <th class="py-2 px-2">Full Name</th>
+                <th class="py-2 px-2">Email</th>
+                <th class="py-2 px-2">Phone</th>
+                <th class="py-2 px-2">Address</th>
+                <th class="py-2 px-2">Type</th>
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2"></th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <td colspan="8">
+                  <div class="links">
+                    <a href="#">&laquo;</a>
+                    <a class="active" href="#">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">&raquo;</a>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+            <tbody>
+              <tr th:each="member : ${members}">
+                <td class="py-2 px-2" th:text="${member.id}"></td>
+                <td class="py-2 px-2 text-capitalize" th:text="${member.fullName}"></td>
+                <td class="py-2 px-2" th:text="${member.email}"></td>
+                <td class="py-2 px-2" th:text="${member.mobileNumber}"></td>
+                <td class="py-2 px-2 text-capitalize" th:text="${member.address}"></td>
+                <td class="py-2 px-2 text-capitalize" th:text="${member.type}"></td>
+                <td class="py-2 px-2">
+                  <a th:href="@{~/admin/members/edit(id=${member.id})}"
+                    class="d-flex flex-column justify-content-center align-items-center">
+                    <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
+                  </a>
+                </td>
+                <td class="py-2 px-2">
+                  <a th:href="@{~/admin/members/delete(id=${member.id})}"
+                    class="d-flex flex-column justify-content-center align-items-center">
+                    <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer></footer>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+  </script>
+</body>
+
+</html>

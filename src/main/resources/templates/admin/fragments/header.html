@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+</head>
+
+<body>
+  <header th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-light border-dark p-0 shadow px-2">
+      <div class="d-flex flex-row justify-content-between align-items-center h-100 w-100">
+        <a class="navbar-brand m-0 p-0 h-100" th:href="@{/admin/dashboard}">
+          <div class="d-flex flex-row justify-content-between align-items-center h-100">
+            <img th:src="@{~/images/logo/logo.png}" class="logo" />
+            <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
+              <h4 class="mb-0">Wet LMS</h4>
+            </div>
+          </div>
+        </a>
+        <div class="d-flex flex-row justify-content-between align-items-center h-100">
+          <div class="d-none d-lg-flex flex-row justify-content-between align-items-center nav-a-tag-list h-100">
+            <a th:href="@{/admin/dashboard}" class="navbar-a navbar-hover px-3 py-2 mx-1">Dashboard</a>
+            <a th:href="@{/admin/loans/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Loans</a>
+            <a th:href="@{/admin/reserves/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Reserves</a>
+            <a th:href="@{/admin/losts/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Lost</a>
+            <a th:href="@{/admin/artifacts/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Artifacts</a>
+            <a th:href="@{/admin/members/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Members</a>
+          </div>
+          <div class="d-flex flex-row justify-content-between align-items-center h-100 dropdown mx-3 px-2">
+            <img th:src="@{~/images/profile/user64px.png}" class="profile-img hover" />
+            <div class="dropdown-content">
+              <div class="">
+                <a href="#" class="px-4 py-2 dropdown-hover">Profile</a>
+                <a th:href="@{/admin/dashboard}" class="px-4 py-2 dropdown-hover">Dashboard</a>
+                <a th:href="@{/admin/loans/view}" class="px-4 py-2 dropdown-hover">Loans</a>
+                <a th:href="@{/admin/reserves/view}" class="px-4 py-2 dropdown-hover">Reserves</a>
+                <a th:href="@{/admin/losts/view}" class="px-4 py-2 dropdown-hover">Lost</a>
+                <a th:href="@{/admin/artifacts/view}" class="px-4 py-2 dropdown-hover">Artifacts</a>
+                <a th:href="@{/admin/members/view}" class="px-4 py-2 dropdown-hover">Members</a>
+                <div class="mx-3 divider"></div>
+                <a href="#" class="px-4 py-2 dropdown-hover">Logout</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+</body>
+
+</html>
