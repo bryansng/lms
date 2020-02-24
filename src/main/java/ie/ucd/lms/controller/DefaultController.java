@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,6 +72,8 @@ public class DefaultController {
     Member member = memberService.findByEmail(login.getEmail());
 
     redirectAttrs.addFlashAttribute("member", member);
+
+    HttpSession session = request.getSession();
 
     return "redirect:/member/profile";
   }

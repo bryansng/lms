@@ -6,3 +6,26 @@
     height: 90%;
     object-fit: contain;
 }
+
+.artifact-card {
+    min-width: 300px;
+    padding-right: 10px;
+    min-height: 300px;
+}
+
+.view-more {
+    right: 0;
+    bottom: 0;
+    margin: 0 10px 10px 0;
+    position: absolute;
+}
+
+.link {
+    cursor: pointer;
+    font-size: 17px;
+    color: inherit;
+}
+
+.link:hover {
+    opacity: 0.5;
+}
