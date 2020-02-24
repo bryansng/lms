@@ -38,9 +38,9 @@
             <div style="width: 15%;">
               <label for="searchQuery" class="mb-2 font-weight-bold">Artifact Type:</label>
               <select id="type" name="type" class="form-control border border-dark rounded-0 text-dark">
-                <option value="issued date" th:selected="${#strings.isEmpty(previousType)}">Issued Date</option>
-                <option value="return date" th:selected="${previousType == 'book'}">Return date</option>
-                <option value="" th:selected="${previousType == 'cd'}">All</option>
+                <option value="issued date" th:selected="${#strings.isEmpty(previousType)}">All</option>
+                <option value="return date" th:selected="${previousType == 'book'}">Issued date</option>
+                <option value="" th:selected="${previousType == 'cd'}">Return date</option>
               </select>
             </div>
             <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Search</button>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
 import ie.ucd.lms.entity.Artifact;
+import ie.ucd.lms.entity.LoanHistory;
 import ie.ucd.lms.entity.Member;
 import ie.ucd.lms.service.admin.ArtifactService;
 import ie.ucd.lms.service.admin.Common;
@@ -103,13 +104,13 @@ public class AdminController {
 			@RequestParam(defaultValue = "", required = false) String fromDate,
 			@RequestParam(defaultValue = "", required = false) String toDate,
 			@RequestParam(defaultValue = "", required = false) String dateType, Model model) {
-		// Page<LoanHistory> loanHistories = loanHistoryService.search(searchQuery, page - 1);
-		// model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loanHistories.getTotalElements());
-		// model.addAttribute("totalPages", loanHistories.getTotalPages());
-		// model.addAttribute("currentPage", page + 1);
-		// model.addAttribute("loanHistories", loanHistories);
-		// return "admin/loanView.html";
-		return "admin/index.html";
+		Page<LoanHistory> loans = loanHistoryService.searchAllButLost(artifactQuery, memberQuery, fromDate, toDate,
+				dateType, page - 1);
+		model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
+		model.addAttribute("totalPages", loans.getTotalPages());
+		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("loans", loans);
+		return "admin/loanView.html";
 	}
 
 	@GetMapping("/admin/losts/view")
@@ -246,32 +247,33 @@ public class AdminController {
 	}
 
 	public void testReserveQueueService() {
-		Assert.isTrue(reserveQueueService.search("", "", 0).getTotalElements() == 5,
+		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 5,
 				" reserveQueueService search() method incorrect.");
-		Assert.isTrue(reserveQueueService.search(Common.nowPlus3Date, "", 0).getTotalElements() == 5,
+		Assert.isTrue(reserveQueueService.search("", "", Common.nowPlus3Date, "", 0).getTotalElements() == 5,
 				" reserveQueueService search() method incorrect.");
-		reserveQueueService.search("", Common.nowPlus3Date, 0);
-		Assert.isTrue(reserveQueueService.search("", Common.nowPlus3Date, 0).getTotalElements() == 5,
+		reserveQueueService.search("", "", "", Common.nowPlus3Date, 0);
+		Assert.isTrue(reserveQueueService.search("", "", "", Common.nowPlus3Date, 0).getTotalElements() == 5,
 				" reserveQueueService search() method incorrect.");
-		Assert.isTrue(reserveQueueService.search(Common.nowPlus3Date, Common.nowPlus3Date, 0).getTotalElements() == 5,
+		Assert.isTrue(
+				reserveQueueService.search("", "", Common.nowPlus3Date, Common.nowPlus3Date, 0).getTotalElements() == 5,
 				" reserveQueueService search() method incorrect.");
 
 		reserveQueueService.update("4", "9780743269513", "4", Common.nowPlus3Date);
-		Assert.isTrue(reserveQueueService.search("", "", 0).getTotalElements() == 5,
+		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 5,
 				" reserveQueueService update() method incorrect.");
 
 		Assert.isTrue(reserveQueueService.delete("5") == true, " reserveQueueService delete() method incorrect.");
-		Assert.isTrue(reserveQueueService.search("", "", 0).getTotalElements() == 4,
+		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 4,
 				" reserveQueueService delete() method incorrect.");
 
 		reserveQueueService.create("9780751532715", "4", Common.nowPlus3Date);
-		Assert.isTrue(reserveQueueService.search("", "", 0).getTotalElements() == 5,
+		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 5,
 				" reserveQueueService create() method incorrect.");
 	}
 
 	public void testLoanFunctionInReserveQueueService() {
 		reserveQueueService.loan("6", "7");
-		Assert.isTrue(reserveQueueService.search("", "", 0).getTotalElements() == 4,
+		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 4,
 				" reserveQueueService loan() method incorrect.");
 		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "issued date", 0).getTotalElements() == 5,
 				" reserveQueueService loan() method incorrect.");
@@ -319,7 +321,7 @@ public class AdminController {
 		loanHistoryService.create("9780062301239", "3", Common.nowPlus3Date, "0.0", "issued");
 		Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "issued", 0).getTotalElements() == 2,
 				" loanHistoryService create() method incorrect.");
-		Assert.isTrue(reserveQueueService.search("", "", 0).getTotalElements() == 5,
+		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 5,
 				" loanHistoryService create() method incorrect.");
 	}
 
@@ -327,7 +329,7 @@ public class AdminController {
 		loanHistoryService.create("9780062301239", "3", Common.nowPlus3Date, "0.0", "issued");
 		Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "issued", 0).getTotalElements() == 2,
 				" loanHistoryService create() method incorrect.");
-		Assert.isTrue(reserveQueueService.search("", "", 0).getTotalElements() == 5,
+		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 5,
 				" loanHistoryService create() method incorrect.");
 	}
 

@@ -43,7 +43,6 @@ public class LoanHistoryService {
 
 		Page<LoanHistory> res = loanHistoryRepository.findAllByArtifactAndMemberAndBothDatesAndStatus(artifactId, artifact,
 				memberId, member, fromDateTime, toDateTime, status, pRequest);
-		printMe(res.getContent());
 		return res;
 	}
 
@@ -57,7 +56,6 @@ public class LoanHistoryService {
 
 		Page<LoanHistory> res = loanHistoryRepository.findAllByArtifactAndMemberAndBothDatesAndStatusNot(artifactId,
 				artifact, memberId, member, fromDateTime, toDateTime, "lost", pRequest);
-		printMe(res.getContent());
 		return res;
 	}
 

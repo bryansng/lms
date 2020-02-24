@@ -27,12 +27,16 @@ public class ReserveQueueService {
 	@Autowired
 	LoanHistoryService loanHistoryService;
 
-	public Page<ReserveQueue> search(String fromDate, String toDate, int pageNum) {
+	public Page<ReserveQueue> search(String artifact, String member, String fromDate, String toDate, int pageNum) {
+		Long artifactId = Common.convertStringToLong(artifact);
+		Long memberId = Common.convertStringToLong(member);
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
-		Page<ReserveQueue> res = reserveQueueRepository.findByExpiredOnBetween(fromDateTime, toDateTime, pRequest);
+		Page<ReserveQueue> res = reserveQueueRepository.findAllByArtifactAndMemberAndBothDatesAndStatus(artifactId,
+				artifact, memberId, member, fromDateTime, toDateTime, pRequest);
+		// Page<ReserveQueue> res = reserveQueueRepository.findByExpiredOnBetween(fromDateTime, toDateTime, pRequest);
 		return res;
 	}
 
