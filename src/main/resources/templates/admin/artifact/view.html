@@ -28,7 +28,7 @@
         </a>
       </div>
       <div class="mb-5">
-        <form action="#" th:action="@{/admin/artifacts/view}" method="GET">
+        <form action="#" th:action="@{/admin/artifacts/view}" method="GET" th:id="searchForm">
           <div class="d-flex flex-row justify-content-between align-items-end">
             <div class="w-50">
               <label for="searchQuery" class="mb-2 font-weight-bold">Artifact ID / Name / ISBN / Authors:</label>
@@ -36,7 +36,7 @@
                 id="searchQuery" style="font-weight: 500;" placeholder="John Doe" th:value="${previousQuery}" />
             </div>
             <div style="width: 15%;">
-              <label for="searchQuery" class="mb-2 font-weight-bold">Artifact Type:</label>
+              <label for="type" class="mb-2 font-weight-bold">Artifact Type:</label>
               <select id="type" name="type" class="form-control border border-dark rounded-0 text-dark">
                 <option value="" th:selected="${#strings.isEmpty(previousType)}">All</option>
                 <option value="book" th:selected="${previousType == 'book'}">Book</option>
@@ -47,9 +47,21 @@
                 <option value="pdf" th:selected="${previousType == 'pdf'}">PDF</option>
               </select>
             </div>
+            <input type="text" class="d-none" id="updateStatus" name="updateStatus" />
+            <input type="text" class="d-none" id="errorMessage" name="errorMessage" />
             <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Search</button>
           </div>
         </form>
+      </div>
+      <div class="row no-gutters" th:unless="${#strings.isEmpty(previousUpdateStatus)}">
+        <div class="p-3 my-3 w-100" style="background-color: #28a745b6;font-weight: bolder;" th:if="${previousUpdateStatus == 'success'}">
+          &#10004;&nbsp;Updated Successfully.
+        </div>
+        <div class="p-3 my-3 w-100" style="background-color: #dc3546b6;font-weight: bolder;" th:if="${previousUpdateStatus == 'fail'}">
+          &#10008;&nbsp;
+          <span th:if="${#strings.isEmpty(previousErrorMessage)}">Failed to Update. Please try again.</span>
+          <span th:unless="${#strings.isEmpty(previousErrorMessage)}" th:text="${previousErrorMessage}"></span>
+        </div>
       </div>
       <div class="row no-gutters">
         <div class="col-12">
@@ -69,83 +81,69 @@
             <col width="4%"> -->
             <thead class="border-top border-dark">
               <tr>
-                <th class="py-2 px-2">ID</th>
-                <th class="py-2 px-2">Name</th>
-                <th class="py-2 px-2">ISBN</th>
-                <th class="py-2 px-2">Description</th>
-                <th class="py-2 px-2">Publisher</th>
-                <th class="py-2 px-2">Authors</th>
-                <th class="py-2 px-2">Location</th>
-                <th class="py-2 px-2">Issued</th>
-                <th class="py-2 px-2">Quantity</th>
-                <th class="py-2 px-2">Type</th>
-                <th class="py-2 px-2">PDF</th>
-                <th class="py-2 px-2"></th>
-                <th class="py-2 px-2"></th>
+                <th class="p-2">ID</th>
+                <th class="p-2">Name</th>
+                <th class="p-2">ISBN</th>
+                <th class="p-2">Description</th>
+                <th class="p-2">Publisher</th>
+                <th class="p-2">Authors</th>
+                <th class="p-2">Location</th>
+                <th class="p-2">Issued</th>
+                <th class="p-2">Quantity</th>
+                <th class="p-2">Type</th>
+                <th class="p-2">PDF</th>
+                <th class="p-2"></th>
+                <th class="p-2"></th>
               </tr>
             </thead>
-            <tfoot>
-              <tr>
-                <td colspan="13">
-                  <div class="links mt-4">
-                    <a th:href="@{~/admin/artifacts/view(page=1)}">&laquo;</a>
-                    <!-- <a th:href="@{~/admin/artifacts/view(page=${currentPage &gt; 1} ? ${currentPage-1})}">❮</a> -->
-                    <span th:each="pageNum: ${#numbers.sequence(currentPage-2, currentPage+2)}">
-                      <a th:if="${pageNum &gt;= 1 AND pageNum &lt;= totalPages}"
-                          th:class="${pageNum == currentPage} ? active"
-                          th:href="@{~/admin/artifacts/view(page=${pageNum})}"
-                          th:text=${pageNum}></a>
-                    </span>
-                    <!-- the below does not work -->
-                    <!-- <a th:href="@{~/admin/artifacts/view(page=${currentPage &lt; totalPages} ? ${currentPage+1})}">❯</a> -->
-                    <a th:href="@{~/admin/artifacts/view(page=${totalPages})}">&raquo;</a>
-                  </div>
-                </td>
-              </tr>
-            </tfoot>
+            <tfoot th:replace="admin/fragments/pagination.html"></tfoot>
             <tbody class="border-bottom border-dark">
               <tr th:each="artifact : ${artifacts}">
-                <td class="py-2 px-2" th:text="${artifact.id}"></td>
-                <td class="py-2 px-2 text-capitalize" th:text="${artifact.title}"></td>
-                <td class="py-2 px-2" th:text="${artifact.isbn}"></td>
-                <td class="py-2 px-2" th:text="${#strings.abbreviate(artifact.description, 70)}"></td>
-                <td class="py-2 px-2 text-capitalize" th:text="${artifact.publishers}"></td>
-                <td class="py-2 px-2 text-capitalize" th:text="${artifact.authors}"></td>
-                <td class="py-2 px-2" th:text="${artifact.rackLocation}"></td>
-                <td class="py-2 px-2" th:text="${artifact.totalQuantity - artifact.quantity}"></td>
-                <td class="py-2 px-2" th:text="${artifact.totalQuantity}"></td>
-                <td class="py-2 px-2 text-capitalize" th:text="${artifact.type}"></td>
-                <td class="py-2 px-2">
+                <td class="p-2" th:text="${artifact.id}"></td>
+                <td class="p-2 text-capitalize" th:text="${artifact.title}"></td>
+                <td class="p-2" th:text="${artifact.isbn}"></td>
+                <td class="p-2" th:text="${#strings.abbreviate(artifact.description, 70)}"></td>
+                <td class="p-2 text-capitalize" th:text="${artifact.publishers}"></td>
+                <td class="p-2 text-capitalize" th:text="${artifact.authors}"></td>
+                <td class="p-2" th:text="${artifact.rackLocation}"></td>
+                <td class="p-2" th:text="${artifact.totalQuantity - artifact.quantity}"></td>
+                <td class="p-2" th:text="${artifact.totalQuantity}"></td>
+                <td class="p-2 text-capitalize" th:text="${artifact.type}"></td>
+                <td class="p-2">
                   <a th:if="${#bools.isFalse(#strings.isEmpty(artifact.pdf))}"
                     th:href="@{${artifact.pdf}}">Link</a>
                 </td>
-                <td class="py-2 px-2">
+                <td class="p-2">
                   <a th:href="@{~/admin/artifacts/edit(id=${artifact.id})}"
                     class="d-flex flex-column justify-content-center align-items-center table-link">
                     <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
                   </a>
                 </td>
-                <td class="py-2 px-2">
-                  <a th:href="@{~/admin/artifacts/delete(id=${artifact.id})}"
-                    class="d-flex flex-column justify-content-center align-items-center table-link">
-                    <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
-                  </a>
+                <td class="p-2">
+                  <form th:action="@{/admin/artifacts/delete}" method="POST" th:id="'delete-form-' + ${artifact.id}">
+                    <div class="d-flex flex-row align-items-center">
+                      <button type="button" th:onclick="'deleteForm(' + ${artifact.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                        <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
+                      </button>
+                      <input type="text" class="d-none" name="id" th:value="${artifact.id}" />
+                    </div>
+                  </form>
                 </td>
               </tr>
               <tr th:each="i: ${#numbers.sequence(1, totalEmptyRows)}">
-                <td class="py-2 px-2">&nbsp;</td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
+                <td class="p-2">&nbsp;</td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
               </tr>
             </tbody>
           </table>
@@ -168,6 +166,10 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
   </script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+  <!-- Include JavaScript from static folder -->
+  <script type="text/javascript" src="/js/formTriggers.js"></script>
 </body>
 
 </html>

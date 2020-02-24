@@ -83,7 +83,7 @@
       <div class="row no-gutters">
         <div class="col-12">
           <table class="w-100 divtable">
-            <col width="5%">
+            <!-- <col width="5%">
             <col width="11%">
             <col width="8%">
             <col width="8%">
@@ -95,54 +95,36 @@
             <col width="12%">
             <col width="8%">
             <col width="4%">
-            <col width="4%">
+            <col width="4%"> -->
             <thead class="border-top border-dark">
               <tr>
-                <th class="py-2 px-2">ID</th>
-                <th class="py-2 px-2">Artifact</th>
-                <th class="py-2 px-2">ISBN</th>
-                <th class="py-2 px-2">Issued To</th>
-                <th class="py-2 px-2">Issued Date</th>
-                <th class="py-2 px-2">Return Date</th>
-                <th class="py-2 px-2">Fine</th>
-                <th class="py-2 px-2">Status</th>
-                <th class="py-2 px-2"></th>
-                <th class="py-2 px-2"></th>
-                <th class="py-2 px-2"></th>
-                <th class="py-2 px-2"></th>
-                <th class="py-2 px-2"></th>
+                <th class="p-2">ID</th>
+                <th class="p-2">Artifact</th>
+                <th class="p-2">ISBN</th>
+                <th class="p-2">Issued To</th>
+                <th class="p-2">Issued Date</th>
+                <th class="p-2">Return Date</th>
+                <th class="p-2">Fine</th>
+                <th class="p-2">Status</th>
+                <th class="p-2"></th>
+                <th class="p-2"></th>
+                <th class="p-2"></th>
+                <th class="p-2"></th>
+                <th class="p-2"></th>
               </tr>
             </thead>
-            <tfoot>
-              <tr>
-                <td colspan="13">
-                  <div class="links mt-4">
-                    <a th:href="@{~/admin/loans/view(page=1)}">&laquo;</a>
-                    <!-- <a th:href="@{~/admin/loans/view(page=${currentPage &gt; 1} ? ${currentPage-1})}">❮</a> -->
-                    <span th:each="pageNum: ${#numbers.sequence(currentPage-2, currentPage+2)}">
-                      <a th:if="${pageNum &gt;= 1 AND pageNum &lt;= totalPages}"
-                          th:class="${pageNum == currentPage} ? active"
-                          th:href="@{~/admin/loans/view(page=${pageNum})}"
-                          th:text=${pageNum}></a>
-                    </span>
-                    <!-- the below does not work -->
-                    <!-- <a th:href="@{~/admin/loans/view(page=${currentPage &lt; totalPages} ? ${currentPage+1})}">❯</a> -->
-                    <a th:href="@{~/admin/loans/view(page=${totalPages})}">&raquo;</a>
-                  </div>
-                </td>
-              </tr>
-            </tfoot>
+            <tfoot th:replace="admin/fragments/pagination.html"></tfoot>
             <tbody class="border-bottom border-dark">
               <tr th:each="loan : ${loans}" th:id="'tr-' + ${loan.id}">
-                <td class="py-2 px-2" th:text="${loan.id}"></td>
-                <td class="py-2 px-2 text-capitalize" th:text="${loan.artifact.title}"></td>
-                <td class="py-2 px-2" th:text="${loan.isbn}"></td>
-                <td class="py-2 px-2 text-capitalize" th:text="${loan.member.fullName}"></td>
-                <td class="py-2 px-2" th:text="${loan.issuedOn}"></td>
-                <td class="py-2 px-2" th:text="${loan.returnOn}"></td>
-                <td class="py-2 px-2">&euro;<span th:text="${loan.fine}"></span></td>
-                <td class="py-2 px-2 text-capitalize" th:text="${loan.status}" th:id="'status-' + ${loan.id}"></td>
-                <td class="py-2 px-2">
+                <td class="p-2" th:text="${loan.id}"></td>
+                <td class="p-2 text-capitalize" th:text="${loan.artifact.title}"></td>
+                <td class="p-2" th:text="${loan.isbn}"></td>
+                <td class="p-2 text-capitalize" th:text="${loan.member.fullName}"></td>
+                <td class="p-2" th:text="${loan.issuedOn}"></td>
+                <td class="p-2" th:text="${loan.returnOn}"></td>
+                <td class="p-2">&euro;<span th:text="${loan.fine}"></span></td>
+                <td class="p-2 text-capitalize" th:text="${loan.status}" th:id="'status-' + ${loan.id}"></td>
+                <td class="p-2">
                   <div th:unless="${loan.status == 'returned' OR loan.status == 'restocked'}">
                     <form th:action="@{/admin/loans/return}" method="POST" th:id="'return-form-' + ${loan.id}">
                       <div class="d-flex flex-row align-items-center">
@@ -150,12 +132,12 @@
                           <img th:src="@{~/images/return.png}" class="table-img" />
                           <div>&nbsp;Return</div>
                         </button>
-                        <input type="text" class="d-none" name="loanId" th:value="${loan.id}" />
+                        <input type="text" class="d-none" name="id" th:value="${loan.id}" />
                       </div>
                     </form>
                   </div>
                 </td>
-                <td class="py-2 px-2">
+                <td class="p-2">
                   <div th:unless="${loan.status == 'returned' OR loan.status == 'restocked' OR loan.status == 'delayed'}">
                     <form th:action="@{/admin/loans/renew}" method="POST" th:id="'renew-form-' + ${loan.id}">
                       <div class="d-flex flex-row align-items-center">
@@ -164,13 +146,13 @@
                           <div>&nbsp;Renew&nbsp;</div>
                         </button>
                         <input type="text" class="form-control border border-dark rounded-0 text-dark text-center table-input" name="daysToRenew" th:placeholder="${daysToRenew}" th:value="${daysToRenew}" />
-                        <input type="text" class="d-none" name="loanId" th:value="${loan.id}" />
+                        <input type="text" class="d-none" name="id" th:value="${loan.id}" />
                         &nbsp;days
                       </div>
                     </form>
                   </div>
                 </td>
-                <td class="py-2 px-2">
+                <td class="p-2">
                   <div th:unless="${loan.status == 'returned' OR loan.status == 'restocked'}">
                     <form th:action="@{/admin/loans/lost}" method="POST" th:id="'lost-form-' + ${loan.id}">
                       <div class="d-flex flex-row align-items-center">
@@ -178,42 +160,42 @@
                           <img th:src="@{~/images/lost_item.png}" class="table-img" />
                           <div>&nbsp;Lost</div>
                         </button>
-                        <input type="text" class="d-none" name="loanId" th:value="${loan.id}" />
+                        <input type="text" class="d-none" name="id" th:value="${loan.id}" />
                       </div>
                     </form>
                   </div>
                 </td>
-                <td class="py-2 px-2">
+                <td class="p-2">
                   <a th:href="@{~/admin/loans/edit(id=${loan.id})}"
                     class="d-flex flex-column justify-content-center align-items-center table-link">
                     <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
                   </a>
                 </td>
-                <td class="py-2 px-2">
+                <td class="p-2">
                   <form th:action="@{/admin/loans/delete}" method="POST" th:id="'delete-form-' + ${loan.id}">
                     <div class="d-flex flex-row align-items-center">
                       <button type="button" th:onclick="'deleteForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
                         <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
                       </button>
-                      <input type="text" class="d-none" name="loanId" th:value="${loan.id}" />
+                      <input type="text" class="d-none" name="id" th:value="${loan.id}" />
                     </div>
                   </form>
                 </td>
               </tr>
               <tr th:each="i: ${#numbers.sequence(1, totalEmptyRows)}">
-                <td class="py-2 px-2">&nbsp;</td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
-                <td class="py-2 px-2"></td>
+                <td class="p-2">&nbsp;</td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
               </tr>
             </tbody>
           </table>
@@ -238,108 +220,8 @@
   </script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
-  <script type="text/javascript">
-    function returnForm(loanId) {
-      var form = $("#return-form-" + loanId);
-      $.ajax({
-        url: form.attr('action'),
-        data: form.serialize(),
-        type: 'post',
-        success: function(result) {
-          // Do something with the response.
-          // Might want to check for errors here.
-          if (result === 'true') {
-            updateStatusSuccess();
-          } else {
-            updateStatusFail();
-          }
-          triggerRefresh();
-        }, error: function(error) {
-          // Here you can handle exceptions thrown by the server or your controller.
-        }
-      })
-    }
-    function renewForm(loanId) {
-      var form = $("#renew-form-" + loanId);
-      $.ajax({
-        url: form.attr('action'),
-        data: form.serialize(),
-        type: 'post',
-        success: function(result) {
-          // Do something with the response.
-          // Might want to check for errors here.
-          if (result === 'true') {
-            updateStatusSuccess();
-          } else {
-            updateStatusFail();
-            updateErrorMessage("Unable to renew. Artifact is reserved for someone else. Artifact has been reserved for this user automatically.");
-          }
-          triggerRefresh();
-        }, error: function(error) {
-          // Here you can handle exceptions thrown by the server or your controller.
-        }
-      })
-    }
-    function lostForm(loanId) {
-      var form = $("#lost-form-" + loanId);
-      $.ajax({
-        url: form.attr('action'),
-        data: form.serialize(),
-        type: 'post',
-        success: function(result) {
-          // Do something with the response.
-          // Might want to check for errors here.
-          if (result === 'true') {
-            updateStatusSuccess();
-          } else {
-            updateStatusFail();
-          }
-            triggerRefresh();
-        }, error: function(error) {
-          // Here you can handle exceptions thrown by the server or your controller.
-        }
-      })
-    }
-    function deleteForm(loanId) {
-      var form = $("#delete-form-" + loanId);
-      $.ajax({
-        url: form.attr('action'),
-        data: form.serialize(),
-        type: 'post',
-        success: function(result) {
-          // Do something with the response.
-          // Might want to check for errors here.
-          if (result === 'true') {
-            updateStatusSuccess();
-          } else {
-            updateStatusFail();
-          }
-            triggerRefresh();
-        }, error: function(error) {
-          // Here you can handle exceptions thrown by the server or your controller.
-        }
-      })
-    }
-    function triggerRefresh() {
-      var form = $("#searchForm");
-      form.submit();
-    }
-
-    function updateStatusSuccess() {
-      var inputStatus = $("#updateStatus");
-      inputStatus.val('success');
-    }
-
-    function updateStatusFail() {
-      var inputStatus = $("#updateStatus");
-      inputStatus.val('fail');
-    }
-
-    function updateErrorMessage(msg) {
-      var inputErrorMsg = $("#errorMessage");
-      inputErrorMsg.val(msg);
-    }
-  </script>
+  <!-- Include JavaScript from static folder -->
+  <script type="text/javascript" src="/js/formTriggers.js"></script>
 </body>
 
 </html>
