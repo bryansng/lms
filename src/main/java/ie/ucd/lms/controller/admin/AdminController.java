@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 
 import ie.ucd.lms.entity.Artifact;
@@ -54,7 +56,7 @@ public class AdminController {
 		model.addAttribute("todayLost", reportService.artifactsLost(reportService.today));
 		model.addAttribute("monthLost", reportService.artifactsLost(reportService.thisMonth));
 		model.addAttribute("yearLost", reportService.artifactsLost(reportService.thisYear));
-		return "admin/index.html";
+		return "admin/dashboard/dashboard.html";
 	}
 
 	@GetMapping("/admin/members/view")
@@ -67,19 +69,19 @@ public class AdminController {
 		model.addAttribute("members", members);
 
 		model.addAttribute("previousQuery", searchQuery);
-		return "admin/memberView.html";
+		return "admin/member/view.html";
 	}
 
 	@GetMapping("/admin/members/edit")
 	public String membersEdit(@RequestParam(defaultValue = "1", required = false) Integer page,
 			@RequestParam(defaultValue = "", required = false) String searchQuery, Model model) {
-		return "admin/memberView.html";
+		return "admin/member/view.html";
 	}
 
 	@GetMapping("/admin/members/delete")
 	public String membersDelete(@RequestParam(defaultValue = "1", required = false) Integer page,
 			@RequestParam(defaultValue = "", required = false) String searchQuery, Model model) {
-		return "admin/memberView.html";
+		return "admin/member/view.html";
 	}
 
 	@GetMapping("/admin/artifacts/view")
@@ -94,11 +96,57 @@ public class AdminController {
 
 		model.addAttribute("previousQuery", searchQuery);
 		model.addAttribute("previousType", type);
-		return "admin/artifactView.html";
+		return "admin/artifact/view.html";
 	}
 
 	@GetMapping("/admin/loans/view")
 	public String loansView(@RequestParam(defaultValue = "1", required = false) Integer page,
+			@RequestParam(defaultValue = "", required = false) String artifactQuery,
+			@RequestParam(defaultValue = "", required = false) String memberQuery,
+			@RequestParam(defaultValue = "", required = false) String fromDate,
+			@RequestParam(defaultValue = "", required = false) String toDate,
+			@RequestParam(defaultValue = "", required = false) String dateType,
+			@RequestParam(defaultValue = "", required = false) String updateStatus,
+			@RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+		Page<LoanHistory> loans = loanHistoryService.searchAllButLost(artifactQuery, memberQuery, fromDate, toDate,
+				dateType, page - 1);
+		model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
+		model.addAttribute("totalPages", loans.getTotalPages());
+		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("loans", loans);
+		model.addAttribute("daysToRenew", Common.DAYS_TO_RENEW);
+
+		model.addAttribute("previousArtifact", artifactQuery);
+		model.addAttribute("previousMember", memberQuery);
+		model.addAttribute("previousFromDate", fromDate);
+		model.addAttribute("previousToDate", toDate);
+		model.addAttribute("previousType", dateType);
+		model.addAttribute("previousUpdateStatus", updateStatus);
+		model.addAttribute("previousErrorMessage", errorMessage);
+		return "admin/loan/view.html";
+	}
+
+	@PostMapping("/admin/loans/return")
+	@ResponseBody
+	public String loansReturn(@RequestParam(name = "loanId") String stringId, Model model) {
+		return loanHistoryService.returnn(stringId).toString();
+	}
+
+	@PostMapping("/admin/loans/renew")
+	@ResponseBody
+	public String loansRenew(@RequestParam(name = "loanId") String stringId,
+			@RequestParam(required = false) String daysToRenew, Model model) {
+		return loanHistoryService.renew(stringId, daysToRenew).toString();
+	}
+
+	@PostMapping("/admin/loans/lost")
+	@ResponseBody
+	public String loansLost(@RequestParam(name = "loanId") String stringId, Model model) {
+		return loanHistoryService.lost(stringId).toString();
+	}
+
+	@GetMapping("/admin/loans/edit")
+	public String loansEdit(@RequestParam(defaultValue = "1", required = false) Integer page,
 			@RequestParam(defaultValue = "", required = false) String artifactQuery,
 			@RequestParam(defaultValue = "", required = false) String memberQuery,
 			@RequestParam(defaultValue = "", required = false) String fromDate,
@@ -110,23 +158,29 @@ public class AdminController {
 		model.addAttribute("totalPages", loans.getTotalPages());
 		model.addAttribute("currentPage", page + 1);
 		model.addAttribute("loans", loans);
-		return "admin/loanView.html";
+
+		model.addAttribute("previousArtifact", artifactQuery);
+		model.addAttribute("previousMember", memberQuery);
+		model.addAttribute("previousFromDate", fromDate);
+		model.addAttribute("previousToDate", toDate);
+		model.addAttribute("previousType", dateType);
+		return "admin/loan/view.html";
 	}
 
 	@GetMapping("/admin/losts/view")
 	public String lostsView(Model model) {
-		return "admin/lostView.html";
+		return "admin/lost/view.html";
 	}
 
 	@GetMapping("/admin/reserves/view")
 	public String reservesView(Model model) {
-		return "admin/reserveView.html";
+		return "admin/reserve/view.html";
 	}
 
 	@GetMapping("/admin/tests")
 	public String testIndexView() {
 		tests();
-		return "admin/index.html";
+		return "admin/test/test.html";
 	}
 
 	public void tests() {

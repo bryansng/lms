@@ -109,6 +109,9 @@ public class LoanHistoryService {
 		return false;
 	}
 
+	/**
+	 * @return false if fail to create on reserveQueue side, or id and isbn already exists.
+	 */
 	public Boolean create(String isbn, String memberId, String returnOn, String fine, String status) {
 		Long aMemberId = Common.convertStringToLong(memberId);
 
@@ -129,6 +132,9 @@ public class LoanHistoryService {
 		return false;
 	}
 
+	/**
+	 * @return false if id does not exist.
+	 */
 	public Boolean delete(String stringId) {
 		Long id = Common.convertStringToLong(stringId);
 
@@ -139,6 +145,9 @@ public class LoanHistoryService {
 		return false;
 	}
 
+	/**
+	 * @return false if id does not exist.
+	 */
 	public Boolean restocked(String stringId) {
 		Long id = Common.convertStringToLong(stringId);
 
@@ -154,6 +163,9 @@ public class LoanHistoryService {
 		return false;
 	}
 
+	/**
+	 * @return false if id does not exist.
+	 */
 	public Boolean returnn(String stringId) {
 		Long id = Common.convertStringToLong(stringId);
 
@@ -170,6 +182,9 @@ public class LoanHistoryService {
 		return false;
 	}
 
+	/**
+	 * @return false if exists in reserveQueue, or id does not exist.
+	 */
 	public Boolean renew(String stringId, String daysToRenew) {
 		Long id = Common.convertStringToLong(stringId);
 		Long days = Common.convertStringToLong(daysToRenew);
@@ -177,7 +192,7 @@ public class LoanHistoryService {
 		if (loanHistoryRepository.existsById(id)) {
 			LoanHistory loanHistory = loanHistoryRepository.getOne(id);
 			if (reserveQueueRepository.existsByIsbn(loanHistory.getIsbn())) {
-				returnn(stringId);
+				// returnn(stringId);
 				// ? maybe add isbn + member_id to reserve list?
 				// ? prompt librarian / member?
 				return false;
@@ -190,6 +205,9 @@ public class LoanHistoryService {
 		return false;
 	}
 
+	/**
+	 * @return false if id does not exist.
+	 */
 	public Boolean lost(String stringId) {
 		Long id = Common.convertStringToLong(stringId);
 

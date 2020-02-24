@@ -9,6 +9,7 @@ public class Common {
 	public static int PAGINATION_ROWS = 15;
 	public static int DAYS_TILL_EXPIRED = 4;
 	public static int DAYS_TILL_RETURNED = 7;
+	public static int DAYS_TO_RENEW = 3;
 
 	public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

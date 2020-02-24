@@ -38,14 +38,14 @@
       <div class="row no-gutters">
         <div class="col-12">
           <table class="w-100 divtable">
-            <col width="5%">
+            <!-- <col width="5%">
             <col width="17%">
             <col width="23%">
             <col width="15%">
             <col width="25%">
             <col width="7%">
             <col width="4%">
-            <col width="4%">
+            <col width="4%"> -->
             <thead class="border-top border-dark">
               <tr>
                 <th class="py-2 px-2">ID</th>
@@ -87,13 +87,13 @@
                 <td class="py-2 px-2 text-capitalize" th:text="${member.type}"></td>
                 <td class="py-2 px-2">
                   <a th:href="@{~/admin/members/edit(id=${member.id})}"
-                    class="d-flex flex-column justify-content-center align-items-center">
+                    class="d-flex flex-column justify-content-center align-items-center table-link">
                     <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
                   </a>
                 </td>
                 <td class="py-2 px-2">
                   <a th:href="@{~/admin/members/delete(id=${member.id})}"
-                    class="d-flex flex-column justify-content-center align-items-center">
+                    class="d-flex flex-column justify-content-center align-items-center table-link">
                     <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
                   </a>
                 </td>

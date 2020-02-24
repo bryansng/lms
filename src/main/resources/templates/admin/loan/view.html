@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+
+  <!-- Import CSS -->
+  <link rel="stylesheet" th:href="@{~/css/common.css}" />
+  <title>View Loans | Wet LMS</title>
+</head>
+
+<body class="m-0">
+  <header th:replace="admin/fragments/header.html"></header>
+
+  <main>
+    <div class="w-100 w-lg-75 my-4 mx-auto container">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <h3 class="mb-4">Loans</h3>
+        <a th:href="@{~/admin/loans/create}" class="d-flex flex-column justify-content-center align-items-center">
+          <img th:src="@{~/images/add_v1.png}" class="create-new-img" />
+        </a>
+      </div>
+      <div th:classappend="${#strings.isEmpty(previousUpdateStatus)} ? mb-5 : mb-1">
+        <form action="#" th:action="@{/admin/loans/view}" method="GET" th:id="searchForm">
+          <div class="d-flex flex-column justify-content-between align-items-start">
+            <div class="d-flex flex-row justify-content-between align-items-end w-75 mb-4">
+              <div style="width: 45%;">
+                <label for="artifactQuery" class="mb-2 font-weight-bold">Artifact ID / Name / ISBN:</label>
+                <input type="text" class="form-control border border-dark rounded-0 text-dark" name="artifactQuery"
+                  id="artifactQuery" style="font-weight: 500;" placeholder="" th:value="${previousArtifact}" />
+              </div>
+              <div style="width: 45%;">
+                <label for="memberQuery" class="mb-2 font-weight-bold">Member ID / Name / Email:</label>
+                <input type="text" class="form-control border border-dark rounded-0 text-dark" name="memberQuery"
+                  id="memberQuery" style="font-weight: 500;" placeholder="John Doe" th:value="${previousMember}" />
+              </div>
+            </div>
+            <div class="d-flex flex-row justify-content-between align-items-end w-100">
+              <div class="d-flex flex-row justify-content-between align-items-start" style="width: 60%;">
+                <div style="width: 35%;">
+                  <label for="fromDate" class="mb-2 font-weight-bold">From Date:</label>
+                  <input type="text" class="form-control border border-dark rounded-0 text-dark" name="fromDate"
+                    id="fromDate" style="font-weight: 500;" placeholder="yyyy-mm-dd" th:value="${previousFromDate}" />
+                </div>
+                <div style="width: 35%;">
+                  <label for="toDate" class="mb-2 font-weight-bold">To Date:</label>
+                  <input type="text" class="form-control border border-dark rounded-0 text-dark" name="toDate"
+                    id="toDate" style="font-weight: 500;" placeholder="yyyy-mm-dd" th:value="${previousToDate}" />
+                </div>
+                <div style="width: 20%;">
+                  <label for="dateType" class="mb-2 font-weight-bold">Date Type:</label>
+                  <select id="dateType" name="dateType" class="form-control border border-dark rounded-0 text-dark">
+                    <option value="" th:selected="${#strings.isEmpty(previousType)}">All</option>
+                    <option value="issued date" th:selected="${previousType == 'issued date'}">Issued date</option>
+                    <option value="return date" th:selected="${previousType == 'return date'}">Return date</option>
+                  </select>
+                </div>
+              </div>
+              <input type="text" class="d-none" id="updateStatus" name="updateStatus" />
+              <input type="text" class="d-none" id="errorMessage" name="errorMessage" />
+              <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Search</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="row no-gutters" th:unless="${#strings.isEmpty(previousUpdateStatus)}">
+        <div class="p-3 my-3 w-100" style="background-color: #28a745b6;font-weight: bolder;" th:if="${previousUpdateStatus == 'success'}">
+          &#10004;&nbsp;Updated Successfully.
+        </div>
+        <div class="p-3 my-3 w-100" style="background-color: #dc3546b6;font-weight: bolder;" th:if="${previousUpdateStatus == 'fail'}">
+          &#10008;&nbsp;
+          <span th:if="${#strings.isEmpty(previousErrorMessage)}">Failed to Update. Please try again.</span>
+          <span th:unless="${#strings.isEmpty(previousErrorMessage)}" th:text="${previousErrorMessage}"></span>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-12">
+          <table class="w-100 divtable">
+            <col width="5%">
+            <col width="11%">
+            <col width="8%">
+            <col width="8%">
+            <col width="8%">
+            <col width="8%">
+            <col width="8%">
+            <col width="8%">
+            <col width="8%">
+            <col width="12%">
+            <col width="8%">
+            <col width="4%">
+            <col width="4%">
+            <thead class="border-top border-dark">
+              <tr>
+                <th class="py-2 px-2">ID</th>
+                <th class="py-2 px-2">Artifact</th>
+                <th class="py-2 px-2">ISBN</th>
+                <th class="py-2 px-2">Issued To</th>
+                <th class="py-2 px-2">Issued Date</th>
+                <th class="py-2 px-2">Return Date</th>
+                <th class="py-2 px-2">Fine</th>
+                <th class="py-2 px-2">Status</th>
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2"></th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <td colspan="13">
+                  <div class="links mt-4">
+                    <a th:href="@{~/admin/loans/view(page=1)}">&laquo;</a>
+                    <!-- <a th:href="@{~/admin/loans/view(page=${currentPage &gt; 1} ? ${currentPage-1})}">❮</a> -->
+                    <span th:each="pageNum: ${#numbers.sequence(currentPage-2, currentPage+2)}">
+                      <a th:if="${pageNum &gt;= 1 AND pageNum &lt;= totalPages}"
+                          th:class="${pageNum == currentPage} ? active"
+                          th:href="@{~/admin/loans/view(page=${pageNum})}"
+                          th:text=${pageNum}></a>
+                    </span>
+                    <!-- the below does not work -->
+                    <!-- <a th:href="@{~/admin/loans/view(page=${currentPage &lt; totalPages} ? ${currentPage+1})}">❯</a> -->
+                    <a th:href="@{~/admin/loans/view(page=${totalPages})}">&raquo;</a>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+            <tbody class="border-bottom border-dark">
+              <tr th:each="loan : ${loans}" th:id="'tr-' + ${loan.id}">
+                <td class="py-2 px-2" th:text="${loan.id}"></td>
+                <td class="py-2 px-2 text-capitalize" th:text="${loan.artifact.title}"></td>
+                <td class="py-2 px-2" th:text="${loan.isbn}"></td>
+                <td class="py-2 px-2 text-capitalize" th:text="${loan.member.fullName}"></td>
+                <td class="py-2 px-2" th:text="${loan.issuedOn}"></td>
+                <td class="py-2 px-2" th:text="${loan.returnOn}"></td>
+                <td class="py-2 px-2">&euro;<span th:text="${loan.fine}"></span></td>
+                <td class="py-2 px-2 text-capitalize" th:text="${loan.status}" th:id="'status-' + ${loan.id}"></td>
+                <td class="py-2 px-2">
+                  <div th:unless="${loan.status == 'returned' OR loan.status == 'restocked'}">
+                    <form th:action="@{/admin/loans/return}" method="POST" th:id="'return-form-' + ${loan.id}">
+                      <div class="d-flex flex-row align-items-center">
+                        <button type="button" th:onclick="'returnForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                          <img th:src="@{~/images/return.png}" class="table-img" />
+                          <div>&nbsp;Return</div>
+                        </button>
+                        <input type="text" class="d-none" name="loanId" th:value="${loan.id}" />
+                      </div>
+                    </form>
+                  </div>
+                </td>
+                <td class="py-2 px-2">
+                  <div th:unless="${loan.status == 'returned' OR loan.status == 'restocked' OR loan.status == 'delayed'}">
+                    <form th:action="@{/admin/loans/renew}" method="POST" th:id="'renew-form-' + ${loan.id}">
+                      <div class="d-flex flex-row align-items-center">
+                        <button type="button" th:onclick="'renewForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                          <img th:src="@{~/images/reuse.png}" class="table-img" />
+                          <div>&nbsp;Renew&nbsp;</div>
+                        </button>
+                        <input type="text" class="form-control border border-dark rounded-0 text-dark text-center table-input" name="daysToRenew" th:placeholder="${daysToRenew}" th:value="${daysToRenew}" />
+                        <input type="text" class="d-none" name="loanId" th:value="${loan.id}" />
+                        &nbsp;days
+                      </div>
+                    </form>
+                  </div>
+                </td>
+                <td class="py-2 px-2">
+                  <div th:unless="${loan.status == 'returned' OR loan.status == 'restocked'}">
+                    <form th:action="@{/admin/loans/lost}" method="POST" th:id="'lost-form-' + ${loan.id}">
+                      <div class="d-flex flex-row align-items-center">
+                        <button type="button" th:onclick="'lostForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                          <img th:src="@{~/images/lost_item.png}" class="table-img" />
+                          <div>&nbsp;Lost</div>
+                        </button>
+                        <input type="text" class="d-none" name="loanId" th:value="${loan.id}" />
+                      </div>
+                    </form>
+                  </div>
+                </td>
+                <td class="py-2 px-2">
+                  <a th:href="@{~/admin/loans/edit(id=${loan.id})}"
+                    class="d-flex flex-column justify-content-center align-items-center table-link">
+                    <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
+                  </a>
+                </td>
+                <td class="py-2 px-2">
+                  <form th:action="@{/admin/loans/delete}" method="POST" th:id="'delete-form-' + ${loan.id}">
+                    <div class="d-flex flex-row align-items-center">
+                      <button type="button" th:onclick="'deleteForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                        <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
+                      </button>
+                      <input type="text" class="d-none" name="loanId" th:value="${loan.id}" />
+                    </div>
+                  </form>
+                </td>
+              </tr>
+              <tr th:each="i: ${#numbers.sequence(1, totalEmptyRows)}">
+                <td class="py-2 px-2">&nbsp;</td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer></footer>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+  </script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+    function returnForm(loanId) {
+      var form = $("#return-form-" + loanId);
+      $.ajax({
+        url: form.attr('action'),
+        data: form.serialize(),
+        type: 'post',
+        success: function(result) {
+          // Do something with the response.
+          // Might want to check for errors here.
+          if (result === 'true') {
+            updateStatusSuccess();
+          } else {
+            updateStatusFail();
+          }
+          triggerRefresh();
+        }, error: function(error) {
+          // Here you can handle exceptions thrown by the server or your controller.
+        }
+      })
+    }
+    function renewForm(loanId) {
+      var form = $("#renew-form-" + loanId);
+      $.ajax({
+        url: form.attr('action'),
+        data: form.serialize(),
+        type: 'post',
+        success: function(result) {
+          // Do something with the response.
+          // Might want to check for errors here.
+          if (result === 'true') {
+            updateStatusSuccess();
+          } else {
+            updateStatusFail();
+            updateErrorMessage("Unable to renew. Artifact is reserved for someone else. Artifact has been reserved for this user automatically.");
+          }
+          triggerRefresh();
+        }, error: function(error) {
+          // Here you can handle exceptions thrown by the server or your controller.
+        }
+      })
+    }
+    function lostForm(loanId) {
+      var form = $("#lost-form-" + loanId);
+      $.ajax({
+        url: form.attr('action'),
+        data: form.serialize(),
+        type: 'post',
+        success: function(result) {
+          // Do something with the response.
+          // Might want to check for errors here.
+          if (result === 'true') {
+            updateStatusSuccess();
+          } else {
+            updateStatusFail();
+          }
+            triggerRefresh();
+        }, error: function(error) {
+          // Here you can handle exceptions thrown by the server or your controller.
+        }
+      })
+    }
+    function deleteForm(loanId) {
+      var form = $("#delete-form-" + loanId);
+      $.ajax({
+        url: form.attr('action'),
+        data: form.serialize(),
+        type: 'post',
+        success: function(result) {
+          // Do something with the response.
+          // Might want to check for errors here.
+          if (result === 'true') {
+            updateStatusSuccess();
+          } else {
+            updateStatusFail();
+          }
+            triggerRefresh();
+        }, error: function(error) {
+          // Here you can handle exceptions thrown by the server or your controller.
+        }
+      })
+    }
+    function triggerRefresh() {
+      var form = $("#searchForm");
+      form.submit();
+    }
+
+    function updateStatusSuccess() {
+      var inputStatus = $("#updateStatus");
+      inputStatus.val('success');
+    }
+
+    function updateStatusFail() {
+      var inputStatus = $("#updateStatus");
+      inputStatus.val('fail');
+    }
+
+    function updateErrorMessage(msg) {
+      var inputErrorMsg = $("#errorMessage");
+      inputErrorMsg.val(msg);
+    }
+  </script>
+</body>
+
+</html>
