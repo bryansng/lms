@@ -22,7 +22,7 @@ public class Member {
 	private LocalDateTime joinedOn = LocalDateTime.now();
 	private LocalDateTime lastActiveOn;
 	private String bio;
-	private Boolean isLibrarian = false;
+	private String type = "member";
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(referencedColumnName = "email")
@@ -92,12 +92,12 @@ public class Member {
 		this.bio = bio;
 	}
 
-	public Boolean getIsLibrarian() {
-		return isLibrarian;
+	public String getType() {
+		return this.type;
 	}
 
-	public void setIsLibrarian(Boolean isLibrarian) {
-		this.isLibrarian = isLibrarian;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Login getLogin() {
