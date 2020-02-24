@@ -33,52 +33,64 @@ public class LoanHistoryService {
 	@Autowired
 	ReserveQueueService reserveQueueService;
 
-	public Page<LoanHistory> searchAll(String fromDate, String toDate, String status, int pageNum) {
+	public Page<LoanHistory> searchAll(String artifact, String member, String fromDate, String toDate, String status,
+			int pageNum) {
+		Long artifactId = Common.convertStringToLong(artifact);
+		Long memberId = Common.convertStringToLong(member);
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
-		Page<LoanHistory> res = loanHistoryRepository
-				.findByIssuedOnBetweenAndStatusIgnoreCaseOrReturnOnBetweenAndStatusIgnoreCase(fromDateTime, toDateTime, status,
-						fromDateTime, toDateTime, status, pRequest);
+		Page<LoanHistory> res = loanHistoryRepository.findAllByArtifactAndMemberAndBothDatesAndStatus(artifactId, artifact,
+				memberId, member, fromDateTime, toDateTime, status, pRequest);
+		printMe(res.getContent());
 		return res;
 	}
 
-	public Page<LoanHistory> searchAllButLost(String fromDate, String toDate, int pageNum) {
+	public Page<LoanHistory> searchAllButLost(String artifact, String member, String fromDate, String toDate,
+			String status, int pageNum) {
+		Long artifactId = Common.convertStringToLong(artifact);
+		Long memberId = Common.convertStringToLong(member);
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
-		Page<LoanHistory> res = loanHistoryRepository
-				.findByIssuedOnBetweenAndStatusNotIgnoreCaseOrReturnOnBetweenAndStatusNotIgnoreCase(fromDateTime, toDateTime,
-						"lost", fromDateTime, toDateTime, "lost", pRequest);
+		Page<LoanHistory> res = loanHistoryRepository.findAllByArtifactAndMemberAndBothDatesAndStatusNot(artifactId,
+				artifact, memberId, member, fromDateTime, toDateTime, "lost", pRequest);
+		printMe(res.getContent());
 		return res;
 	}
 
-	public Page<LoanHistory> searchAllButLost(String fromDate, String toDate, String dateType, int pageNum) {
+	public Page<LoanHistory> searchAllButLost(String artifact, String member, String fromDate, String toDate,
+			String status, String dateType, int pageNum) {
+		Long artifactId = Common.convertStringToLong(artifact);
+		Long memberId = Common.convertStringToLong(member);
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
 		switch (dateType.toLowerCase()) {
 			case "issued date":
-				return loanHistoryRepository.findByIssuedOnBetweenAndStatusNotIgnoreCase(fromDateTime, toDateTime, "lost",
-						pRequest);
+				return loanHistoryRepository.findAllByArtifactAndMemberAndIssuedDateAndStatusNot(artifactId, artifact, memberId,
+						member, fromDateTime, toDateTime, "lost", pRequest);
 			case "return date":
-				return loanHistoryRepository.findByReturnOnBetweenAndStatusNotIgnoreCase(fromDateTime, toDateTime, "lost",
-						pRequest);
+				return loanHistoryRepository.findAllByArtifactAndMemberAndReturnDateAndStatusNot(artifactId, artifact, memberId,
+						member, fromDateTime, toDateTime, "lost", pRequest);
 			default:
 		}
 		return new PageImpl<LoanHistory>(new ArrayList<LoanHistory>()); // return empty list.
 	}
 
-	public Page<LoanHistory> searchLost(String fromDate, String toDate, int pageNum) {
+	public Page<LoanHistory> searchLost(String artifact, String member, String fromDate, String toDate, String status,
+			int pageNum) {
+		Long artifactId = Common.convertStringToLong(artifact);
+		Long memberId = Common.convertStringToLong(member);
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
 		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
 		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
-		Page<LoanHistory> res = loanHistoryRepository.findByIssuedOnBetweenAndStatusIgnoreCase(fromDateTime, toDateTime,
-				"lost", pRequest);
+		Page<LoanHistory> res = loanHistoryRepository.findAllByArtifactAndMemberAndIssuedDateAndStatus(artifactId, artifact,
+				memberId, member, fromDateTime, toDateTime, "lost", pRequest);
 		return res;
 	}
 
