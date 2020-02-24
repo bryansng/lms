@@ -1,11 +1,12 @@
 package ie.ucd.lms.entity;
 
+import java.io.Serializable;
 import java.time.*;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "members")
-public class Member {
+public class Member implements Serializable {
 
 	public Member() {
 	}

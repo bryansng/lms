@@ -4,16 +4,27 @@ import ie.ucd.lms.entity.Login;
 import ie.ucd.lms.entity.Member;
 import ie.ucd.lms.service.LoginService;
 import ie.ucd.lms.service.MemberService;
+
+import java.util.Map;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.ModelAndView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class DefaultController {
@@ -24,7 +35,7 @@ public class DefaultController {
   private MemberService memberService;
 
   // Debugging purposes
-  // private static final Logger logger = LoggerFactory.getLogger(DefaultController.class);
+  private static final Logger logger = LoggerFactory.getLogger(DefaultController.class);
 
   @GetMapping("/restricted")
   public String restrictedView() {
@@ -37,23 +48,29 @@ public class DefaultController {
   }
 
   @GetMapping("/member/profile")
-  public String indexView(@RequestParam(name = "member") Member member, Model model) {
+  public String indexView(@ModelAttribute("member") Member member, Model model) {
     model.addAttribute("member", member);
+
     return "member/index.html";
   }
 
   @GetMapping("/login")
-  public String loginView(Login loginModel) {
+  public String loginView(Login login) {
     return "member/login";
   }
 
   @PostMapping("/login")
-  public String loginMember(@Valid Login login, BindingResult bindingResult, Model model) {
+  public String loginMember(@Valid @ModelAttribute("member") Login login, BindingResult bindingResult, Model model,
+      ModelMap modelMap, HttpServletRequest request, RedirectAttributes redirectAttrs) {
 
     if (bindingResult.hasErrors() || !loginService.exists(login)) {
       model.addAttribute("loginError", true);
       return "member/login";
     }
+
+    Member member = memberService.findByEmail(login.getEmail());
+
+    redirectAttrs.addFlashAttribute("member", member);
 
     return "redirect:/member/profile";
   }
@@ -75,7 +92,7 @@ public class DefaultController {
 
       memberService.save(member, newLogin);
 
-      return "redirect:/";
+      return "redirect:/login";
     }
 
     return "member/register";

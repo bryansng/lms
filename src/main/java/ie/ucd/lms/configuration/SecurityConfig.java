@@ -13,28 +13,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) {
-		web
-			.ignoring().requestMatchers(PathRequest.toH2Console());
+		web.ignoring().requestMatchers(PathRequest.toH2Console());
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// http.csrf().disable();
-		// http
-		// 	.authorizeRequests()
-		// 		.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-		// 		.anyRequest().authenticated()
-		// 		.and()
-		// 	.formLogin()
-		// 		.permitAll();
-		
-		// Disabling default login page that comes with Spring security
-		// http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.OPTIONS, "*/").permitAll()
-		// 		.antMatchers(HttpMethod.GET, "/login").permitAll();
+		// http.csrf().disable().authorizeRequests().antMatchers("/").permitAll().antMatchers("/register").permitAll().antMatchers("/login").permitAll().anyRequest().authenticated();
 
-		http.csrf().disable().authorizeRequests().antMatchers("/").permitAll().antMatchers("/register").permitAll().antMatchers("/login").permitAll().anyRequest().authenticated();
-
-		
-
-    }
+	}
 }

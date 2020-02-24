@@ -53,6 +53,10 @@ public class MemberService {
         return false;
     }
 
+    public Optional<Member> findById(Long id) {
+        return memberRepository.findById(id);
+    }
+
     public Member createMember(Login login) {
         Member member = new Member();
         member.setEmail(login.getEmail());
@@ -60,9 +64,7 @@ public class MemberService {
         return member;
     }
 
-    public Member get(Login login) {
-        String email = login.getEmail();
-
+    public Member findbyEmail(String email) {
         return memberRepository.findByEmail(email);
     }
 }
