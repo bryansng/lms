@@ -43,6 +43,11 @@ public class DefaultController {
     return "restricted";
   }
 
+  @GetMapping("member/historical")
+  public String historicalView(Model model) {
+    return "member/historical";
+  }
+
   @GetMapping("member/loans")
   public String loansView(Model model) {
 
