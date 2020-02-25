@@ -182,7 +182,7 @@ public class LoanHistoryService {
 		if (loanHistoryRepository.existsById(id)) {
 			LoanHistory loanHistory = loanHistoryRepository.getOne(id);
 			if (reserveQueueRepository.existsByIsbn(loanHistory.getIsbn())) {
-				// returnn(stringId);
+				// returnn(stringId); // ? why did I put return here again? (assumed they renew in person, if so, they cant renew if is reserved, so return the book, and set up reservation if required)
 				// ? maybe add isbn + member_id to reserve list?
 				// ? prompt librarian / member?
 				return false;
@@ -226,10 +226,11 @@ public class LoanHistoryService {
 	 */
 	private void handleArtifactStock(LoanHistory loanHistory) {
 		String status = loanHistory.getStatus();
-		// System.out.println(loanHistory);
-		// if (status.equals("issued") || status.equals("renewed") || status.equals("delayed") || status.equals("lost")) {
-		// 	loanHistory.getArtifact().incrementQuantity();
-		// }
+		System.out.println(loanHistory);
+		if (status.equals("issued") || status.equals("renewed") || status.equals("delayed") || status.equals("lost")) {
+			loanHistory.getArtifact().incrementQuantity();
+			System.out.println("incremented");
+		}
 	}
 
 	private void printMe(List<LoanHistory> arr) {
