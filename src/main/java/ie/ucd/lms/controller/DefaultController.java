@@ -43,6 +43,12 @@ public class DefaultController {
     return "restricted";
   }
 
+  @GetMapping("member/loans")
+  public String loansView(Model model) {
+
+    return "member/loans";
+  }
+
   @GetMapping("member/index")
   public String testView() {
     return "member/index";
