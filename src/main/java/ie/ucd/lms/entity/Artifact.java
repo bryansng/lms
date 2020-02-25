@@ -38,8 +38,8 @@ public class Artifact {
 	private LocalDateTime publishedOn;
 	private LocalDateTime createdOn = LocalDateTime.now();
 	private BigDecimal itemPrice = BigDecimal.valueOf(10.00);
-	private Integer quantity;
-	private Integer totalQuantity;
+	private Integer quantity; // current quantity in stock.
+	private Integer totalQuantity; // how many quantity we should have for this artifact.
 	private String rackLocation;
 
 	@OneToMany(mappedBy = "artifact", cascade = CascadeType.ALL)
@@ -67,7 +67,7 @@ public class Artifact {
 	}
 
 	public boolean inStock() {
-		return quantity != 0;
+		return quantity > 0;
 	}
 
 	public Long getId() {

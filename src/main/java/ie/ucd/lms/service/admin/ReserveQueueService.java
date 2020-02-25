@@ -87,15 +87,23 @@ public class ReserveQueueService {
 		return false;
 	}
 
+	/**
+	 * @return false if artifact not in stock, or id and isbn already exists.
+	 */
 	public Boolean loan(String stringId, String daysToLoan) {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (reserveQueueRepository.existsById(id)) {
 			ReserveQueue rQ = reserveQueueRepository.getOne(id);
-			loanHistoryService.create(rQ.getIsbn(), Long.toString(rQ.getMemberId()), Common.getStringNowPlusDays(daysToLoan),
-					"0.0", "issued");
-			reserveQueueRepository.deleteById(id);
-			return true;
+			Artifact artifact = artifactRepository.findByIsbn(rQ.getIsbn());
+			if (artifact.inStock()) {
+				if (loanHistoryService.create(rQ.getIsbn(), Long.toString(rQ.getMemberId()),
+						Common.getStringNowPlusDays(daysToLoan), "0.0", "issued")) {
+					reserveQueueRepository.deleteById(id);
+					return true;
+				}
+			}
+			return false;
 		}
 		return false;
 	}

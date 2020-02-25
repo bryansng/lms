@@ -40,4 +40,16 @@ public class LostController {
 		model.addAttribute("previousErrorMessage", errorMessage);
 		return "admin/lost/view.html";
 	}
+
+	@PostMapping("/admin/losts/restock")
+	@ResponseBody
+	public String lostsLost(@RequestParam(name = "id") String stringId, Model model) {
+		return loanHistoryService.restocked(stringId).toString();
+	}
+
+	@PostMapping("/admin/losts/delete")
+	@ResponseBody
+	public String lostsDelete(@RequestParam(name = "id") String stringId, Model model) {
+		return loanHistoryService.delete(stringId).toString();
+	}
 }

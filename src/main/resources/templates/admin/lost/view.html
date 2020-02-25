@@ -13,14 +13,147 @@
 
   <!-- Import CSS -->
   <link rel="stylesheet" th:href="@{~/css/common.css}" />
-  <title>Home | Wet LMS</title>
+  <title>View Lost | Wet LMS</title>
 </head>
 
 <body class="m-0">
   <header th:replace="admin/fragments/header.html"></header>
 
   <main>
-    It works
+    <div class="w-100 w-lg-75 my-4 mx-auto container">
+      <div class="d-flex flex-row justify-content-between align-items-start">
+        <h3 class="mb-4">Lost</h3>
+        <a th:href="@{~/admin/losts/create}" class="d-flex flex-column justify-content-center align-items-center">
+          <img th:src="@{~/images/add_v1.png}" class="create-new-img" />
+        </a>
+      </div>
+      <div th:classappend="${#strings.isEmpty(previousUpdateStatus)} ? mb-5 : mb-1">
+        <form action="#" th:action="@{/admin/losts/view}" method="GET" th:id="searchForm">
+          <div class="d-flex flex-column justify-content-between align-items-start">
+            <div class="d-flex flex-row justify-content-between align-items-end w-75 mb-4">
+              <div style="width: 45%;">
+                <label for="artifactQuery" class="mb-2 font-weight-bold">Artifact ID / Name / ISBN:</label>
+                <input type="text" class="form-control border border-dark rounded-0 text-dark" name="artifactQuery"
+                  id="artifactQuery" style="font-weight: 500;" placeholder="" th:value="${previousArtifact}" />
+              </div>
+              <div style="width: 45%;">
+                <label for="memberQuery" class="mb-2 font-weight-bold">Member ID / Name / Email:</label>
+                <input type="text" class="form-control border border-dark rounded-0 text-dark" name="memberQuery"
+                  id="memberQuery" style="font-weight: 500;" placeholder="John Doe" th:value="${previousMember}" />
+              </div>
+            </div>
+            <div class="d-flex flex-row justify-content-between align-items-end w-100">
+              <div class="d-flex flex-row justify-content-between align-items-start" style="width: 60%;">
+                <div style="width: 35%;">
+                  <label for="fromDate" class="mb-2 font-weight-bold">From Date:</label>
+                  <input type="text" class="form-control border border-dark rounded-0 text-dark" name="fromDate"
+                    id="fromDate" style="font-weight: 500;" placeholder="yyyy-mm-dd" th:value="${previousFromDate}" />
+                </div>
+                <div style="width: 35%;">
+                  <label for="toDate" class="mb-2 font-weight-bold">To Date:</label>
+                  <input type="text" class="form-control border border-dark rounded-0 text-dark" name="toDate"
+                    id="toDate" style="font-weight: 500;" placeholder="yyyy-mm-dd" th:value="${previousToDate}" />
+                </div>
+                <div style="width: 20%;">
+                  &nbsp;
+                </div>
+              </div>
+              <input type="text" class="d-none" id="updateStatus" name="updateStatus" />
+              <input type="text" class="d-none" id="errorMessage" name="errorMessage" />
+              <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Search</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="row no-gutters" th:unless="${#strings.isEmpty(previousUpdateStatus)}">
+        <div class="p-3 my-3 w-100" style="background-color: #28a745b6;font-weight: bolder;" th:if="${previousUpdateStatus == 'success'}">
+          &#10004;&nbsp;Updated Successfully.
+        </div>
+        <div class="p-3 my-3 w-100" style="background-color: #dc3546b6;font-weight: bolder;" th:if="${previousUpdateStatus == 'fail'}">
+          &#10008;&nbsp;
+          <span th:if="${#strings.isEmpty(previousErrorMessage)}">Failed to Update. Please try again.</span>
+          <span th:unless="${#strings.isEmpty(previousErrorMessage)}" th:text="${previousErrorMessage}"></span>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-12">
+          <table class="w-100 divtable">
+            <col width="5%">
+            <col width="25%">
+            <col width="10%">
+            <col width="24%">
+            <col width="14%">
+            <col width="6%">
+            <col width="8%">
+            <col width="4%">
+            <col width="4%">
+            <thead class="border-top border-dark">
+              <tr>
+                <th class="p-2">ID</th>
+                <th class="p-2">Artifact</th>
+                <th class="p-2">ISBN</th>
+                <th class="p-2">Issued To</th>
+                <th class="p-2">Issued Date</th>
+                <th class="p-2">Fine</th>
+                <th class="p-2"></th>
+                <th class="p-2"></th>
+                <th class="p-2"></th>
+              </tr>
+            </thead>
+            <tfoot th:replace="admin/fragments/pagination.html"></tfoot>
+            <tbody class="border-bottom border-dark">
+              <tr th:each="loan : ${loans}" th:id="'tr-' + ${loan.id}">
+                <td class="p-2" th:text="${loan.id}"></td>
+                <td class="p-2 text-capitalize" th:text="${loan.artifact.title}"></td>
+                <td class="p-2" th:text="${loan.isbn}"></td>
+                <td class="p-2 text-capitalize" th:text="${loan.member.fullName}"></td>
+                <td class="p-2" th:text="${loan.issuedOn}"></td>
+                <td class="p-2">&euro;<span th:text="${loan.fine}"></span></td>
+                <td class="p-2">
+                  <form th:action="@{/admin/losts/restock}" method="POST" th:id="'restock-form-' + ${loan.id}">
+                    <div class="d-flex flex-row align-items-center">
+                      <button type="button" th:onclick="'restockForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                        <img th:src="@{~/images/restock.png}" class="table-img" />
+                        <div>&nbsp;Restocked</div>
+                      </button>
+                      <input type="text" class="d-none" name="id" th:value="${loan.id}" />
+                    </div>
+                  </form>
+                </td>
+                <td class="p-2">
+                  <a th:href="@{~/admin/losts/edit(id=${loan.id})}"
+                    class="d-flex flex-column justify-content-center align-items-center table-link">
+                    <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
+                  </a>
+                </td>
+                <td class="p-2">
+                  <form th:action="@{/admin/losts/delete}" method="POST" th:id="'delete-form-' + ${loan.id}">
+                    <div class="d-flex flex-row align-items-center">
+                      <button type="button" th:onclick="'deleteForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                        <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
+                      </button>
+                      <input type="text" class="d-none" name="id" th:value="${loan.id}" />
+                    </div>
+                  </form>
+                </td>
+              </tr>
+              <tr th:each="i: ${#numbers.sequence(1, totalEmptyRows)}">
+                <td class="p-2">&nbsp;</td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+                <td class="p-2"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <footer></footer>
@@ -36,6 +169,10 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
   </script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+  <!-- Include JavaScript from static folder -->
+  <script type="text/javascript" src="/js/formTriggers.js"></script>
 </body>
 
 </html>

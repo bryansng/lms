@@ -21,8 +21,10 @@
 
   <main>
     <div class="w-100 w-lg-75 my-4 mx-auto container">
-      <h3 class="mb-4">Members</h3>
-      <div class="mb-5">
+      <div class="d-flex flex-row justify-content-between align-items-start">
+        <h3 class="mb-4">Members</h3>
+      </div>
+      <div th:classappend="${#strings.isEmpty(previousUpdateStatus)} ? mb-5 : mb-1">
         <form action="#" th:action="@{/admin/members/view}" method="GET" th:id="searchForm">
           <div class="d-flex flex-row justify-content-between align-items-end">
             <div class="w-50">
@@ -50,14 +52,14 @@
       <div class="row no-gutters">
         <div class="col-12">
           <table class="w-100 divtable">
-            <!-- <col width="5%">
+            <col width="5%">
             <col width="17%">
             <col width="23%">
             <col width="15%">
             <col width="25%">
             <col width="7%">
             <col width="4%">
-            <col width="4%"> -->
+            <col width="4%">
             <thead class="border-top border-dark">
               <tr>
                 <th class="p-2">ID</th>

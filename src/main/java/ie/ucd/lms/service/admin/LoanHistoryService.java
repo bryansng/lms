@@ -97,7 +97,7 @@ public class LoanHistoryService {
 	}
 
 	/**
-	 * @return false if fail to create on reserveQueue side, or id and isbn already exists.
+	 * @return false if artifact not in stock, and reserveQueue already has user with same isbn and memberId, or id and isbn already exists.
 	 */
 	public Boolean create(String isbn, String memberId, String returnOn, String fine, String status) {
 		Long aMemberId = Common.convertStringToLong(memberId);
@@ -107,6 +107,7 @@ public class LoanHistoryService {
 				Artifact artifact = artifactRepository.findByIsbn(isbn);
 				Member member = memberRepository.getOne(aMemberId);
 				if (artifact.inStock()) {
+					artifact.decrementQuantity();
 					LoanHistory loanHistory = new LoanHistory();
 					loanHistory.setAll(isbn, memberId, returnOn, fine, status, artifact, member);
 					loanHistoryRepository.save(loanHistory);
@@ -126,6 +127,7 @@ public class LoanHistoryService {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (loanHistoryRepository.existsById(id)) {
+			handleArtifactStock(loanHistoryRepository.getOne(id));
 			loanHistoryRepository.deleteById(id);
 			return true;
 		}
@@ -143,6 +145,7 @@ public class LoanHistoryService {
 			loanHistory.setStatus("restocked");
 
 			Artifact artifact = loanHistory.getArtifact();
+			// artifact.decrementQuantity(); // because lost() does not increment, so system still assumes the book is issued, but is actually lost. So we are actually derementing the issued quantity.
 			artifact.incrementQuantity();
 			loanHistoryRepository.save(loanHistory);
 			return true;
@@ -209,6 +212,24 @@ public class LoanHistoryService {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * A book cant just disappear if we delete an entry/a row.
+	 * Significant if librarian created loan or whatever accidentally
+	 * and wants to delete it, only to cause the artifact stock to
+	 * be wrong for some reason.
+	 *
+	 * This function basically checks the loan status,
+	 * depending on that status, add it back.
+	 * @param loanHistory
+	 */
+	private void handleArtifactStock(LoanHistory loanHistory) {
+		String status = loanHistory.getStatus();
+		// System.out.println(loanHistory);
+		// if (status.equals("issued") || status.equals("renewed") || status.equals("delayed") || status.equals("lost")) {
+		// 	loanHistory.getArtifact().incrementQuantity();
+		// }
 	}
 
 	private void printMe(List<LoanHistory> arr) {

@@ -50,7 +50,6 @@ public class TestController {
 		testOnCreateWillAddToReserveQueue();
 		testNextInLineFunctionInReserveQueueService();
 		testReportService();
-		testNewSearchInLoanHistoryService();
 		System.out.println("\n\nTests completed.\n\n");
 	}
 
@@ -78,7 +77,7 @@ public class TestController {
 		artifactService.update("1", "9780743269513", "book", "Self-Help", "R. Covey",
 				"The 7 Habits of Highly Effective People", "",
 				"In The 7 Habits of Highly Effective People, author Stephen R. Covey presents a holistic, integrated, principle-centered approach for solving personal and professional problems. With penetrating insights and pointed anecdotes, Covey reveals a step-by-step pathway for living with fairness, integrity, service, and human dignity—principles that give us the security to adapt to change and the wisdom and power to take advantage of the opportunities that change creates.",
-				"Free Press", "2004-11-09", "30.00", "2", "2", "420");
+				"Free Press", "2004-11-09", "30.00", "3", "3", "420");
 		Assert.isTrue(artifactService.search("", "book", 0).getTotalElements() == 6,
 				" ArtifactService update() method incorrect.");
 
@@ -178,24 +177,32 @@ public class TestController {
 	}
 
 	public void testLoanFunctionInReserveQueueService() {
+		// Loan Id 6 has no more stock.
 		reserveQueueService.loan("6", "7");
-		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 4,
-				" reserveQueueService loan() method incorrect.");
-		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "issued date", 0).getTotalElements() == 5,
-				" reserveQueueService loan() method incorrect.");
+		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 5,
+				" reserveQueueService loan() method when no more artifact stock incorrect.");
+		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "issued date", 0).getTotalElements() == 4,
+				" reserveQueueService loan() method when no more artifact stock incorrect.");
+
+		// Loan Id 3 has stock.
+		reserveQueueService.loan("6", "3");
+		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 5,
+				" reserveQueueService loan() method when artifact in stock incorrect.");
+		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "issued date", 0).getTotalElements() == 4,
+				" reserveQueueService loan() method when artifact in stock incorrect.");
 	}
 
 	public void testRestockedFunctionInLoanHistoryService() {
 		loanHistoryService.create("9780743269513", "4", Common.nowPlus3Date, "0.0", "lost");
 		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", 0).getTotalElements() == 1,
 				" loanHistoryService restocked() method incorrect.");
-		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 5,
+		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 4,
 				" loanHistoryService restocked() method incorrect.");
 
-		loanHistoryService.restocked("8");
+		loanHistoryService.restocked("7");
 		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", 0).getTotalElements() == 0,
 				" loanHistoryService restocked() method incorrect.");
-		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 6,
+		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 5,
 				" loanHistoryService restocked() method incorrect.");
 	}
 
@@ -203,16 +210,23 @@ public class TestController {
 		loanHistoryService.returnn("7");
 		Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "returned", 0).getTotalElements() == 1,
 				" loanHistoryService returnn() method incorrect.");
-		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 6,
+		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 5,
 				" loanHistoryService returnn() method incorrect.");
 	}
 
 	public void testRenewFunctionInLoanHistoryService() {
 		loanHistoryService.renew("6", "3");
+		Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "renewed", 0).getTotalElements() == 0,
+				" loanHistoryService renew() method when artifact is reserved by another user incorrect.");
+		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 5,
+				" loanHistoryService renew() method when artifact is reserved by another user incorrect.");
+
+		loanHistoryService.create("9780061241895", "3", Common.nowPlus3Date, "0.0", "issued");
+		loanHistoryService.renew("8", "3");
 		Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "renewed", 0).getTotalElements() == 1,
-				" loanHistoryService renew() method incorrect.");
+				" loanHistoryService renew() method when artifact not reserved incorrect.");
 		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 6,
-				" loanHistoryService renew() method incorrect.");
+				" loanHistoryService renew() method when artifact not reserved incorrect.");
 	}
 
 	public void testLostFunctionInLoanHistoryService() {
@@ -225,18 +239,18 @@ public class TestController {
 
 	public void testOnCreateWillAddToReserveQueue() {
 		loanHistoryService.create("9780062301239", "3", Common.nowPlus3Date, "0.0", "issued");
-		Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "issued", 0).getTotalElements() == 2,
+		Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "issued", 0).getTotalElements() == 3,
 				" loanHistoryService create() method incorrect.");
-		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 5,
+		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 6,
 				" loanHistoryService create() method incorrect.");
 	}
 
 	public void testNextInLineFunctionInReserveQueueService() {
-		loanHistoryService.create("9780062301239", "3", Common.nowPlus3Date, "0.0", "issued");
-		Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "issued", 0).getTotalElements() == 2,
-				" loanHistoryService create() method incorrect.");
-		Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 5,
-				" loanHistoryService create() method incorrect.");
+		loanHistoryService.create("9780307353139", "3", Common.nowPlus3Date, "0.0", "issued");
+		Assert.isTrue(reserveQueueService.nextInLine("9780307353139").getMemberId().intValue() == 1,
+				" reserveQueueService nextInLine() method incorrect.");
+		Assert.isTrue(reserveQueueService.nextInLine("9780307353139").getId().intValue() == 2,
+				" reserveQueueService nextInLine() method incorrect.");
 	}
 
 	public void testReportService() {
@@ -254,11 +268,11 @@ public class TestController {
 		Assert.isTrue(reportService.totalArtifacts(reportService.thisYear) == 6,
 				" reportService totalArtifacts() method for this year incorrect.");
 
-		Assert.isTrue(reportService.artifactsIssued(reportService.today) == 6,
+		Assert.isTrue(reportService.artifactsIssued(reportService.today) == 7,
 				" reportService artifactsIssued() method for today incorrect.");
-		Assert.isTrue(reportService.artifactsIssued(reportService.thisMonth) == 6,
+		Assert.isTrue(reportService.artifactsIssued(reportService.thisMonth) == 7,
 				" reportService artifactsIssued() method for this month incorrect.");
-		Assert.isTrue(reportService.artifactsIssued(reportService.thisYear) == 6,
+		Assert.isTrue(reportService.artifactsIssued(reportService.thisYear) == 7,
 				" reportService artifactsIssued() method for this year incorrect.");
 
 		Assert.isTrue(reportService.artifactsReturned(reportService.today) == 1,
@@ -274,11 +288,5 @@ public class TestController {
 				" reportService artifactsLost() method for this month incorrect.");
 		Assert.isTrue(reportService.artifactsLost(reportService.thisYear) == 1,
 				" reportService artifactsLost() method for this year incorrect.");
-	}
-
-	public void testNewSearchInLoanHistoryService() {
-		// loanHistoryService.searchAll("", "", "", "", "", 0); // size = 6
-		// loanHistoryService.search("", "hong.sng@ucdconnect.ie", "", "", "", 0); // size =
-		// loanHistoryService.search("9780743269513", "", "", "", "", 0); // size =
 	}
 }
