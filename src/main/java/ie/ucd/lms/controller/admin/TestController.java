@@ -1,20 +1,10 @@
 package ie.ucd.lms.controller.admin;
 
 import java.math.BigDecimal;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.ui.Model;
-
-import ie.ucd.lms.entity.Artifact;
-import ie.ucd.lms.entity.LoanHistory;
-import ie.ucd.lms.entity.Member;
 import ie.ucd.lms.service.admin.ArtifactService;
 import ie.ucd.lms.service.admin.Common;
 import ie.ucd.lms.service.admin.MemberService;
@@ -135,30 +125,30 @@ public class TestController {
 				" loanHistoryService delete() method incorrect.");
 
 		loanHistoryService.create("9780751532715", "3", Common.nowPlus3Date, "0.0", "issued");
-		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", "issued date", 0).getTotalElements() == 4,
+		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "issued date", 0).getTotalElements() == 4,
 				" loanHistoryService create() method incorrect.");
 	}
 
 	public void testLostService() {
 		loanHistoryService.create("9780743269513", "4", Common.nowPlus3Date, "0.0", "lost");
-		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", "", 0).getTotalElements() == 1,
+		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", 0).getTotalElements() == 1,
 				" loanHistoryService create() method incorrect.");
 
-		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", "", 0).getTotalElements() == 1,
+		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", 0).getTotalElements() == 1,
 				" loanHistoryService search() method incorrect.");
-		Assert.isTrue(loanHistoryService.searchLost("", "", "", Common.nowDate, "", 0).getTotalElements() == 1,
+		Assert.isTrue(loanHistoryService.searchLost("", "", Common.nowDate, "", 0).getTotalElements() == 1,
 				" loanHistoryService search() method incorrect.");
-		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", Common.nowDate, 0).getTotalElements() == 1,
+		Assert.isTrue(loanHistoryService.searchLost("", "", "", Common.nowDate, 0).getTotalElements() == 1,
 				" loanHistoryService search() method incorrect.");
-		Assert.isTrue(loanHistoryService.searchLost("", "", "", Common.nowDate, Common.nowDate, 0).getTotalElements() == 1,
+		Assert.isTrue(loanHistoryService.searchLost("", "", Common.nowDate, Common.nowDate, 0).getTotalElements() == 1,
 				" loanHistoryService search() method incorrect.");
 
 		loanHistoryService.update("6", "9780743269513", "3", Common.nowPlus3Date, "0.0", "lost");
-		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", "", 0).getTotalElements() == 1,
+		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", 0).getTotalElements() == 1,
 				" loanHistoryService update() method incorrect.");
 
 		Assert.isTrue(loanHistoryService.delete("5") == true, " loanHistoryService delete() method incorrect.");
-		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", "", 0).getTotalElements() == 0,
+		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", 0).getTotalElements() == 0,
 				" loanHistoryService delete() method incorrect.");
 	}
 
@@ -197,13 +187,13 @@ public class TestController {
 
 	public void testRestockedFunctionInLoanHistoryService() {
 		loanHistoryService.create("9780743269513", "4", Common.nowPlus3Date, "0.0", "lost");
-		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", "", 0).getTotalElements() == 1,
+		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", 0).getTotalElements() == 1,
 				" loanHistoryService restocked() method incorrect.");
 		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 5,
 				" loanHistoryService restocked() method incorrect.");
 
 		loanHistoryService.restocked("8");
-		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", "", 0).getTotalElements() == 0,
+		Assert.isTrue(loanHistoryService.searchLost("", "", "", "", 0).getTotalElements() == 0,
 				" loanHistoryService restocked() method incorrect.");
 		Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 6,
 				" loanHistoryService restocked() method incorrect.");

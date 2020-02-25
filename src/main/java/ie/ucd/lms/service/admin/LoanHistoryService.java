@@ -47,20 +47,7 @@ public class LoanHistoryService {
 	}
 
 	public Page<LoanHistory> searchAllButLost(String artifact, String member, String fromDate, String toDate,
-			String status, int pageNum) {
-		Long artifactId = Common.convertStringToLong(artifact);
-		Long memberId = Common.convertStringToLong(member);
-		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
-		LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
-		PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
-
-		Page<LoanHistory> res = loanHistoryRepository.findAllByArtifactAndMemberAndBothDatesAndStatusNot(artifactId,
-				artifact, memberId, member, fromDateTime, toDateTime, "lost", pRequest);
-		return res;
-	}
-
-	public Page<LoanHistory> searchAllButLost(String artifact, String member, String fromDate, String toDate,
-			String status, String dateType, int pageNum) {
+			String dateType, int pageNum) {
 		Long artifactId = Common.convertStringToLong(artifact);
 		Long memberId = Common.convertStringToLong(member);
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
@@ -75,12 +62,12 @@ public class LoanHistoryService {
 				return loanHistoryRepository.findAllByArtifactAndMemberAndReturnDateAndStatusNot(artifactId, artifact, memberId,
 						member, fromDateTime, toDateTime, "lost", pRequest);
 			default:
+				return loanHistoryRepository.findAllByArtifactAndMemberAndBothDatesAndStatusNot(artifactId, artifact, memberId,
+						member, fromDateTime, toDateTime, "lost", pRequest);
 		}
-		return new PageImpl<LoanHistory>(new ArrayList<LoanHistory>()); // return empty list.
 	}
 
-	public Page<LoanHistory> searchLost(String artifact, String member, String fromDate, String toDate, String status,
-			int pageNum) {
+	public Page<LoanHistory> searchLost(String artifact, String member, String fromDate, String toDate, int pageNum) {
 		Long artifactId = Common.convertStringToLong(artifact);
 		Long memberId = Common.convertStringToLong(member);
 		LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
