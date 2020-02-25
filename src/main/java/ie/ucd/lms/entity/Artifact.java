@@ -7,10 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-
 @Entity
 @Table(name = "artifacts")
-public class Artifact {
+public class Artifact implements Comparable<Artifact> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -215,7 +214,12 @@ public class Artifact {
 		this.rackLocation = rackLocation;
 	}
 
- @Override
+	@Override
+	public int compareTo(Artifact a) {
+		return createdOn.compareTo(a.getCreatedOn());
+	}
+
+	@Override
 	public String toString() {
 		String buf = " - ";
 		return id + buf + isbn + buf + title + buf + authors + buf + type;

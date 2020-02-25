@@ -77,18 +77,17 @@ public class DefaultController {
 
   @GetMapping("member/loans")
   public String loansView(Model model) {
+    // final version will take member entity as parameters from redirectattrs
     Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
     List<LoanHistory> loans = LoanHistoryService.findByMember(member);
-    // logger.info(loans.get(1).getTitle());
-    logger.info(loans.toString());
-    // logger.info(loans.get(1).getReturnOn().getM.toString());
     model.addAttribute("member", member);
     model.addAttribute("loans", loans);
     return "member/loans";
   }
 
   @GetMapping("member/index")
-  public String testView() {
+  public String testView(Model model) {
+    model.addAttribute("artifacts", artifactService.getPopularArtifacts());
     return "member/index";
   }
 

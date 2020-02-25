@@ -1,5 +1,6 @@
 package ie.ucd.lms.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,13 +14,13 @@ import ie.ucd.lms.entity.Artifact;
 @Service
 public class ArtifactService {
 	@Autowired
-    ArtifactRepository artifactRepository;
+	ArtifactRepository artifactRepository;
 
-    public Optional<Artifact> exists(Long id) {
-        Optional<Artifact> artifact = artifactRepository.findById(id);
+	public Optional<Artifact> exists(Long id) {
+		Optional<Artifact> artifact = artifactRepository.findById(id);
 
-        return artifact;
-    }
+		return artifact;
+	}
 
 	public Page<Artifact> search(String stringToSearch, String type, int pageNum) {
 		Long id = Common.convertStringToLong(stringToSearch);
@@ -32,14 +33,14 @@ public class ArtifactService {
 	}
 
 	public Boolean update(String stringId, String isbn, String type, String genre, String authors, String title,
-			String subtitle, String description, String publishers, String publishedOn, String itemPrice, String quantity,
-			String totalQuantity, String rackLocation) {
+			String subtitle, String description, String publishers, String publishedOn, String itemPrice,
+			String quantity, String totalQuantity, String rackLocation) {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (artifactRepository.existsById(id)) {
 			Artifact artifact = artifactRepository.getOne(id);
-			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
-					quantity, totalQuantity, rackLocation);
+			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn,
+					itemPrice, quantity, totalQuantity, rackLocation);
 			artifactRepository.save(artifact);
 			return true;
 		}
@@ -51,8 +52,8 @@ public class ArtifactService {
 			String totalQuantity, String rackLocation) {
 		if (!artifactRepository.existsByIsbn(isbn)) {
 			Artifact artifact = new Artifact();
-			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
-					quantity, totalQuantity, rackLocation);
+			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn,
+					itemPrice, quantity, totalQuantity, rackLocation);
 			artifactRepository.save(artifact);
 			return true;
 		}
@@ -67,6 +68,14 @@ public class ArtifactService {
 			return true;
 		}
 		return false;
+	}
+
+	public List<Artifact> getPopularArtifacts() {
+		List<Artifact> list = artifactRepository.findAll();
+
+		Collections.sort(list);
+
+		return list;
 	}
 
 	public void printMe(List<Artifact> arr) {

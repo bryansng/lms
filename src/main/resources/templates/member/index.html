@@ -39,40 +39,12 @@
         <a href="#" class="link col my-auto text-right text-decoration-none">Browse All</a>
       </div>
       <div class="row">
-        <div class="col ">
+        <div class="col " th:each="artifact : ${artifacts}">
           <div class="card artifact-card">
             <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
             <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <a href="#" class="btn btn-outline-primary view-more">View more</a>
-            </div>
-          </div>
-        </div>
-        <div class=" col">
-          <div class="card artifact-card">
-            <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <!-- <a th:href="@{/view(id=${artifact.id})}" class="btn btn-outline-primary view-more">View more</a> -->
-              <a href="#" class="btn btn-outline-primary view-more">View more</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="card artifact-card">
-            <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
+              <h5 class="card-title" th:text=${artifact.title}></h5>
+              <p class="card-text" th:text=${artifact.authors}></p>
               <a href="#" class="btn btn-outline-primary view-more">View more</a>
             </div>
           </div>
@@ -87,38 +59,13 @@
         <a class="link col my-auto text-right text-decoration-none">Show All</a>
       </div>
       <div class="row">
-        <div class="col ">
+        <div class="col" th:each="artifact : ${artifacts}">
           <div class="card artifact-card">
             <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
             <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <a href="#" class="btn btn-outline-primary view-more">View more</a>
-            </div>
-          </div>
-        </div>
-        <div class=" col">
-          <div class="card artifact-card">
-            <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <a href="#" class="btn btn-outline-primary view-more">View more</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="card artifact-card">
-            <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
+              <h5 class="card-title" th:text=${artifact.title}></h5>
+              <p class="card-text" th:text=${artifact.authors}>
+                
               </p>
               <a href="#" class="btn btn-outline-primary view-more">View more</a>
             </div>
