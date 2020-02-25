@@ -87,7 +87,8 @@ public class DefaultController {
 
   @GetMapping("member/index")
   public String testView(Model model) {
-    model.addAttribute("artifacts", artifactService.getPopularArtifacts());
+    model.addAttribute("latestArtifacts", artifactService.getLatestArtifacts());
+    model.addAttribute("popularArtifacts", artifactService.getPopularArtifacts());
     return "member/index";
   }
 

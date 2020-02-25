@@ -1,6 +1,7 @@
 package ie.ucd.lms.service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,13 +35,13 @@ public class ArtifactService {
 
 	public Boolean update(String stringId, String isbn, String type, String genre, String authors, String title,
 			String subtitle, String description, String publishers, String publishedOn, String itemPrice,
-			String quantity, String totalQuantity, String rackLocation) {
+			String quantity, String totalQuantity, String rackLocation, Integer totalLoans) {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (artifactRepository.existsById(id)) {
 			Artifact artifact = artifactRepository.getOne(id);
 			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn,
-					itemPrice, quantity, totalQuantity, rackLocation);
+					itemPrice, quantity, totalQuantity, rackLocation, totalLoans);
 			artifactRepository.save(artifact);
 			return true;
 		}
@@ -49,11 +50,11 @@ public class ArtifactService {
 
 	public Boolean create(String isbn, String type, String genre, String authors, String title, String subtitle,
 			String description, String publishers, String publishedOn, String itemPrice, String quantity,
-			String totalQuantity, String rackLocation) {
+			String totalQuantity, String rackLocation, Integer totalLoans) {
 		if (!artifactRepository.existsByIsbn(isbn)) {
 			Artifact artifact = new Artifact();
 			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn,
-					itemPrice, quantity, totalQuantity, rackLocation);
+					itemPrice, quantity, totalQuantity, rackLocation, totalLoans);
 			artifactRepository.save(artifact);
 			return true;
 		}
@@ -70,10 +71,24 @@ public class ArtifactService {
 		return false;
 	}
 
+	public List<Artifact> getLatestArtifacts() {
+		List<Artifact> list = artifactRepository.findAll();
+
+		Comparator<Artifact> compareByDate = (Artifact a1, Artifact a2) -> a1.getCreatedOn()
+				.compareTo(a2.getCreatedOn());
+
+		Collections.sort(list, compareByDate);
+
+		return list;
+	}
+
 	public List<Artifact> getPopularArtifacts() {
 		List<Artifact> list = artifactRepository.findAll();
 
-		Collections.sort(list);
+		Comparator<Artifact> compareByTotalLoans = (Artifact a1, Artifact a2) -> a1.getTotalLoans()
+				.compareTo(a2.getTotalLoans());
+
+		Collections.sort(list, compareByTotalLoans);
 
 		return list;
 	}

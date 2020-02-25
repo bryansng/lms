@@ -39,7 +39,7 @@
         <a href="#" class="link col my-auto text-right text-decoration-none">Browse All</a>
       </div>
       <div class="row">
-        <div class="col " th:each="artifact : ${artifacts}">
+        <div class="col " th:each="artifact : ${latestArtifacts}">
           <div class="card artifact-card">
             <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
             <div class="card-body">
@@ -59,7 +59,7 @@
         <a class="link col my-auto text-right text-decoration-none">Show All</a>
       </div>
       <div class="row">
-        <div class="col" th:each="artifact : ${artifacts}">
+        <div class="col" th:each="artifact : ${popularArtifacts}">
           <div class="card artifact-card">
             <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
             <div class="card-body">
