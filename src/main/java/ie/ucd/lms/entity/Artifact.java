@@ -1,9 +1,12 @@
 package ie.ucd.lms.entity;
 
-import javax.persistence.*;
+import ie.ucd.lms.service.Common;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.time.*;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.*;
+
 
 @Entity
 @Table(name = "artifacts")
@@ -11,21 +14,62 @@ public class Artifact {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String isbn;
 	private String type;
 	private String genre;
-	private Blob pdf;
+	// private String edition;
+	@Column(length = 65535)
+	private String pdf;
+
+	@Column(length = 512)
 	private String authors;
+
 	private String title;
 	private String originalTitle;
+
+	@Column(length = 65535)
 	private String subtitle;
+
+	@Column(length = 65535)
 	private String description;
+
+	@Column(length = 512)
 	private String publishers;
 	private LocalDateTime publishedOn;
 	private LocalDateTime createdOn = LocalDateTime.now();
 	private BigDecimal itemPrice = BigDecimal.valueOf(10.00);
-	private Integer quantity;
+	private Integer quantity; // current quantity in stock.
+	private Integer totalQuantity; // how many quantity we should have for this artifact.
 	private String rackLocation;
+
+	@OneToMany(mappedBy = "artifact", cascade = CascadeType.ALL)
+	private List<LoanHistory> loanHistories = new ArrayList<>();
+
+	@OneToMany(mappedBy = "artifact", cascade = CascadeType.ALL)
+	private List<ReserveQueue> reserveQueues;
+
+	public void setAll(String isbn, String type, String genre, String authors, String title, String subtitle,
+			String description, String publishers, String publishedOn, String itemPrice, String quantity,
+			String totalQuantity, String rackLocation) {
+		setIsbn(isbn);
+		setType(type);
+		setGenre(genre);
+		setAuthors(authors);
+		setTitle(title);
+		setSubtitle(subtitle);
+		setDescription(description);
+		setPublishers(publishers);
+		setPublishedOn(Common.convertStringDateToDateTime(publishedOn));
+		setItemPrice(Common.convertStringToBigDecimal(itemPrice));
+		setQuantity(Common.convertStringToInteger(quantity));
+		setTotalQuantity(Common.convertStringToInteger(totalQuantity));
+		setRackLocation(rackLocation);
+	}
+
+	public boolean inStock() {
+		return quantity > 0;
+	}
 
 	public Long getId() {
 		return id;
@@ -59,11 +103,11 @@ public class Artifact {
 		this.genre = genre;
 	}
 
-	public Blob getPdf() {
+	public String getPdf() {
 		return pdf;
 	}
 
-	public void setPdf(Blob pdf) {
+	public void setPdf(String pdf) {
 		this.pdf = pdf;
 	}
 
@@ -147,11 +191,51 @@ public class Artifact {
 		this.quantity = quantity;
 	}
 
+	public void incrementQuantity() {
+		this.quantity += 1;
+	}
+
+	public void decrementQuantity() {
+		this.quantity -= 1;
+	}
+
+	public Integer getTotalQuantity() {
+		return totalQuantity;
+	}
+
+	public void setTotalQuantity(Integer totalQuantity) {
+		this.totalQuantity = totalQuantity;
+	}
+
 	public String getRackLocation() {
 		return rackLocation;
 	}
 
 	public void setRackLocation(String rackLocation) {
 		this.rackLocation = rackLocation;
+	}
+
+ @Override
+	public String toString() {
+		String buf = " - ";
+		return id + buf + isbn + buf + title + buf + authors + buf + type;
+	}
+
+	public String toStringWithLoanHistory() {
+		String buf = " - ";
+		String res = id + buf + isbn + buf + title + buf + authors + buf + type + "\n";
+		for (LoanHistory loanHistory : loanHistories) {
+			res += "\t" + loanHistory.toStringWithoutArtifact() + "\n";
+		}
+		return res;
+	}
+
+	public String toStringWithReserveQueue() {
+		String buf = " - ";
+		String res = id + buf + isbn + buf + title + buf + authors + buf + type + "\n";
+		for (ReserveQueue reserveQueue : reserveQueues) {
+			res += "\t" + reserveQueue.toStringWithoutArtifact() + "\n";
+		}
+		return res;
 	}
 }

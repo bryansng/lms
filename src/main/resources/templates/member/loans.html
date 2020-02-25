@@ -32,73 +32,25 @@
 
     <main class="container-fluid mt-5 pl-5 pr-5">
         <div class="row">
-            <div class="col hello-title">Hello <span>Braddy Yeoh!</span></div>
+            <div class="col hello-title">Hello <span th:text=${member.fullName}></span>!</div>
         </div>
         <div class="row">
             <div class="col">
-                <div class="loans-title">
+                <div class="title mb-3">
                     Current Loans
                 </div>
             </div>
         </div>
-        <div class="row mb-5">
-            <div class="col">
+        <div class="row mb-5" >
+            <div class="col" th:each="loan : ${loans}">
                 <div class="card artifact-card">
                     <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
                     <div class="card-body">
-                        <h5 class="card-title">Artifact title</h5>
-                        <p class="card-text">
-                            Author
+                        <h5 class="card-title" th:text=${loan.getArtifact().title}></h5>
+                        <p class="card-text" th:text=${loan.getArtifact().authors}>
+                            
                         </p>
-                        <h4>Due:</h4>
-                        <div class="view-more">
-                            <a href="#" class="btn btn-outline-primary mr-2">Renew</a>
-                            <a href="#" class="btn btn-outline-primary ">View more</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card artifact-card">
-                    <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-                    <div class="card-body">
-                        <h5 class="card-title">Artifact title</h5>
-                        <p class="card-text">
-                            Author
-                        </p>
-                        <h4>Due:</h4>
-                        <div class="view-more">
-                            <a href="#" class="btn btn-outline-primary mr-2">Renew</a>
-                            <a href="#" class="btn btn-outline-primary ">View more</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card artifact-card">
-                    <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-                    <div class="card-body">
-                        <h5 class="card-title">Artifact title</h5>
-                        <p class="card-text">
-                            Author
-                        </p>
-                        <h4>Due:</h4>
-                        <div class="view-more">
-                            <a href="#" class="btn btn-outline-primary mr-2">Renew</a>
-                            <a href="#" class="btn btn-outline-primary ">View more</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card artifact-card">
-                    <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-                    <div class="card-body">
-                        <h5 class="card-title">Artifact title</h5>
-                        <p class="card-text">
-                            Author
-                        </p>
-                        <h4>Due:</h4>
+                        <h4>Due: <span th:text=${loan.getDueDate()}></span></h4>
                         <div class="view-more">
                             <a href="#" class="btn btn-outline-primary mr-2">Renew</a>
                             <a href="#" class="btn btn-outline-primary ">View more</a>
@@ -109,7 +61,7 @@
         </div>
         <div class="row pt-5">
             <div class="col">
-                <div class="loans-title">
+                <div class="title mb-3">
                     Historical Loans
                 </div>
             </div>

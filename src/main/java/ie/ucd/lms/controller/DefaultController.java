@@ -1,30 +1,30 @@
 package ie.ucd.lms.controller;
 
+import ie.ucd.lms.entity.Artifact;
+import ie.ucd.lms.entity.LoanHistory;
 import ie.ucd.lms.entity.Login;
 import ie.ucd.lms.entity.Member;
+import ie.ucd.lms.service.ArtifactService;
+import ie.ucd.lms.service.LoanHistoryService;
 import ie.ucd.lms.service.LoginService;
 import ie.ucd.lms.service.MemberService;
 
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -35,12 +35,39 @@ public class DefaultController {
   @Autowired
   private MemberService memberService;
 
+  @Autowired
+  private ArtifactService artifactService;
+
+  @Autowired
+  private LoanHistoryService LoanHistoryService;
+
   // Debugging purposes
   private static final Logger logger = LoggerFactory.getLogger(DefaultController.class);
 
   @GetMapping("/restricted")
   public String restrictedView() {
     return "restricted";
+  }
+
+  @PostMapping("/member/profile")
+  public String profileView(@Valid @ModelAttribute("member") Member member, BindingResult bindingResult, Model model,
+      RedirectAttributes redirectAttrs) {
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("invalid", "invalid");
+    }
+
+    return "/member/profile";
+  }
+
+  @GetMapping("member/view")
+  public String artifactView(@RequestParam(name = "id") Long id, Model model) {
+    Optional<Artifact> viewArtifact = artifactService.exists(id);
+
+    if (viewArtifact.isPresent()) {
+      model.addAttribute("artifact", viewArtifact.get());
+    }
+
+    return "member/view";
   }
 
   @GetMapping("member/historical")
@@ -50,7 +77,13 @@ public class DefaultController {
 
   @GetMapping("member/loans")
   public String loansView(Model model) {
-
+    Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
+    List<LoanHistory> loans = LoanHistoryService.findByMember(member);
+    // logger.info(loans.get(1).getTitle());
+    logger.info(loans.toString());
+    // logger.info(loans.get(1).getReturnOn().getM.toString());
+    model.addAttribute("member", member);
+    model.addAttribute("loans", loans);
     return "member/loans";
   }
 
@@ -73,7 +106,7 @@ public class DefaultController {
 
   @PostMapping("/login")
   public String loginMember(@Valid @ModelAttribute("member") Login login, BindingResult bindingResult, Model model,
-      ModelMap modelMap, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+      HttpServletRequest request, RedirectAttributes redirectAttrs) {
 
     if (bindingResult.hasErrors() || !loginService.exists(login)) {
       model.addAttribute("loginError", true);

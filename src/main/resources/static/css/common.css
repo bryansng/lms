@@ -31,13 +31,8 @@
 }
 
 .hello-title {
-  font-size: 32px;
-  margin-bottom: 20px;
-}
-
-.loans-title {
-  font-size: 32px;
-  margin-bottom: 20px;
+  font-size: 36px;
+  margin-bottom: 24px;
 }
 
 .loan-year {
@@ -46,6 +41,6 @@
   margin-top: 20px;
 }
 
-.historical-loan-title {
+.title {
   font-size: 32px;
 }
