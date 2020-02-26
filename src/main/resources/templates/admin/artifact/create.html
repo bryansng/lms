@@ -13,14 +13,106 @@
 
   <!-- Import CSS -->
   <link rel="stylesheet" th:href="@{~/css/common.css}" />
-  <title>Home | Wet LMS</title>
+  <title>Create new Artifact | Wet LMS</title>
 </head>
 
 <body class="m-0">
   <header th:replace="admin/fragments/header.html"></header>
 
   <main>
-    It works
+    <div class="w-100 w-lg-75 my-4 mx-auto container">
+      <div th:classappend="${#strings.isEmpty(previousUpdateStatus)} ? mb-3 : mb-0" class="d-flex flex-row justify-content-between align-items-start">
+        <h3 class="">New Artifact</h3>
+      </div>
+      <div th:replace="admin/fragments/viewUpdateStatus.html"></div>
+      <div class="d-flex flex-row justify-content-between w-100 mx-auto py-3 px-0 container">
+        <div class="w-25 container mx-2">
+          <img th:src="@{~/images/profile/kfc.jpg}" style="width: 100%;"/> <!-- STAND IN IMAGE - CANNOT ADD/CHANGE  -->
+        </div>
+        <div class="w-75 container mx-2">
+          <form th:action="@{/admin/artifacts/create}" method="POST" th:id="createForm">
+            <div class="d-flex flex-column justify-content-center">
+              <label for="isbn" class="m-0 font-weight-bold">ISBN*</label>
+              <input type="text" class="form-control border border-dark rounded-0 text-dark my-2" name="isbn"
+                id="isbn" style="font-weight: 500;" placeholder="9781627792127" th:value="${previousISBN}" required />
+              <label for="title" class="m-0 font-weight-bold">Title</label>
+              <input type="text" class="form-control border border-dark rounded-0 text-dark my-2" name="title"
+                id="title" style="font-weight: 500;" placeholder="SISTEM Handbook" th:value="${previousTitle}" />
+              <label for="authors" class="m-0 font-weight-bold">Authors</label>
+              <input type="text" class="form-control border border-dark rounded-0 text-dark my-2" name="authors"
+                id="authors" style="font-weight: 500;" placeholder="John Doe, Jane Smith" th:value="${previousAuthors}" />
+              <label for="description" class="m-0 font-weight-bold">Description</label>
+              <textarea  type="text" class="form-control border border-dark rounded-0 text-dark my-2" name="description"
+                id="description" style="font-weight: 500; min-height: 100px;" placeholder="SISTEM is Ireland's largest tech conference for students, with the mission to inspire the next generation of tech. SISTEM 2020 will take place in University College Dublin. This is our third year organising this conference and the event has grown in scale and ambition since our first edition in 2018. Over 200 of Ireland's most engaged students in computing are expected to attend this event." th:value="${previousDescription}"></textarea>
+              <div class="container p-0">
+                <div class="row">
+                  <div class="col">
+                    <label for="publishers" class="m-0 font-weight-bold">Publishers</label>
+                    <input type="text" class="form-control border border-dark rounded-0 text-dark my-2" name="publishers"
+                    id="publishers" style="font-weight: 500;" placeholder="Intersocs IE" th:value="${previousPublishers}" />
+                  </div>
+                  <div class="col">
+                    <label for="publishedOn" class="m-0 font-weight-bold">Published Date*</label>
+                    <input type="date" class="form-control border border-dark rounded-0 text-dark my-2" name="publishedOn"
+                    id="publishedOn" style="font-weight: 500;" placeholder="2020-02-29" th:value="${#strings.isEmpty(previousPublishedOn)} ? '2020-02-29' : ${previousPublishedOn}" required />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label for="type" class="m-0 font-weight-bold">Artifact Type*</label>
+                    <select id="type" name="type" class="form-control border border-dark rounded-0 text-dark my-2" style="font-weight: 500;" required>
+                      <option value="" th:selected="${#strings.isEmpty(previousType)}" disabled>All</option>
+                      <option value="book" th:selected="${previousType == 'book'}">Book</option>
+                      <option value="cd" th:selected="${previousType == 'cd'}">CD</option>
+                      <option value="dvd" th:selected="${previousType == 'dvd'}">DVD</option>
+                      <option value="comic" th:selected="${previousType == 'comic'}">Comic</option>
+                      <option value="magazine" th:selected="${previousType == 'magazine'}">Magazine</option>
+                      <option value="pdf" th:selected="${previousType == 'pdf'}">PDF</option>
+                    </select>
+                  </div>
+                  <div class="col">
+                    <label for="genre" class="m-0 font-weight-bold">Genre</label>
+                    <input type="text" class="form-control border border-dark rounded-0 text-dark my-2" name="genre"
+                    id="genre" style="font-weight: 500;" placeholder="Guidebook" th:value="${previousGenre}" />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <label for="rackLocation" class="m-0 font-weight-bold">Rack Location</label>
+                    <input type="text" class="form-control border border-dark rounded-0 text-dark my-2" name="rackLocation"
+                    id="rackLocation" style="font-weight: 500;" placeholder="B106" th:value="${previousRackLocation}" />
+                  </div>
+                  <div class="col">
+                    <label for="itemPrice" class="m-0 font-weight-bold">Price</label>
+                    <input type="text" class="form-control border border-dark rounded-0 text-dark my-2" name="itemPrice"
+                    id="itemPrice" style="font-weight: 500;" placeholder="12.00" th:value="${previousItemPrice}" />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label for="quantity" class="m-0 font-weight-bold">In Stock Quantity*</label>
+                    <input type="text" class="form-control border border-dark rounded-0 text-dark my-2" name="quantity"
+                    id="quantity" style="font-weight: 500;" placeholder="1" th:value="${#strings.isEmpty(previousQuantity)} ? '1' : ${previousQuantity}" required />
+                  </div>
+                  <div class="col">
+                    <label for="totalQuantity" class="m-0 font-weight-bold">Total Quantity*</label>
+                    <input type="text" class="form-control border border-dark rounded-0 text-dark my-2" name="totalQuantity"
+                    id="totalQuantity" style="font-weight: 500;" placeholder="1" th:value="${#strings.isEmpty(previousTotalQuantity)} ? '1' : ${previousTotalQuantity}" required />
+                  </div>
+                </div>
+              </div>
+              <input type="text" class="d-none" id="updateStatus" name="updateStatus" />
+              <input type="text" class="d-none" id="errorMessage" name="errorMessage" />
+            </div>
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="px-4 py-2 btn btn-lg border border-dark text-dark hover">Create Artifact</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
   </main>
 
   <footer></footer>
