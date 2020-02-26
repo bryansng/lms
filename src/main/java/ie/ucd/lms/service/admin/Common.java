@@ -6,11 +6,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Common {
-	public static int PAGINATION_ROWS = 15;
-	public static int DAYS_TILL_EXPIRED = 4;
-	public static int DAYS_TILL_RETURNED = 7;
-	public static int DAYS_TO_RENEW = 3;
-	public static int DAYS_TO_LOAN = 7;
+	public static final int PAGINATION_ROWS = 15;
+	public static final int SEARCH_BAR_ROWS = 5;
+	public static final int DAYS_TILL_EXPIRED = 4;
+	public static final int DAYS_TILL_RETURNED = 7;
+	public static final int DAYS_TO_RENEW = 3;
+	public static final int DAYS_TO_LOAN = 7;
 
 	public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

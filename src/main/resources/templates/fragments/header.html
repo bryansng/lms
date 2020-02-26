@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+</head>
+
+<body>
+  <header th:fragment="signedIn">
+    <nav class="navbar navbar-expand-lg navbar-light border-dark p-0 shadow px-2">
+      <div class="d-flex justify-content-between align-items-center h-100 w-100">
+        <div class="d-flex justify-content-between align-items-center h-100" style="width: 60%;">
+          <a class="navbar-brand m-0 p-0 h-100 hover-no-bg" th:href="@{/admin/dashboard}">
+            <div class="d-flex flex-row justify-content-center align-items-center h-100">
+              <img th:src="@{~/images/logo/logo.png}" class="logo" />
+              <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
+                <h4 class="mb-0">Wet LMS</h4>
+              </div>
+            </div>
+          </a>
+          <div class="d-none d-lg-block" style="width: 52.5%;">
+            <form action="#" th:action="@{/search}" method="GET" th:id="searchBarForm">
+              <div class="quick-search-container quick-search-dropdown">
+                <input type="text" autocomplete="off" placeholder="Search artifact"
+                  class="form-control border border-dark rounded-0 text-dark" name="searchQuery" />
+                <button type="submit">
+                  <img th:src="@{~/images/search.png}" class="search-glass hover-no-bg" />
+                </button>
+                <div class="search-spinner">
+                  <div class="sk-chase">
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                  </div>
+                </div>
+                <div class="quick-search-dropdown-content">
+                  <div class="px-3 py-2 quick-search-dropdown-hover hover-only-bg border-bottom">
+                    <div class="d-flex justify-content-start align-items-center">
+                      <div class="bg-dark" style="width: 2.5rem; height: 2.5rem"></div>
+                      <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
+                        <div class="font-weight-bolder">Artifact Title</div>
+                        <div>by Authors</div>
+                      </div>
+                    </div>
+                  </div>
+                  <a href="#" class="px-3 py-2 quick-search-dropdown-seeAllResults-hover text-center">See all results
+                    for
+                    "searchQuery HERE"</a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="d-flex flex-row justify-content-between align-items-center h-100">
+          <div class="d-none d-lg-flex flex-row justify-content-between align-items-center nav-a-tag-list h-100">
+            <a th:href="@{/member/dashboard}" class="navbar-a navbar-hover px-3 py-2 mx-1">Dashboard</a>
+            <a th:href="@{/member/loans/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Current Loans</a>
+          </div>
+          <div class="d-flex flex-row justify-content-center align-items-center h-100 dropdown mx-3 px-2">
+            <img th:src="@{~/images/profile/user64px.png}" class="profile-img hover" />
+            <div class="dropdown-content profile-dropdown-content">
+              <a href="#" class="px-4 py-2 dropdown-hover">
+                <div class="d-flex flex-row justify-content-start align-items-center dropdown-profile-img hover-no-bg">
+                  <img th:src="@{~/images/profile/user64px.png}" class="profile-img" />
+                  <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
+                    <div>Full Name HERE</div>
+                    <div>Email HERE</div>
+                  </div>
+                </div>
+              </a>
+              <a th:href="@{/member/dashboard}" class="px-4 py-2 dropdown-hover">Dashboard</a>
+              <a th:href="@{/member/current-loans}" class="px-4 py-2 dropdown-hover">Current Loans</a>
+              <a th:href="@{/member/historical-loans}" class="px-4 py-2 dropdown-hover">Historical Loans</a>
+              <div class="mx-3 divider"></div>
+              <a href="#" class="px-4 py-2 dropdown-hover">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <header th:fragment="notSignedIn">
+    <nav class="navbar navbar-expand-lg navbar-light border-dark p-0 shadow px-2">
+      <div class="d-flex justify-content-between align-items-center h-100 w-100">
+        <div class="d-flex justify-content-between align-items-center h-100" style="width: 60%;">
+          <a class="navbar-brand m-0 p-0 h-100 hover-no-bg" th:href="@{/admin/dashboard}">
+            <div class="d-flex flex-row justify-content-center align-items-center h-100">
+              <img th:src="@{~/images/logo/logo.png}" class="logo" />
+              <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
+                <h4 class="mb-0">Wet LMS</h4>
+              </div>
+            </div>
+          </a>
+          <div class="d-none d-lg-block" style="width: 52.5%;">
+            <form action="#" th:action="@{/search}" method="GET" th:id="searchBarForm">
+              <div class="quick-search-container quick-search-dropdown">
+                <input type="text" autocomplete="off" placeholder="Search artifact"
+                  class="form-control border border-dark rounded-0 text-dark" name="searchQuery" />
+                <button type="submit">
+                  <img th:src="@{~/images/search.png}" class="search-glass hover-no-bg" />
+                </button>
+                <div class="search-spinner">
+                  <div class="sk-chase">
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                  </div>
+                </div>
+                <div class="quick-search-dropdown-content">
+                  <div class="px-3 py-2 quick-search-dropdown-hover hover-only-bg border-bottom">
+                    <div class="d-flex justify-content-start align-items-center">
+                      <div class="bg-dark" style="width: 2.5rem; height: 2.5rem"></div>
+                      <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
+                        <div class="font-weight-bolder">Artifact Title</div>
+                        <div>by Authors</div>
+                      </div>
+                    </div>
+                  </div>
+                  <a href="#" class="px-3 py-2 quick-search-dropdown-seeAllResults-hover text-center">See all results
+                    for
+                    "searchQuery HERE"</a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="d-flex flex-row justify-content-between align-items-center h-100">
+          <div class="d-flex flex-row justify-content-center align-items-center h-100 dropdown">
+            <div class="navbar-a navbar-hover px-3 px-lg-5 py-2">
+              Log In
+            </div>
+            <div class="dropdown-content logIn-dropdown-content" id="logInDropdown">
+              <form action="#" th:action="@{/login}" method="POST" th:id="logInForm">
+                <div class="px-4 py-3 text-center font-weight-bold">Log In and Start Reserving!</div>
+                <div class="mx-3 divider"></div>
+                <div class="px-4 py-2">
+                  <div class="form__group">
+                    <input type="email" name="email" id="logInEmail" placeholder="john.doe@mail.com"
+                      th:value="${previousEmail}" required />
+                    <label for="logInEmail">Email</label>
+                  </div>
+                </div>
+                <div class="px-4 py-2">
+                  <div class="form__group">
+                    <input type="password" name="password" id="logInPassword" placeholder="&nbsp;" required />
+                    <label for="logInPassword">Password</label>
+                  </div>
+                </div>
+                <div class="px-4 py-3 text-right">
+                  <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Log In</button>
+                </div>
+                <!-- <div class="mx-3 mt-1 divider"></div>
+                <div class="px-4 py-2 dropdown-hover text-center" style="font-size: 0.9rem;"
+                  onclick="logInFromSignUp()">
+                  Don't have an account? Sign Up
+                </div> -->
+              </form>
+            </div>
+          </div>
+          <div class="d-flex flex-row justify-content-center align-items-center h-100 dropdown mr-1">
+            <div class="navbar-a navbar-hover px-3 px-lg-5 py-2">
+              Sign Up
+            </div>
+            <div class="dropdown-content signUp-dropdown-content" id="signUpDropdown">
+              <form action="#" th:action="@{/signup}" method="POST" th:id="signUpForm">
+                <div class="px-4 py-3 text-center font-weight-bold">Sign Up and Start Reading!</div>
+                <div class="mx-3 divider"></div>
+                <div class="px-4 py-2">
+                  <div class="form__group">
+                    <input type="text" name="fullName" id="signUpFullName" placeholder="John Doe"
+                      th:value="${previousFullName}" required />
+                    <label for="signUpFullName">Full Name</label>
+                  </div>
+                </div>
+                <div class="px-4 py-2">
+                  <div class="form__group">
+                    <input type="email" name="email" id="signUpEmail" placeholder="john.doe@mail.com"
+                      th:value="${previousEmail}" required />
+                    <label for="signUpEmail">Email</label>
+                  </div>
+                </div>
+                <div class="px-4 py-2">
+                  <div class="form__group">
+                    <input type="password" name="password" id="signUpPassword" placeholder="&nbsp;" required />
+                    <label for="signUpPassword">Password</label>
+                  </div>
+                </div>
+                <div class="px-4 py-3 text-right">
+                  <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Sign Up</button>
+                </div>
+                <!-- <div class="mx-3 mt-1 divider"></div>
+                <a href="#" class="px-4 py-2 dropdown-hover text-center" style="font-size: 0.9rem;"
+                  onclick="signUpFromLogIn()">
+                  Already have an account? Log In
+                </a> -->
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Include JavaScript from static folder -->
+    <script type="text/javascript" src="/js/navbarSearch.js"></script>
+    <script type="text/javascript" src="/js/navbarAuthentication.js"></script>
+  </header>
+</body>
+
+</html>

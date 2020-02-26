@@ -1,3 +1,28 @@
+function logInForm(id) {
+  var form = $("#logInForm");
+  $.ajax({
+    url: form.attr("action"),
+    data: form.serialize(),
+    type: "post",
+    success: function(result) {
+      // Do something with the response.
+      // Might want to check for errors here.
+      if (result === "true") {
+        // updateStatusSuccess();
+      } else {
+        // updateStatusFail();
+        // updateErrorMessage(
+        //   "Unable to loan. Artifact not in stock. No change made to the database."
+        // );
+      }
+      // triggerRefresh();
+    },
+    error: function(error) {
+      // Here you can handle exceptions thrown by the server or your controller.
+    }
+  });
+}
+
 function loanForm(id) {
   var form = $("#loan-form-" + id);
   $.ajax({
