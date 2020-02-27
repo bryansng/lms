@@ -69,7 +69,7 @@ public class ArtifactController {
       @RequestParam(name = "quantity", required = true) String quantity,
       @RequestParam(name = "totalQuantity", required = true) String totalQuantity,
       @RequestParam(name = "rackLocation", required = false) String rackLocation,
-      @RequestParam(defaultValue = "", required = false) String createStatus,
+      @RequestParam(defaultValue = "", required = false) String updateStatus,
       @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
     if (artifactService.update(stringId, isbn, type, genre, authors, title, subtitle, description, publishers,
         publishedOn, itemPrice, quantity, totalQuantity, rackLocation)) {
@@ -103,7 +103,7 @@ public class ArtifactController {
       model.addAttribute("previousRackLocation", rackLocation);
       model.addAttribute("previousUpdateStatus", "fail");
       model.addAttribute("previousUpdateMessage", "");
-      model.addAttribute("previousErrorMessage", "Failed to Update. Please try again.");
+      model.addAttribute("previousErrorMessage", "Failed to Update Artifact. Please try again.");
       return "admin/artifact/edit.html";
     }
   }
@@ -123,7 +123,7 @@ public class ArtifactController {
       @RequestParam(name = "quantity", defaultValue = "1", required = true) String quantity,
       @RequestParam(name = "totalQuantity", defaultValue = "1", required = true) String totalQuantity,
       @RequestParam(name = "rackLocation", required = false) String rackLocation,
-      @RequestParam(defaultValue = "", required = false) String createStatus,
+      @RequestParam(defaultValue = "", required = false) String updateStatus,
       @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
     if (artifactService.create(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn,
         itemPrice, quantity, totalQuantity, rackLocation)) {
@@ -154,7 +154,7 @@ public class ArtifactController {
       model.addAttribute("previousRackLocation", rackLocation);
       model.addAttribute("previousUpdateStatus", "fail");
       model.addAttribute("previousUpdateMessage", "");
-      model.addAttribute("previousErrorMessage", "Failed to Create. Please try again.");
+      model.addAttribute("previousErrorMessage", "Failed to Create Artifact. Please try again.");
       return "admin/artifact/create.html";
     }
   }
