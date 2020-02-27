@@ -64,13 +64,8 @@
                       <select id="status" name="status" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} : ${previousStatus}" required>
                         <!-- <option value="" th:selected="${#strings.isEmpty(previousType)}" hidden disabled></option> -->
                         <option value="issued" th:selected="${previousStatus == 'issued'}">Issued</option>
-                        <!-- <option value="cd" th:selected="${previousType == 'cd'}">CD</option>
-                        <option value="dvd" th:selected="${previousType == 'dvd'}">DVD</option>
-                        <option value="comic" th:selected="${previousType == 'comic'}">Comic</option>
-                        <option value="magazine" th:selected="${previousType == 'magazine'}">Magazine</option>
-                        <option value="pdf" th:selected="${previousType == 'pdf'}">PDF</option> -->
                       </select>
-                      <label for="status">Loan Status*</label>
+                      <label for="status">Artifact Status*</label>
                     </div>
                   </div>
                 </div>
