@@ -42,7 +42,10 @@ public class ArtifactController {
 
   @GetMapping("/admin/artifacts/edit")
   public String artifactsEditGet(@RequestParam(name = "id") String stringId, Model model) {
-    model.addAttribute("artifact", artifactRepository.findById(Common.convertStringToLong(stringId)));
+    Artifact artifact = artifactRepository.findById(Common.convertStringToLong(stringId)).get();
+    String publishedOn = artifact.getPublishedOn().format(Common.dateFormatter);
+    model.addAttribute("artifact", artifact);
+    model.addAttribute("publishedOn", publishedOn);
     return "admin/artifact/edit.html";
   }
 
@@ -51,10 +54,59 @@ public class ArtifactController {
     return "admin/artifact/create.html";
   }
 
-  // @PostMapping("/admin/artifacts/edit")
-  // public String artifactsEditPost(@RequestParam(name = "id") String stringId, Model model) {
-  // 	return artifactService.update(stringId).toString();
-  // }
+  @PostMapping("admin/artifacts/edit")
+  public String artifactsEditPost(@RequestParam(defaultValue = "1", required = false) Integer page,
+      @RequestParam(name = "id") String stringId, @RequestParam(name = "isbn", required = true) String isbn,
+      @RequestParam(name = "type", required = true) String type,
+      @RequestParam(defaultValue = "", required = false) String genre,
+      @RequestParam(name = "authors", required = false) String authors,
+      @RequestParam(name = "title", required = false) String title,
+      @RequestParam(defaultValue = "", required = false) String subtitle,
+      @RequestParam(name = "description", required = false) String description,
+      @RequestParam(name = "publishers", required = false) String publishers,
+      @RequestParam(name = "publishedOn", required = true) String publishedOn,
+      @RequestParam(name = "itemPrice", required = false) String itemPrice,
+      @RequestParam(name = "quantity", required = true) String quantity,
+      @RequestParam(name = "totalQuantity", required = true) String totalQuantity,
+      @RequestParam(name = "rackLocation", required = false) String rackLocation,
+      @RequestParam(defaultValue = "", required = false) String createStatus,
+      @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+    if (artifactService.update(stringId, isbn, type, genre, authors, title, subtitle, description, publishers,
+        publishedOn, itemPrice, quantity, totalQuantity, rackLocation)) {
+      Page<Artifact> artifacts = artifactService.search("", type, page - 1);
+      model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
+      model.addAttribute("totalPages", artifacts.getTotalPages());
+      model.addAttribute("currentPage", page + 1);
+      model.addAttribute("artifacts", artifacts);
+
+      model.addAttribute("previousQuery", "");
+      model.addAttribute("previousType", type);
+      model.addAttribute("previousUpdateStatus", "success");
+      model.addAttribute("previousUpdateMessage", "Updated Succesfully.");
+      model.addAttribute("previousErrorMessage", "");
+      return "admin/artifact/view.html";
+    } else {
+      Artifact artifact = artifactRepository.findById(Common.convertStringToLong(stringId)).get();
+      model.addAttribute("artifact", artifact);
+      model.addAttribute("publishedOn", publishedOn);
+      model.addAttribute("previousISBN", isbn);
+      model.addAttribute("previousType", type);
+      model.addAttribute("previousGenre", genre);
+      model.addAttribute("previouseAuthors", authors);
+      model.addAttribute("previouseTitle", title);
+      model.addAttribute("previousDescription", description);
+      model.addAttribute("previousPublishers", publishers);
+      model.addAttribute("previousPublishedOn", publishedOn);
+      model.addAttribute("previousItemPrice", itemPrice);
+      model.addAttribute("previousQuantity", quantity);
+      model.addAttribute("previousTotalQuantity", totalQuantity);
+      model.addAttribute("previousRackLocation", rackLocation);
+      model.addAttribute("previousUpdateStatus", "fail");
+      model.addAttribute("previousUpdateMessage", "");
+      model.addAttribute("previousErrorMessage", "Failed to Update. Please try again.");
+      return "admin/artifact/edit.html";
+    }
+  }
 
   @PostMapping("admin/artifacts/create")
   public String artifactsCreatePost(@RequestParam(defaultValue = "1", required = false) Integer page,
