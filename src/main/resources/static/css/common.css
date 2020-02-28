@@ -175,11 +175,15 @@ u {
 
 .form__group textarea:focus::placeholder,
 .form__group input:focus::placeholder,
-.form__group select:focus>option,
 .form__field:focus::placeholder {
   color: gray;
   font-weight: normal;
   transition: 0.2s;
+}
+
+
+.form__group select:focus>option {
+  color: black;
 }
 
 .form__group select:invalid~label,

@@ -34,19 +34,19 @@
             <div class="d-flex flex-column justify-content-center">
               <div class="form__group my-1">
                 <input type="text" name="isbn"
-                id="isbn" placeholder="${loan.isbn}" th:value="${#strings.isEmpty(previousISBN)} ? ${loan.isbn} : ${previousISBN}" required />
+                id="isbn" th:placeholder="${loan.isbn}" th:value="${#strings.isEmpty(previousISBN)} ? ${loan.isbn} : ${previousISBN}" required />
                 <label for="isbn">ISBN*</label>
               </div>
 
               <div class="form__group my-1">
                 <input type="text" name="title"
-                id="title" placeholder="${title}" th:value="${#strings.isEmpty(previousTitle)} ? ${title} : ${previousTitle}" />
+                id="title" th:placeholder="${title}" th:value="${#strings.isEmpty(previousTitle)} ? ${title} : ${previousTitle}" />
                 <label for="title">Title</label>
               </div>
 
               <div class="form__group my-1">
                 <input type="text" name="artifactID"
-                id="artifactID" placeholder="${loan.id}" th:value="${#strings.isEmpty(previousId)} ? ${loan.id} : ${previousId}" />
+                id="artifactID" th:placeholder="${loan.id}" th:value="${#strings.isEmpty(previousId)} ? ${loan.id} : ${previousId}" />
                 <label for="id">Artifact ID</label>
               </div>
 
@@ -55,15 +55,21 @@
                   <div class="col">
                     <div class="form__group my-1">
                       <input type="text" name="memberID"
-                      id="memberID" placeholder="${loan.memberId}" th:value="${#strings.isEmpty(previousMemberID)} ? ${loan.memberId} : ${previousMemberID}" />
+                      id="memberID" th:placeholder="${loan.memberId}" th:value="${#strings.isEmpty(previousMemberID)} ? ${loan.memberId} : ${previousMemberID}" />
                       <label for="memberID">Issused to*</label>
                     </div>
                   </div>
                   <div class="col">
                     <div class="form__group my-1">
-                      <select id="status" name="status" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} : ${previousStatus}" required>
-                        <!-- <option value="" th:selected="${#strings.isEmpty(previousType)}" hidden disabled></option> -->
-                        <option value="issued" th:selected="${previousStatus == 'issued'}">Issued</option>
+                      <select id="status" name="status" required>
+                        <option value="" th:selected="${#strings.isEmpty(previousStatus)}" hidden disabled></option>
+                        <option value="issued" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'issued': ${previousStatus} == 'issued'">Issued</option>
+                        <!-- <option value="renewed" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'renewed': ${previousStatus} == 'renewed'">Renewed</option>
+                        <option value="restocked" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'restocked': ${previousStatus} == 'restocked'">Restocked</option>
+                        <option value="delayed" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'delayed': ${previousStatus} == 'delayed'">Delayed</option>
+                        <option value="returned" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'returned': ${previousStatus} == 'returned'">Returned</option> -->
+                        <option value="lost" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'lost': ${previousStatus} == 'lost'">Lost</option>
+                        <!-- <option value="reserved" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'reserved': ${previousStatus} == 'reserved'">Reserved</option> -->
                       </select>
                       <label for="status">Artifact Status*</label>
                     </div>
@@ -73,14 +79,14 @@
                   <div class="col">
                     <div class="form__group my-1">
                       <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="returnOn"
-                      id="returnOn" placeholder="${returnOn}" th:value="${#strings.isEmpty(previousReturnOn)} ? ${returnOn} : ${previousReturnOn}" required />
+                      id="returnOn" th:placeholder="${returnOn}" th:value="${#strings.isEmpty(previousReturnOn)} ? ${returnOn} : ${previousReturnOn}" required />
                       <label for="returnOn">Return Date*</label>
                     </div>
                   </div>
                   <div class="col">
                     <div class="form__group my-1">
                       <input type="text" name="fine"
-                      id="fine" placeholder="${loan.fine}" th:value="${#strings.isEmpty(previousFine)} ? ${loan.fine} : ${previousFine}" />
+                      id="fine" th:placeholder="${loan.fine}" th:value="${#strings.isEmpty(previousFine)} ? ${loan.fine} : ${previousFine}" />
                       <label for="fine">Fine</label>
                     </div>
                   </div>

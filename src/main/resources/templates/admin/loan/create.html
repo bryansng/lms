@@ -78,7 +78,7 @@
                   <div class="col">
                     <div class="form__group my-1">
                       <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="returnOn"
-                      id="returnOn" placeholder="${returnOn}" th:value="${#strings.isEmpty(previousReturnOn)} ? ${returnOn} : ${previousReturnOn}" required />
+                      id="returnOn" th:placeholder="${returnOn}" th:value="${#strings.isEmpty(previousReturnOn)} ? ${returnOn} : ${previousReturnOn}" required />
                       <label for="returnOn">Return Date*</label>
                     </div>
                   </div>

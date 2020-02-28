@@ -74,7 +74,7 @@
                   <div class="col">
                     <div class="form__group my-1">
                       <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="issuedOn"
-                      id="issuedOn" placeholder="${issuedOn}" th:value="${#strings.isEmpty(previousIssuedOn)} ? ${issuedOn} : ${previousIssuedOn}" required />
+                      id="issuedOn" th:placeholder="${issuedOn}" th:value="${#strings.isEmpty(previousIssuedOn)} ? ${issuedOn} : ${previousIssuedOn}" required />
                       <label for="issuedOn">Issued Date*</label>
                     </div>
                   </div>
