@@ -57,4 +57,28 @@ public class ArtifactController {
 		return artifactService.delete(stringId).toString();
 	}
 
+	@GetMapping("/artifacts/search")
+	@ResponseBody
+	public Page<Artifact> artifactsSearch(@RequestParam(defaultValue = "", required = false) String searchQuery) {
+		System.out.println("searchQuery: " + searchQuery);
+		return artifactService.search(searchQuery, "", 0, Common.QUICK_SEARCH_ROWS);
+	}
+
+	/* @GetMapping("/artifacts/search")
+	@ResponseBody
+	public Page<Artifact> artifactsSearch(@RequestParam(defaultValue = "", required = false) String searchQuery,
+			@RequestParam(defaultValue = "", required = false) String type,
+			@RequestParam(defaultValue = "", required = false) String updateStatus,
+			@RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+		Page<Artifact> artifacts = artifactService.search(searchQuery, type, 0);
+		model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
+		model.addAttribute("totalPages", artifacts.getTotalPages());
+		model.addAttribute("artifacts", artifacts);
+	
+		model.addAttribute("previousQuery", searchQuery);
+		model.addAttribute("previousType", type);
+		model.addAttribute("previousUpdateStatus", updateStatus);
+		model.addAttribute("previousErrorMessage", errorMessage);
+		return artifacts;
+	} */
 }

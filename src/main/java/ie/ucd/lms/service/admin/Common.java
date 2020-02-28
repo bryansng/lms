@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Common {
 	public static final int PAGINATION_ROWS = 15;
-	public static final int SEARCH_BAR_ROWS = 5;
+	public static final int QUICK_SEARCH_ROWS = 5;
 	public static final int DAYS_TILL_EXPIRED = 4;
 	public static final int DAYS_TILL_RETURNED = 7;
 	public static final int DAYS_TO_RENEW = 3;

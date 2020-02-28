@@ -97,7 +97,7 @@ u {
 	padding: 4px 32px 4px 8px;
 }
 
-.quick-search-container button {
+.quick-search-container label {
 	position: absolute;
 	top: 50%;
 	right: -7px;
@@ -145,14 +145,13 @@ u {
 	display: block;
 }
 
-/* Show the dropdown menu on hover */
-.quick-search-dropdown:hover .quick-search-dropdown-content {
+/* Show the dropdown menu on ... */
+.quick-search-dropdown input:focus~.quick-search-dropdown-content,
+/* .quick-search-dropdown:hover .quick-search-dropdown-content, */
+.quick-search-dropdown-content:hover {
 	display: block;
 	transition-duration: 1s;
 }
-
-
-
 
 
 

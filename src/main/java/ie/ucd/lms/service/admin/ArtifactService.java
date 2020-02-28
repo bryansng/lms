@@ -14,12 +14,16 @@ public class ArtifactService {
 	ArtifactRepository artifactRepository;
 
 	public Page<Artifact> search(String stringToSearch, String type, int pageNum) {
+		return this.search(stringToSearch, type, pageNum, Common.PAGINATION_ROWS);
+	}
+
+	public Page<Artifact> search(String stringToSearch, String type, int pageNum, int pageSize) {
 		Long id = Common.convertStringToLong(stringToSearch);
 
 		Page<Artifact> res = artifactRepository
 				.findByIdAndTypeContainsIgnoreCaseOrTitleContainsIgnoreCaseAndTypeContainsIgnoreCaseOrIsbnContainsIgnoreCaseAndTypeContainsIgnoreCaseOrAuthorsContainsIgnoreCaseAndTypeContainsIgnoreCase(
 						id, type, stringToSearch, type, stringToSearch, type, stringToSearch, type,
-						PageRequest.of(pageNum, Common.PAGINATION_ROWS));
+						PageRequest.of(pageNum, pageSize));
 		return res;
 	}
 

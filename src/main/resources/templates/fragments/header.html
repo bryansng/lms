@@ -17,41 +17,7 @@
               </div>
             </div>
           </a>
-          <div class="d-none d-lg-block" style="width: 52.5%;">
-            <form action="#" th:action="@{/search}" method="GET" th:id="searchBarForm">
-              <div class="quick-search-container quick-search-dropdown">
-                <input type="text" autocomplete="off" placeholder="Search artifact"
-                  class="form-control border border-dark rounded-0 text-dark" name="searchQuery" />
-                <button type="submit">
-                  <img th:src="@{~/images/search.png}" class="search-glass hover-no-bg" />
-                </button>
-                <div class="search-spinner">
-                  <div class="sk-chase">
-                    <div class="sk-chase-dot"></div>
-                    <div class="sk-chase-dot"></div>
-                    <div class="sk-chase-dot"></div>
-                    <div class="sk-chase-dot"></div>
-                    <div class="sk-chase-dot"></div>
-                    <div class="sk-chase-dot"></div>
-                  </div>
-                </div>
-                <div class="quick-search-dropdown-content">
-                  <div class="px-3 py-2 quick-search-dropdown-hover hover-only-bg border-bottom">
-                    <div class="d-flex justify-content-start align-items-center">
-                      <div class="bg-dark" style="width: 2.5rem; height: 2.5rem"></div>
-                      <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
-                        <div class="font-weight-bolder">Artifact Title</div>
-                        <div>by Authors</div>
-                      </div>
-                    </div>
-                  </div>
-                  <a href="#" class="px-3 py-2 quick-search-dropdown-seeAllResults-hover text-center">See all results
-                    for
-                    "searchQuery HERE"</a>
-                </div>
-              </div>
-            </form>
-          </div>
+          <div th:replace="this :: navbarQuickSearch"></div>
         </div>
         <div class="d-flex flex-row justify-content-between align-items-center h-100">
           <div class="d-none d-lg-flex flex-row justify-content-between align-items-center nav-a-tag-list h-100">
@@ -94,41 +60,7 @@
               </div>
             </div>
           </a>
-          <div class="d-none d-lg-block" style="width: 52.5%;">
-            <form action="#" th:action="@{/search}" method="GET" th:id="searchBarForm">
-              <div class="quick-search-container quick-search-dropdown">
-                <input type="text" autocomplete="off" placeholder="Search artifact"
-                  class="form-control border border-dark rounded-0 text-dark" name="searchQuery" />
-                <button type="submit">
-                  <img th:src="@{~/images/search.png}" class="search-glass hover-no-bg" />
-                </button>
-                <div class="search-spinner">
-                  <div class="sk-chase">
-                    <div class="sk-chase-dot"></div>
-                    <div class="sk-chase-dot"></div>
-                    <div class="sk-chase-dot"></div>
-                    <div class="sk-chase-dot"></div>
-                    <div class="sk-chase-dot"></div>
-                    <div class="sk-chase-dot"></div>
-                  </div>
-                </div>
-                <div class="quick-search-dropdown-content">
-                  <div class="px-3 py-2 quick-search-dropdown-hover hover-only-bg border-bottom">
-                    <div class="d-flex justify-content-start align-items-center">
-                      <div class="bg-dark" style="width: 2.5rem; height: 2.5rem"></div>
-                      <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
-                        <div class="font-weight-bolder">Artifact Title</div>
-                        <div>by Authors</div>
-                      </div>
-                    </div>
-                  </div>
-                  <a href="#" class="px-3 py-2 quick-search-dropdown-seeAllResults-hover text-center">See all results
-                    for
-                    "searchQuery HERE"</a>
-                </div>
-              </div>
-            </form>
-          </div>
+          <div th:replace="this :: navbarQuickSearch"></div>
         </div>
         <div class="d-flex flex-row justify-content-between align-items-center h-100">
           <div class="d-flex flex-row justify-content-center align-items-center h-100 dropdown">
@@ -206,9 +138,34 @@
       </div>
     </nav>
     <!-- Include JavaScript from static folder -->
-    <script type="text/javascript" src="/js/navbarSearch.js"></script>
     <script type="text/javascript" src="/js/navbarAuthentication.js"></script>
   </header>
+
+  <div th:fragment="navbarQuickSearch" class="d-none d-lg-block" style="width: 52.5%;">
+    <div class="quick-search-container quick-search-dropdown">
+      <input type="text" autocomplete="off" placeholder="Search artifact"
+        class="form-control border border-dark rounded-0 text-dark" id="searchQuery" name="searchQuery"
+        oninput="searchBarForm('/artifacts/search?searchQuery=')" />
+      <label for="searchQuery">
+        <img th:src="@{~/images/search.png}" class="search-glass hover-no-bg" />
+      </label>
+      <div class="search-spinner">
+        <div class="sk-chase">
+          <div class="sk-chase-dot"></div>
+          <div class="sk-chase-dot"></div>
+          <div class="sk-chase-dot"></div>
+          <div class="sk-chase-dot"></div>
+          <div class="sk-chase-dot"></div>
+          <div class="sk-chase-dot"></div>
+        </div>
+      </div>
+      <div class="quick-search-dropdown-content" id="cardsContainer">
+      </div>
+    </div>
+
+    <!-- Include JavaScript from static folder -->
+    <script type="text/javascript" src="/js/navbarSearch.js"></script>
+  </div>
 </body>
 
 </html>
