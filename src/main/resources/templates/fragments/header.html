@@ -144,9 +144,9 @@
   <div th:fragment="navbarQuickSearch" class="d-none d-lg-block" style="width: 52.5%;">
     <div class="quick-search-container quick-search-dropdown">
       <input type="text" autocomplete="off" placeholder="Search artifact"
-        class="form-control border border-dark rounded-0 text-dark" id="searchQuery" name="searchQuery"
-        oninput="searchBarForm('/artifacts/search?searchQuery=')" />
-      <label for="searchQuery">
+        class="form-control border border-dark rounded-0 text-dark" id="navbarSearchQuery" name="navbarSearchQuery"
+        oninput="navbarSearchForm('/artifacts/search?searchQuery=')" />
+      <label for="navbarSearchQuery">
         <img th:src="@{~/images/search.png}" class="search-glass hover-no-bg" />
       </label>
       <div class="search-spinner">

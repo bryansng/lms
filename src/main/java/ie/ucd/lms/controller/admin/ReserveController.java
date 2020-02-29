@@ -29,7 +29,7 @@ public class ReserveController {
 		// reserveQueueService.nextInLine(isbn);
 		model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - reserves.getTotalElements());
 		model.addAttribute("totalPages", reserves.getTotalPages());
-		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("currentPage", page);
 		model.addAttribute("reserves", reserves);
 		model.addAttribute("daysToLoan", Common.DAYS_TO_LOAN);
 

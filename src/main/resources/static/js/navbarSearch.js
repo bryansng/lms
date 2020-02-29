@@ -1,13 +1,12 @@
-function searchBarForm(url) {
-  var searchQuery = document.querySelector("#searchQuery").value;
+function navbarSearchForm(url) {
+  var searchQuery = document.querySelector("#navbarSearchQuery").value;
   var searchSpinner = document.querySelector(".search-spinner");
   var searchGlass = document.querySelector(".search-glass");
 
+  clearChild(document.querySelector("#cardsContainer"));
   if (searchQuery !== "") {
     searchSpinner.style.display = "block";
     searchGlass.style.display = "none";
-
-    clearChild(document.querySelector("#cardsContainer"));
 
     fetch(url + searchQuery)
       .then(resp => resp.json())
@@ -33,8 +32,6 @@ function searchBarForm(url) {
         searchSpinner.style.display = "none";
         searchGlass.style.display = "block";
       });
-  } else {
-    clearChild(document.querySelector("#cardsContainer"));
   }
 }
 
@@ -49,8 +46,8 @@ function clearChild(aNode) {
   <div class="d-flex justify-content-start align-items-center">
     <div class="bg-dark" style="width: 2.5rem; height: 2.5rem"></div>
     <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
-      <p class="font-weight-bolder m-0">Artifact Title</p>
-      <p class="m-0">by Authors</p>
+      <p class="font-weight-bolder m-0 text-truncate">Artifact Title</p>
+      <p class="m-0 text-truncate">by Authors</p>
     </div>
   </div>
 </a>
@@ -88,11 +85,11 @@ function getSearchCard(titleText, authorsText, link) {
   );
 
   var title = document.createElement("p");
-  title.classList.add("font-weight-bolder", "m-0");
+  title.classList.add("font-weight-bolder", "m-0", "text-truncate");
   title.textContent = titleText;
 
   var authors = document.createElement("p");
-  authors.classList.add("m-0");
+  authors.classList.add("m-0", "text-truncate");
   authors.textContent = `by ${authorsText}`;
 
   titleAuthorsContainer.appendChild(title);

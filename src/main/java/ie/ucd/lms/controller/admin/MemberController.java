@@ -24,7 +24,7 @@ public class MemberController {
 		Page<Member> members = memberService.search(searchQuery, page - 1);
 		model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - members.getTotalElements());
 		model.addAttribute("totalPages", members.getTotalPages());
-		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("currentPage", page);
 		model.addAttribute("members", members);
 
 		model.addAttribute("previousQuery", searchQuery);

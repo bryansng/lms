@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-</head>
+<head> </head>
 
 <body>
-  <tfoot th:fragment="pagination">
-    <tr>
-      <td colspan="13">
-        <div class="links mt-4">
-          <a th:if="${totalPages &gt; 1}" th:href="@{~/admin/loans/view(page=1)}">&laquo;</a>
-          <!-- <a th:href="@{~/admin/loans/view(page=${currentPage &gt; 1} ? ${currentPage-1})}">❮</a> -->
-          <span th:each="pageNum: ${#numbers.sequence(currentPage-2, currentPage+2)}">
-            <a th:if="${pageNum &gt;= 1 AND pageNum &lt;= totalPages}"
-                th:class="${pageNum == currentPage} ? active"
-                th:href="@{~/admin/loans/view(page=${pageNum})}"
-                th:text=${pageNum}></a>
-          </span>
-          <!-- the below does not work -->
-          <!-- <a th:href="@{~/admin/loans/view(page=${currentPage &lt; totalPages} ? ${currentPage+1})}">❯</a> -->
-          <a th:if="${totalPages &gt; 1}" th:href="@{~/admin/loans/view(page=${totalPages})}">&raquo;</a>
-        </div>
-      </td>
-    </tr>
-  </tfoot>
+  <div th:fragment="pagination">
+    <div class="links mt-4">
+      <a th:if="${totalPages &gt; 1}" th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})"
+        th:href="@{${currentUrl}(page=1)}">
+        &laquo;</a>
+      <!-- <a th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})" th:href="@{${currentUrl}(page=${currentPage &gt; 1} ? ${currentPage-1})}">❮</a> -->
+      <span th:each="pageNum: ${#numbers.sequence(currentPage-2, currentPage+2)}"
+        >
+        <a
+          th:if="${pageNum &gt;= 1 AND pageNum &lt;= totalPages}"
+          th:class="${pageNum == currentPage} ? active"
+          th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})"
+          th:href="@{${currentUrl}(page=${pageNum})}"
+          th:text="${pageNum}"
+        ></a>
+      </span>
+      <!-- the below does not work -->
+      <!-- <a th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})" th:href="@{${currentUrl}(page=${currentPage &lt; totalPages} ? ${currentPage+1})}">❯</a> -->
+      <a
+        th:if="${totalPages &gt; 1}"
+        th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})"
+        th:href="@{${currentUrl}(page=${totalPages})}"
+        >&raquo;</a
+      >
+      <!-- th:with="currentUrl=(${#httpServletRequest.requestURI + '?' + #strings.defaultString(#httpServletRequest.queryString, '')})" -->
+      <!-- https://stackoverflow.com/questions/27623405/thymeleaf-add-parameter-to-current-url -->
+    </div>
+  </div>
 </body>
-
 </html>

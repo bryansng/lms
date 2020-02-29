@@ -30,7 +30,7 @@ public class LoanController {
 				dateType, page - 1);
 		model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
 		model.addAttribute("totalPages", loans.getTotalPages());
-		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("currentPage", page);
 		model.addAttribute("loans", loans);
 		model.addAttribute("daysToRenew", Common.DAYS_TO_RENEW);
 

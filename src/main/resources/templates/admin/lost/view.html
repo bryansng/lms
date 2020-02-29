@@ -100,7 +100,7 @@
                 <th class="p-2"></th>
               </tr>
             </thead>
-            <tfoot th:replace="admin/fragments/pagination.html"></tfoot>
+            <tfoot th:replace="admin/fragments/pagination.html :: pagination"></tfoot>
             <tbody class="border-bottom border-dark">
               <tr th:each="loan : ${loans}" th:id="'tr-' + ${loan.id}">
                 <td class="p-2" th:text="${loan.id}"></td>
