@@ -243,11 +243,16 @@ u {
   right: 65px;
 }
 
+
+
+
 .form__group {
   position: relative;
   padding: 15px 0 0;
 }
 
+.form__group textarea,
+.form__group select,
 .form__group input,
 .form__field {
   width: 100%;
@@ -260,13 +265,17 @@ u {
   background: transparent;
   /* transition: border-color 0.2s; */
   transition: 0.2s;
+  min-height: 1.7em;
+  box-sizing: content-box;
 }
 
+.form__group textarea::placeholder,
 .form__group input::placeholder,
 .form__field::placeholder {
   color: transparent;
 }
 
+.form__group textarea:focus::placeholder,
 .form__group input:focus::placeholder,
 .form__field:focus::placeholder {
   color: gray;
@@ -274,13 +283,25 @@ u {
   transition: 0.2s;
 }
 
-.form__group input:placeholder-shown ~ label,
-.form__field:placeholder-shown ~ .form__label {
+.form__group select:focus>option {
+  color: black;
+}
+
+.form__group select:invalid~label,
+.form__group input:placeholder-shown~label,
+.form__field:placeholder-shown~.form__label {
   font-size: initial;
   cursor: text;
   top: 42%;
 }
 
+.form__group textarea:placeholder-shown~label {
+  font-size: initial;
+  cursor: text;
+  top: 72%;
+}
+
+.form__group select~label,
 .form__group label,
 .form__label {
   position: absolute;
@@ -290,6 +311,8 @@ u {
   color: #9b9b9b;
 }
 
+.form__group textarea:focus,
+.form__group select:focus,
 .form__group input:focus,
 .form__field:focus {
   font-weight: normal;
@@ -316,8 +339,10 @@ u {
   border-image-slice: 1;
 }
 
-.form__group input:focus ~ label,
-.form__field:focus ~ .form__label {
+.form__group textarea:focus~label,
+.form__group select:focus~label,
+.form__group input:focus~label,
+.form__field:focus~.form__label {
   position: absolute;
   top: 0;
   display: block;
@@ -327,6 +352,8 @@ u {
 }
 
 /* reset input */
+.form__group textarea,
+.form__group select,
 .form__group input,
 .form__field:required,
 .form__field:invalid {
@@ -504,6 +531,7 @@ table.divtable tfoot .links a {
 }
 
 @keyframes sk-chase-dot {
+
   80%,
   100% {
     transform: rotate(360deg);

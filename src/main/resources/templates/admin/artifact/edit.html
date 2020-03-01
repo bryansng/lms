@@ -13,14 +13,135 @@
 
   <!-- Import CSS -->
   <link rel="stylesheet" th:href="@{~/css/common.css}" />
-  <title>Home | Wet LMS</title>
+  <title>Edit Artifacts | Wet LMS</title>
 </head>
 
 <body class="m-0">
   <header th:replace="admin/fragments/header.html"></header>
 
   <main>
-    It works
+    <div class="w-100 w-lg-75 my-4 mx-auto container">
+      <div th:classappend="${#strings.isEmpty(previousUpdateStatus)} ? mb-3 : mb-0" class="d-flex flex-row justify-content-between align-items-start">
+        <h3 class="">Update Artifact</h3>
+      </div>
+      <div th:replace="admin/fragments/viewUpdateStatus.html"></div>
+      <div class="d-flex flex-row justify-content-between w-100 mx-auto py-3 px-0 container">
+        <div class="w-25 container mx-2">
+          <img th:src="@{~/images/placeholder.jpg}" style="width: 100%;"/> <!-- STAND IN IMAGE - CANNOT ADD/CHANGE  -->
+        </div>
+        <div class="w-75 container mx-2">
+          <form th:action="@{/admin/artifacts/edit(id=${artifact.id})}" method="POST" th:id="editForm">
+            <div class="d-flex flex-column justify-content-center">
+              <div class="form__group my-1">
+                <input type="text" name="isbn"
+                id="isbn" th:placeholder="${artifact.isbn}" th:value="${#strings.isEmpty(previousISBN)} ? ${artifact.isbn} : ${previousISBN}" required />
+                <label for="isbn">ISBN*</label>
+              </div>
+
+              <div class="form__group my-1">
+                <input type="text" name="title"
+                id="title" th:placeholder="${artifact.title}" th:value="${#strings.isEmpty(previousTitle)} ? ${artifact.title} : ${previousTitle}" />
+                <label for="title">Title</label>
+              </div>
+
+              <div class="form__group my-1">
+                <input type="text" name="authors"
+                id="authors" th:placeholder="${artifact.authors}" th:value="${#strings.isEmpty(previousAuthors)} ? ${artifact.authors} : ${previousAuthors}" />
+                <label for="authors">Authors</label>
+              </div>
+
+              <div class="form__group my-1">
+                <textarea type="text" name="description"
+                id="description" style="min-height: 110px;" th:text="${#strings.isEmpty(previousDescription)} ? ${artifact.description} : ${previousDescription}" th:placeholder="${artifact.description}" ></textarea>
+                <label for="description">Description</label>
+              </div>
+
+              <div class="container p-0">
+                <div class="row">
+                  <div class="col">
+                    <div class="form__group my-1">
+                      <input type="text" name="publishers"
+                      id="publishers" th:placeholder="${artifact.publishers}" th:value="${#strings.isEmpty(previousPublishers)} ? ${artifact.publishers} : ${previousPublishers}" />
+                      <label for="publishers">Publishers</label>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form__group my-1">
+                      <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')"  name="publishedOn"
+                      id="publishedOn" th:placeholder="${publishedOn}" th:value="${#strings.isEmpty(previousPublishedOn)} ? ${publishedOn} : ${previousPublishedOn}" required />
+                      <label for="publishedOn">Published Date*</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form__group my-1">
+                      <select id="type" name="type" th:selected="${#strings.isEmpty(previousType)} ? ${artifact.type} : ${previousType}" required>
+                        <option value="" hidden disabled></option>
+                        <option value="book" th:selected="${previousType == 'book'}">Book</option>
+                        <option value="cd" th:selected="${previousType == 'cd'}">CD</option>
+                        <option value="dvd" th:selected="${previousType == 'dvd'}">DVD</option>
+                        <option value="comic" th:selected="${previousType == 'comic'}">Comic</option>
+                        <option value="magazine" th:selected="${previousType == 'magazine'}">Magazine</option>
+                        <option value="pdf" th:selected="${previousType == 'pdf'}">PDF</option>
+                      </select>
+                      <label for="type">Artifact Type*</label>
+                    </div>
+
+                  </div>
+                  <div class="col">
+                    <div class="form__group my-1">
+                      <input type="text" name="genre"
+                      id="genre" th:placeholder="${artifact.genre}" th:value="${#strings.isEmpty(previousGenre)} ? ${artifact.genre} : ${previousGenre}" />
+                      <label for="genre">Genre</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <div class="form__group my-1">
+                      <input type="text" name="rackLocation"
+                      id="rackLocation" th:placeholder="${artifact.rackLocation}" th:value="${#strings.isEmpty(previousRackLocation)} ? ${artifact.rackLocation} : ${previousRackLocation}" />
+                      <label for="rackLocation">Rack Location</label>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form__group my-1">
+                      <input type="text" name="itemPrice"
+                      id="itemPrice" th:placeholder="${artifact.itemPrice}" th:value="${#strings.isEmpty(previousItemPrice)} ? ${artifact.itemPrice} : ${previousItemPrice}" />
+                      <label for="itemPrice">Price</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form__group my-1">
+                      <input type="text" name="quantity"
+                      id="quantity" th:placeholder="${artifact.quantity}" th:value="${#strings.isEmpty(previousQuantity)} ? ${artifact.quantity} : ${previousQuantity}" required />
+                      <label for="quantity">In Stock Quantity*</label>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form__group my-1">
+                      <input type="text" name="totalQuantity"
+                      id="totalQuantity" th:placeholder="1" th:value="${#strings.isEmpty(previousTotalQuantity)} ? ${artifact.totalQuantity} : ${previousTotalQuantity}" required />
+                      <label for="totalQuantity">Total Quantity*</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <input type="text" class="d-none" id="updateStatus" name="updateStatus" />
+              <input type="text" class="d-none" id="errorMessage" name="errorMessage" />
+            </div>
+            <div class="d-flex justify-content-end my-5">
+              <button type="submit" class="px-4 py-2 btn btn-lg border border-dark text-dark hover">Update Artifact</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
   </main>
 
   <footer></footer>

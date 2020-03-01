@@ -53,16 +53,7 @@
           </div>
         </form>
       </div>
-      <div class="row no-gutters" th:unless="${#strings.isEmpty(previousUpdateStatus)}">
-        <div class="p-3 my-3 w-100" style="background-color: #28a745b6;font-weight: bolder;" th:if="${previousUpdateStatus == 'success'}">
-          &#10004;&nbsp;Updated Successfully.
-        </div>
-        <div class="p-3 my-3 w-100" style="background-color: #dc3546b6;font-weight: bolder;" th:if="${previousUpdateStatus == 'fail'}">
-          &#10008;&nbsp;
-          <span th:if="${#strings.isEmpty(previousErrorMessage)}">Failed to Update. Please try again.</span>
-          <span th:unless="${#strings.isEmpty(previousErrorMessage)}" th:text="${previousErrorMessage}"></span>
-        </div>
-      </div>
+      <div th:replace="admin/fragments/viewUpdateStatus.html"></div>
       <div class="row no-gutters">
         <div class="col-12">
           <table class="w-100 divtable">
