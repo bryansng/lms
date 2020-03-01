@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 import ie.ucd.lms.dao.ArtifactRepository;
 import ie.ucd.lms.entity.Artifact;
+import ie.ucd.lms.service.admin.ActionConclusion;
 import ie.ucd.lms.service.admin.ArtifactService;
 import ie.ucd.lms.service.admin.Common;
 
@@ -71,8 +72,9 @@ public class ArtifactController {
       @RequestParam(name = "rackLocation", required = false) String rackLocation,
       @RequestParam(defaultValue = "", required = false) String updateStatus,
       @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
-    if (artifactService.update(stringId, isbn, type, genre, authors, title, subtitle, description, publishers,
-        publishedOn, itemPrice, quantity, totalQuantity, rackLocation)) {
+    ActionConclusion actionConclusion = artifactService.update(stringId, isbn, type, genre, authors, title, subtitle,
+        description, publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation);
+    if (actionConclusion.isSuccess) {
       Page<Artifact> artifacts = artifactService.search("", type, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
       model.addAttribute("totalPages", artifacts.getTotalPages());
@@ -125,8 +127,9 @@ public class ArtifactController {
       @RequestParam(name = "rackLocation", required = false) String rackLocation,
       @RequestParam(defaultValue = "", required = false) String updateStatus,
       @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
-    if (artifactService.create(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn,
-        itemPrice, quantity, totalQuantity, rackLocation)) {
+    ActionConclusion actionConclusion = artifactService.create(isbn, type, genre, authors, title, subtitle, description,
+        publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation);
+    if (actionConclusion.isSuccess) {
       Page<Artifact> artifacts = artifactService.search("", type, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
       model.addAttribute("totalPages", artifacts.getTotalPages());

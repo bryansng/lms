@@ -1,12 +1,10 @@
 package ie.ucd.lms.service.admin;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import ie.ucd.lms.dao.LoanHistoryRepository;
 import ie.ucd.lms.dao.ReserveQueueRepository;
@@ -79,8 +77,8 @@ public class LoanHistoryService {
     return res;
   }
 
-  public Boolean update(String stringId, String isbn, String memberId, String issuedOn, String returnOn, String fine,
-      String status) {
+  public ActionConclusion update(String stringId, String isbn, String memberId, String issuedOn, String returnOn,
+      String fine, String status) {
     Long id = Common.convertStringToLong(stringId);
     Long aMemberId = Common.convertStringToLong(memberId);
 
@@ -97,16 +95,17 @@ public class LoanHistoryService {
         LoanHistory loanHistory = loanHistoryRepository.getOne(id);
         loanHistory.setAll(isbn, memberId, issuedOn, returnOn, fine, status, artifact, member);
         loanHistoryRepository.save(loanHistory);
-        return true;
+        return new ActionConclusion(true, "Updated successfully.");
       }
     }
-    return false;
+    return new ActionConclusion(false, "Failed to update. Loan ID does not exist.");
   }
 
   /**
    * @return false if artifact not in stock, and reserveQueue already has user with same isbn and memberId, or id and isbn already exists.
    */
-  public Boolean create(String isbn, String memberId, String issuedOn, String returnOn, String fine, String status) {
+  public ActionConclusion create(String isbn, String memberId, String issuedOn, String returnOn, String fine,
+      String status) {
     Long aMemberId = Common.convertStringToLong(memberId);
 
     if (issuedOn.equals("") && !returnOn.equals("")) {
@@ -114,8 +113,6 @@ public class LoanHistoryService {
     } else if (!issuedOn.equals("") && returnOn.equals("")) {
       returnOn = issuedOn;
     }
-
-    // check by loan id, isbn, memberId
 
     // if (!loanHistoryRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
     if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
@@ -126,33 +123,33 @@ public class LoanHistoryService {
         LoanHistory loanHistory = new LoanHistory();
         loanHistory.setAll(isbn, memberId, issuedOn, returnOn, fine, status, artifact, member);
         loanHistoryRepository.save(loanHistory);
-        return true;
+        return new ActionConclusion(true, "Created successfully.");
       } else {
         return reserveQueueService.create(isbn, memberId, Common.DEFAULT_EXPIRED_ON);
       }
     }
     // }
-    return false;
+    return new ActionConclusion(false, "Failed to create. ISBN or member ID does not exist.");
   }
 
   /**
    * @return false if id does not exist.
    */
-  public Boolean delete(String stringId) {
+  public ActionConclusion delete(String stringId) {
     Long id = Common.convertStringToLong(stringId);
 
     if (loanHistoryRepository.existsById(id)) {
       handleArtifactStock(loanHistoryRepository.getOne(id));
       loanHistoryRepository.deleteById(id);
-      return true;
+      return new ActionConclusion(true, "Deleted successfully.'");
     }
-    return false;
+    return new ActionConclusion(false, "Failed to delete. Loan ID does not exist.");
   }
 
   /**
    * @return false if id does not exist.
    */
-  public Boolean restocked(String stringId) {
+  public ActionConclusion restocked(String stringId) {
     Long id = Common.convertStringToLong(stringId);
 
     if (loanHistoryRepository.existsById(id)) {
@@ -163,15 +160,15 @@ public class LoanHistoryService {
       // artifact.decrementQuantity(); // because lost() does not increment, so system still assumes the book is issued, but is actually lost. So we are actually derementing the issued quantity.
       artifact.incrementQuantity();
       loanHistoryRepository.save(loanHistory);
-      return true;
+      return new ActionConclusion(true, "Restocked successfully.");
     }
-    return false;
+    return new ActionConclusion(false, "Failed to restock. Loan ID does not exist.");
   }
 
   /**
    * @return false if id does not exist.
    */
-  public Boolean returnn(String stringId) {
+  public ActionConclusion returnn(String stringId) {
     Long id = Common.convertStringToLong(stringId);
 
     if (loanHistoryRepository.existsById(id)) {
@@ -182,15 +179,15 @@ public class LoanHistoryService {
       Artifact artifact = loanHistory.getArtifact();
       artifact.incrementQuantity();
       loanHistoryRepository.save(loanHistory);
-      return true;
+      return new ActionConclusion(true, "Returned successfully.");
     }
-    return false;
+    return new ActionConclusion(false, "Failed to return. Loan ID does not exist.");
   }
 
   /**
    * @return false if exists in reserveQueue, or id does not exist.
    */
-  public Boolean renew(String stringId, String daysToRenew) {
+  public ActionConclusion renew(String stringId, String daysToRenew) {
     Long id = Common.convertStringToLong(stringId);
     Long days = Common.convertStringToLong(daysToRenew);
 
@@ -200,20 +197,20 @@ public class LoanHistoryService {
         // returnn(stringId); // ? why did I put return here again? (assumed they renew in person, if so, they cant renew if is reserved, so return the book, and set up reservation if required)
         // ? maybe add isbn + member_id to reserve list?
         // ? prompt librarian / member?
-        return false;
+        return new ActionConclusion(false, "Unable to renew. Someone else is reserving the same artifact.");
       }
       loanHistory.setReturnOn(LocalDateTime.now().plusDays(days));
       loanHistory.setStatus("renewed");
       loanHistoryRepository.save(loanHistory);
-      return true;
+      return new ActionConclusion(true, "Renewed successfully.");
     }
-    return false;
+    return new ActionConclusion(false, "Failed to renew. Loan ID does not exist.");
   }
 
   /**
    * @return false if id does not exist.
    */
-  public Boolean lost(String stringId) {
+  public ActionConclusion lost(String stringId) {
     Long id = Common.convertStringToLong(stringId);
 
     if (loanHistoryRepository.existsById(id)) {
@@ -224,9 +221,9 @@ public class LoanHistoryService {
       loanHistory.setStatus("lost");
       loanHistory.setWasLost(true);
       loanHistoryRepository.save(loanHistory);
-      return true;
+      return new ActionConclusion(true, "Added to Lost successfully.");
     }
-    return false;
+    return new ActionConclusion(false, "Failed to add to Lost. Loan ID does not exist.");
   }
 
   /**

@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 
 import ie.ucd.lms.dao.LoanHistoryRepository;
 import ie.ucd.lms.entity.LoanHistory;
+import ie.ucd.lms.service.admin.ActionConclusion;
 import ie.ucd.lms.service.admin.Common;
 import ie.ucd.lms.service.admin.LoanHistoryService;
 
@@ -65,7 +66,8 @@ public class LostController {
       @RequestParam(name = "fine", required = false) String fine,
       @RequestParam(defaultValue = "", required = false) String updateStatus,
       @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
-    if (loanHistoryService.update(stringId, isbn, memberID, issuedOn, "", fine, status)) {
+    ActionConclusion actionConclusion = loanHistoryService.update(stringId, isbn, memberID, issuedOn, "", fine, status);
+    if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
       model.addAttribute("totalPages", loans.getTotalPages());
@@ -116,7 +118,8 @@ public class LostController {
     System.out.println(issuedOn);
     System.out.println(fine);
     System.out.println(status);
-    if (loanHistoryService.create(isbn, memberID, issuedOn, "", fine, status)) {
+    ActionConclusion actionConclusion = loanHistoryService.create(isbn, memberID, issuedOn, "", fine, status);
+    if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
       model.addAttribute("totalPages", loans.getTotalPages());

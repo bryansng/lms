@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 import ie.ucd.lms.entity.ReserveQueue;
+import ie.ucd.lms.service.admin.ActionConclusion;
 import ie.ucd.lms.service.admin.Common;
 import ie.ucd.lms.service.admin.ReserveQueueService;
 
@@ -44,9 +45,9 @@ public class ReserveController {
 
 	@PostMapping("/admin/reserves/loan")
 	@ResponseBody
-	public String reservesRenew(@RequestParam(name = "id") String stringId,
+	public ActionConclusion reservesLoan(@RequestParam(name = "id") String stringId,
 			@RequestParam(required = false) String daysToLoan, Model model) {
-		return reserveQueueService.loan(stringId, daysToLoan).toString();
+		return reserveQueueService.loan(stringId, daysToLoan);
 	}
 
 	@PostMapping("/admin/reserves/delete")

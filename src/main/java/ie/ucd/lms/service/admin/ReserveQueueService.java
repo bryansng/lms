@@ -44,7 +44,7 @@ public class ReserveQueueService {
     return reserveQueueRepository.findFirstByIsbnOrderById(isbn);
   }
 
-  public Boolean update(String stringId, String isbn, String memberId, String expiredOn) {
+  public ActionConclusion update(String stringId, String isbn, String memberId, String expiredOn) {
     Long id = Common.convertStringToLong(stringId);
     Long aMemberId = Common.convertStringToLong(memberId);
 
@@ -55,42 +55,42 @@ public class ReserveQueueService {
         ReserveQueue reserveQueue = reserveQueueRepository.getOne(id);
         reserveQueue.setAll(isbn, memberId, expiredOn, artifact, member);
         reserveQueueRepository.save(reserveQueue);
-        return true;
+        return new ActionConclusion(true, "Updated successfully.");
       }
     }
-    return false;
+    return new ActionConclusion(false, "Failed to update. Reserve ID does not exist.");
   }
 
-  public Boolean create(String isbn, String memberId, String expiredOn) {
+  public ActionConclusion create(String isbn, String memberId, String expiredOn) {
     Long aMemberId = Common.convertStringToLong(memberId);
 
-    if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
-      if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
-        Artifact artifact = artifactRepository.findByIsbn(isbn);
-        Member member = memberRepository.getOne(aMemberId);
-        ReserveQueue reserveQueue = new ReserveQueue();
-        reserveQueue.setAll(isbn, memberId, expiredOn, artifact, member);
-        reserveQueueRepository.save(reserveQueue);
-        return true;
-      }
+    // if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
+    if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
+      Artifact artifact = artifactRepository.findByIsbn(isbn);
+      Member member = memberRepository.getOne(aMemberId);
+      ReserveQueue reserveQueue = new ReserveQueue();
+      reserveQueue.setAll(isbn, memberId, expiredOn, artifact, member);
+      reserveQueueRepository.save(reserveQueue);
+      return new ActionConclusion(true, "Created successfully.");
     }
-    return false;
+    // }
+    return new ActionConclusion(false, "Failed to create. ISBN or member ID does not exist.");
   }
 
-  public Boolean delete(String stringId) {
+  public ActionConclusion delete(String stringId) {
     Long id = Common.convertStringToLong(stringId);
 
     if (reserveQueueRepository.existsById(id)) {
       reserveQueueRepository.deleteById(id);
-      return true;
+      return new ActionConclusion(true, "Deleted successfully.'");
     }
-    return false;
+    return new ActionConclusion(false, "Failed to delete. Reserve ID does not exist.");
   }
 
   /**
    * @return false if artifact not in stock, or id and isbn already exists.
    */
-  public Boolean loan(String stringId, String daysToLoan) {
+  public ActionConclusion loan(String stringId, String daysToLoan) {
     Long id = Common.convertStringToLong(stringId);
 
     if (reserveQueueRepository.existsById(id)) {
@@ -98,14 +98,14 @@ public class ReserveQueueService {
       Artifact artifact = artifactRepository.findByIsbn(rQ.getIsbn());
       if (artifact.inStock()) {
         if (loanHistoryService.create(rQ.getIsbn(), Long.toString(rQ.getMemberId()), "",
-            Common.getStringNowPlusDays(daysToLoan), "0.0", "issued")) {
+            Common.getStringNowPlusDays(daysToLoan), "0.0", "issued").isSuccess) {
           reserveQueueRepository.deleteById(id);
-          return true;
+          return new ActionConclusion(true, "Added to Loan successfully.");
         }
       }
-      return false;
+      return new ActionConclusion(false, "Failed to add to Loan. Artifact not in stock.");
     }
-    return false;
+    return new ActionConclusion(false, "Failed to add to Loan. Reserve ID does not exist.");
   }
 
   private void printMe(List<ReserveQueue> arr) {

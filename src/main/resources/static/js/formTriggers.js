@@ -32,6 +32,7 @@ function loanForm(id) {
     success: function(result) {
       // Do something with the response.
       // Might want to check for errors here.
+      console.log(result);
       if (result === "true") {
         updateStatusSuccess();
       } else {
@@ -40,7 +41,7 @@ function loanForm(id) {
           "Unable to loan. Artifact not in stock. No change made to the database."
         );
       }
-      triggerRefresh();
+      // triggerRefresh();
     },
     error: function(error) {
       // Here you can handle exceptions thrown by the server or your controller.

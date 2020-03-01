@@ -13,6 +13,9 @@ public class Common {
 	public static final int DAYS_TO_RENEW = 3;
 	public static final int DAYS_TO_LOAN = 7;
 
+	public static final int MAX_LOANS_PER_USER = 4;
+	public static final int MAX_RESERVES_PER_USER = 8;
+
 	public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

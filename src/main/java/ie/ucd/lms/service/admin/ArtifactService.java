@@ -27,7 +27,7 @@ public class ArtifactService {
 		return res;
 	}
 
-	public Boolean update(String stringId, String isbn, String type, String genre, String authors, String title,
+	public ActionConclusion update(String stringId, String isbn, String type, String genre, String authors, String title,
 			String subtitle, String description, String publishers, String publishedOn, String itemPrice, String quantity,
 			String totalQuantity, String rackLocation) {
 		Long id = Common.convertStringToLong(stringId);
@@ -37,12 +37,12 @@ public class ArtifactService {
 			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
 					quantity, totalQuantity, rackLocation);
 			artifactRepository.save(artifact);
-			return true;
+			return new ActionConclusion(true, "Updated successfully.");
 		}
-		return false;
+		return new ActionConclusion(false, "Failed to update. Artifact ID does not exist.");
 	}
 
-	public Boolean create(String isbn, String type, String genre, String authors, String title, String subtitle,
+	public ActionConclusion create(String isbn, String type, String genre, String authors, String title, String subtitle,
 			String description, String publishers, String publishedOn, String itemPrice, String quantity,
 			String totalQuantity, String rackLocation) {
 		if (!artifactRepository.existsByIsbn(isbn)) {
@@ -50,19 +50,19 @@ public class ArtifactService {
 			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
 					quantity, totalQuantity, rackLocation);
 			artifactRepository.save(artifact);
-			return true;
+			return new ActionConclusion(true, "Created successfully.");
 		}
-		return false;
+		return new ActionConclusion(false, "Failed to create. Artifact ISBN already exists.");
 	}
 
-	public Boolean delete(String stringId) {
+	public ActionConclusion delete(String stringId) {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (artifactRepository.existsById(id)) {
 			artifactRepository.deleteById(id);
-			return true;
+			return new ActionConclusion(true, "Deleted successfully.'");
 		}
-		return false;
+		return new ActionConclusion(false, "Failed to delete. Artifact ID does not exist.");
 	}
 
 	public void printMe(List<Artifact> arr) {
