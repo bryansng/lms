@@ -152,8 +152,7 @@ public class LoanHistory {
 	}
 
 	public String getDueDate() {
-		String date = returnOn.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " - "
-				+ returnOn.getDayOfMonth() + "/" + returnOn.getMonthValue() + " - "
+		String date = returnOn.getDayOfMonth() + "/" + returnOn.getMonthValue() + " @ "
 				+ String.format("%02d:%02d", returnOn.getHour(), returnOn.getMinute());
 		return date;
 	}
