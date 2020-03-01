@@ -1,0 +1,113 @@
+.form__group {
+  position: relative;
+  padding: 15px 0 0;
+}
+
+.form__group textarea,
+.form__group select,
+.form__group input,
+.form__field {
+  width: 100%;
+  font-family: inherit;
+  font-weight: normal;
+  border: 0;
+  border-bottom: 2px solid #9b9b9b;
+  outline: 0;
+  padding: 7px 0;
+  background: transparent;
+  /* transition: border-color 0.2s; */
+  transition: 0.2s;
+  min-height: 1.7em;
+  box-sizing: content-box;
+}
+
+.form__group textarea::placeholder,
+.form__group input::placeholder,
+.form__field::placeholder {
+  color: transparent;
+}
+
+.form__group textarea:focus::placeholder,
+.form__group input:focus::placeholder,
+.form__field:focus::placeholder {
+  color: gray;
+  font-weight: normal;
+  transition: 0.2s;
+}
+
+.form__group select:focus>option {
+  color: black;
+}
+
+.form__group select:invalid~label,
+.form__group input:placeholder-shown~label,
+.form__field:placeholder-shown~.form__label {
+  font-size: initial;
+  cursor: text;
+  top: 42%;
+}
+
+.form__group textarea:placeholder-shown~label {
+  font-size: initial;
+  cursor: text;
+  top: 72%;
+}
+
+.form__group select~label,
+.form__group label,
+.form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  color: #9b9b9b;
+}
+
+.form__group textarea:focus,
+.form__group select:focus,
+.form__group input:focus,
+.form__field:focus {
+  font-weight: normal;
+  /* border-image: linear-gradient(to right, #de6161, #2657eb); */
+  /* border-image: linear-gradient(to right, #3a6186, #89253e); */
+
+  /* border-image: linear-gradient(to right, #2C3E50, #4CA1AF); */
+  /* border-image: linear-gradient(to right, #000428, #004e92); */
+
+  /* 50 Shades of Grey */
+  border-image: #bdc3c7;
+  /* fallback for old browsers */
+  border-image: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);
+  /* Chrome 10-25, Safari 5.1-6 */
+  border-image: linear-gradient(to right, #2c3e50, #bdc3c7);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  /* border-image: linear-gradient(to right, #005AA7, #FFFDE4); */
+  /* border-image: linear-gradient(to right, #000C40, #F0F2F0); */
+
+  /* border-image: linear-gradient(to right, #232526, #414345); */
+  /* border-image: linear-gradient(to right, #000000, #434343); */
+  /* border-image: linear-gradient(to right, #11998e, #38ef7d); */
+  border-image-slice: 1;
+}
+
+.form__group textarea:focus~label,
+.form__group select:focus~label,
+.form__group input:focus~label,
+.form__field:focus~.form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+/* reset input */
+.form__group textarea,
+.form__group select,
+.form__group input,
+.form__field:required,
+.form__field:invalid {
+  box-shadow: none;
+}
