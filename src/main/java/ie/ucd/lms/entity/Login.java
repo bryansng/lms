@@ -1,5 +1,7 @@
 package ie.ucd.lms.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -7,7 +9,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "login")
-public class Login {
+public class Login implements Serializable {
 
 	public Login() {
 	}

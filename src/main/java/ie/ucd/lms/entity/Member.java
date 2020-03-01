@@ -1,32 +1,41 @@
 package ie.ucd.lms.entity;
 
+import java.io.Serializable;
 import java.time.*;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "members")
-public class Member {
+public class Member implements Serializable {
 
 	public Member() {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name = "email")
 	private String email;
 	private String fullName;
 	private String mobileNumber;
+	private String address;
 	private LocalDateTime bornOn;
 	private LocalDateTime joinedOn = LocalDateTime.now();
 	private LocalDateTime lastActiveOn;
 	private String bio;
-	private Boolean isLibrarian = false;
+	private String type = "member";
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(referencedColumnName = "email")
 	private Login login;
+
+	@OneToMany(mappedBy = "member")
+	private List<LoanHistory> loanHistories;
+
+	@OneToMany(mappedBy = "member")
+	private List<ReserveQueue> reserveQueues;
 
 	public Long getId() {
 		return id;
@@ -58,6 +67,15 @@ public class Member {
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+	}
+
+
+	public String getAddress() {
+		return this.address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public LocalDateTime getBornOn() {
@@ -92,12 +110,12 @@ public class Member {
 		this.bio = bio;
 	}
 
-	public Boolean getIsLibrarian() {
-		return isLibrarian;
+	public String getType() {
+		return this.type;
 	}
 
-	public void setIsLibrarian(Boolean isLibrarian) {
-		this.isLibrarian = isLibrarian;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Login getLogin() {
@@ -107,4 +125,29 @@ public class Member {
 	public void setLogin(Login login) {
 		this.login = login;
 	}
+
+ @Override
+	public String toString() {
+		String buf = " - ";
+		return id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type;
+	}
+
+	public String toStringWithLoanHistory() {
+		String buf = " - ";
+		String res = id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type + "\n";
+		for (LoanHistory loanHistory : loanHistories) {
+			res += "\t" + loanHistory.toStringWithoutArtifact() + "\n";
+		}
+		return res;
+	}
+
+	public String toStringWithReserveQueue() {
+		String buf = " - ";
+		String res = id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type + "\n";
+		for (ReserveQueue reserveQueue : reserveQueues) {
+			res += "\t" + reserveQueue.toStringWithoutArtifact() + "\n";
+		}
+		return res;
+	}
+
 }

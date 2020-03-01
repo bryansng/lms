@@ -8,9 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LoginRepository extends JpaRepository<Login, String> {
-    // Login findByHash(String email);
-
-    // @Query("SELECT email FROM Login WHERE LOWER(Login.email) = LOWER(:email)")
-    // String getEmailByEmail(@Param("email") String email);
     Login findByEmail(String email);
 }
