@@ -84,7 +84,7 @@ public class LoanController {
       @RequestParam(name = "fine", required = false) String fine,
       @RequestParam(defaultValue = "", required = false) String updateStatus,
       @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
-    if (loanHistoryService.update(stringId, isbn, memberID, returnOn, fine, status)) {
+    if (loanHistoryService.update(stringId, isbn, memberID, "", returnOn, fine, status)) {
       Page<LoanHistory> loans = loanHistoryService.searchAllButLost(artifactQuery, memberQuery, fromDate, toDate,
           dateType, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
@@ -133,7 +133,7 @@ public class LoanController {
       @RequestParam(name = "fine", required = false) String fine,
       @RequestParam(defaultValue = "", required = false) String updateStatus,
       @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
-    if (loanHistoryService.create(isbn, memberID, returnOn, fine, status)) {
+    if (loanHistoryService.create(isbn, memberID, "", returnOn, fine, status)) {
       Page<LoanHistory> loans = loanHistoryService.searchAllButLost(artifactQuery, memberQuery, fromDate, toDate,
           dateType, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
