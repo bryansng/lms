@@ -1,4 +1,4 @@
-package ie.ucd.lms.service.admin;
+package ie.ucd.lms.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,12 +7,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ie.ucd.lms.dao.MemberRepository;
+import ie.ucd.lms.entity.Login;
 import ie.ucd.lms.entity.Member;
 
 @Service
 public class MemberService {
 	@Autowired
 	MemberRepository memberRepository;
+
+	public void save(Member member, Login login) {
+		login.setMember(member);
+		member.setLogin(login);
+
+		memberRepository.save(member);
+	}
 
 	public Page<Member> search(String stringToSearch, int pageNum) {
 		Long id = Common.convertStringToLong(stringToSearch);
@@ -42,6 +50,21 @@ public class MemberService {
 			}
 		}
 		return false;
+	}
+
+	public Optional<Member> findById(Long id) {
+		return memberRepository.findById(id);
+	}
+
+	public Member createMember(Login login) {
+		Member member = new Member();
+		member.setEmail(login.getEmail());
+
+		return member;
+	}
+
+	public Member findByEmail(String email) {
+		return memberRepository.findByEmail(email);
 	}
 
 	public void printMe(List<Member> arr) {

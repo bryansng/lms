@@ -1,15 +1,15 @@
 package ie.ucd.lms.entity;
 
-import javax.persistence.*;
+import ie.ucd.lms.service.Common;
 import java.math.BigDecimal;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
-import ie.ucd.lms.service.admin.Common;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "artifacts")
-public class Artifact {
+public class Artifact implements Comparable<Artifact> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -41,12 +41,32 @@ public class Artifact {
 	private Integer quantity; // current quantity in stock.
 	private Integer totalQuantity; // how many quantity we should have for this artifact.
 	private String rackLocation;
+	private Integer totalLoans;
 
 	@OneToMany(mappedBy = "artifact", cascade = CascadeType.ALL)
 	private List<LoanHistory> loanHistories = new ArrayList<>();
 
 	@OneToMany(mappedBy = "artifact", cascade = CascadeType.ALL)
 	private List<ReserveQueue> reserveQueues;
+
+	public void setAll(String isbn, String type, String genre, String authors, String title, String subtitle,
+			String description, String publishers, String publishedOn, String itemPrice, String quantity,
+			String totalQuantity, String rackLocation, Integer totalLoans) {
+		setIsbn(isbn);
+		setType(type);
+		setGenre(genre);
+		setAuthors(authors);
+		setTitle(title);
+		setSubtitle(subtitle);
+		setDescription(description);
+		setPublishers(publishers);
+		setPublishedOn(Common.convertStringDateToDateTime(publishedOn));
+		setItemPrice(Common.convertStringToBigDecimal(itemPrice));
+		setQuantity(Common.convertStringToInteger(quantity));
+		setTotalQuantity(Common.convertStringToInteger(totalQuantity));
+		setRackLocation(rackLocation);
+		setTotalLoans(totalLoans);
+	}
 
 	public void setAll(String isbn, String type, String genre, String authors, String title, String subtitle,
 			String description, String publishers, String publishedOn, String itemPrice, String quantity,
@@ -214,6 +234,20 @@ public class Artifact {
 		this.rackLocation = rackLocation;
 	}
 
+	public Integer getTotalLoans() {
+		return this.totalLoans;
+	}
+
+	public void setTotalLoans(Integer totalLoans) {
+		this.totalLoans = totalLoans;
+	}
+
+	@Override
+	public int compareTo(Artifact a) {
+		return createdOn.compareTo(a.getCreatedOn());
+	}
+
+	@Override
 	public String toString() {
 		String buf = " - ";
 		return id + buf + isbn + buf + title + buf + authors + buf + type;

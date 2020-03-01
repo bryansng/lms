@@ -1,4 +1,4 @@
-package ie.ucd.lms.controller.admin;
+package ie.ucd.lms.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 import ie.ucd.lms.entity.ReserveQueue;
-import ie.ucd.lms.service.admin.ActionConclusion;
-import ie.ucd.lms.service.admin.Common;
-import ie.ucd.lms.service.admin.ReserveQueueService;
+import ie.ucd.lms.service.ActionConclusion;
+import ie.ucd.lms.service.Common;
+import ie.ucd.lms.service.ReserveQueueService;
 
 @Controller
 public class ReserveController {

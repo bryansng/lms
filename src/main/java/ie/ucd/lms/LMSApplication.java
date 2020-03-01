@@ -7,8 +7,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 public class LMSApplication {
 	// for how to do this: http://zetcode.com/springboot/bean/
 	// for the code below: https://stackoverflow.com/questions/27623405/thymeleaf-add-parameter-to-current-url

@@ -1,4 +1,4 @@
-package ie.ucd.lms.service.admin;
+package ie.ucd.lms.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +30,17 @@ public class LoanHistoryService {
 
   @Autowired
   ReserveQueueService reserveQueueService;
+
+  public List<LoanHistory> findByMember(Member member) {
+    return loanHistoryRepository.findByMember(member);
+
+    // List<Artifact> artifacts = new ArrayList<Artifact>();
+    // for (LoanHistory loan : list) {
+    //     artifacts.add(artifactRepository.findByIsbn(loan.getIsbn()));
+    // }
+
+    // return artifacts;
+  }
 
   public Page<LoanHistory> searchAll(String artifact, String member, String fromDate, String toDate, String status,
       int pageNum) {

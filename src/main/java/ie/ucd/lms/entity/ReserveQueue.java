@@ -1,8 +1,8 @@
 package ie.ucd.lms.entity;
 
-import javax.persistence.*;
-import ie.ucd.lms.service.admin.Common;
+import ie.ucd.lms.service.Common;
 import java.time.LocalDateTime;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "reserve_queue")
@@ -80,6 +80,7 @@ public class ReserveQueue {
 		this.expiredOn = expiredOn;
 	}
 
+	@Override
 	public String toString() {
 		String buf = " - ";
 		return id + buf + isbn + buf + memberId + "\n" + artifact + '\n';

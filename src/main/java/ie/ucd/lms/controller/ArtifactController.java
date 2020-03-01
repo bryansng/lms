@@ -1,4 +1,4 @@
-package ie.ucd.lms.controller.admin;
+package ie.ucd.lms.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 import ie.ucd.lms.dao.ArtifactRepository;
 import ie.ucd.lms.entity.Artifact;
-import ie.ucd.lms.service.admin.ActionConclusion;
-import ie.ucd.lms.service.admin.ArtifactService;
-import ie.ucd.lms.service.admin.Common;
+import ie.ucd.lms.service.ActionConclusion;
+import ie.ucd.lms.service.ArtifactService;
+import ie.ucd.lms.service.Common;
 
 @Controller
 public class ArtifactController {

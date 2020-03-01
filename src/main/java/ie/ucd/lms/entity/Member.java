@@ -1,16 +1,22 @@
 package ie.ucd.lms.entity;
 
-import javax.persistence.*;
+import java.io.Serializable;
 import java.time.*;
 import java.util.List;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "members")
-public class Member {
+public class Member implements Serializable {
+
+	public Member() {
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "email")
 	private String email;
 	private String fullName;
 	private String mobileNumber;

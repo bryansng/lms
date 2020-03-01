@@ -1,0 +1,37 @@
+.artifact-card {
+  width: 350px;
+  padding-right: 10px;
+  min-height: 550px;
+}
+
+.view-more {
+  right: 0;
+  bottom: 0;
+  margin: 0 10px 10px 0;
+  position: absolute;
+}
+
+.link {
+  cursor: pointer;
+  font-size: 17px;
+  color: inherit;
+}
+
+.link:hover {
+  opacity: 0.5;
+}
+
+.hello-title {
+  font-size: 36px;
+  margin-bottom: 24px;
+}
+
+.loan-year {
+  font-size: 26px;
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+.title {
+  font-size: 32px;
+}

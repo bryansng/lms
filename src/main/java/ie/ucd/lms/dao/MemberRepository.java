@@ -1,14 +1,15 @@
 package ie.ucd.lms.dao;
 
-import java.util.List;
-import org.springframework.data.domain.Pageable;
+import ie.ucd.lms.entity.Member;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ie.ucd.lms.entity.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-	Page<Member> findByIdOrFullNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrMobileNumberContainsOrAddressContainsIgnoreCaseOrTypeIgnoreCaseContains(
-			Long id, String fullName, String email, String mobileNumber, String address, String type, Pageable pageable);
+  Page<Member> findByIdOrFullNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrMobileNumberContainsOrAddressContainsIgnoreCaseOrTypeIgnoreCaseContains(
+      Long id, String fullName, String email, String mobileNumber, String address, String type, Pageable pageable);
+
+  Member findByEmail(String email);
 }

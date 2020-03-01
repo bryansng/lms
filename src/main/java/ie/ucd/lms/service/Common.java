@@ -1,4 +1,4 @@
-package ie.ucd.lms.service.admin;
+package ie.ucd.lms.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

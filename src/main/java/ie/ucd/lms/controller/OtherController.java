@@ -1,10 +1,10 @@
-package ie.ucd.lms.controller.admin;
+package ie.ucd.lms.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
-import ie.ucd.lms.service.admin.ReportService;
+import ie.ucd.lms.service.ReportService;
 
 @Controller
 public class OtherController {
