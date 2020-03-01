@@ -30,8 +30,9 @@ public class LoanController {
       @RequestParam(defaultValue = "", required = false) String fromDate,
       @RequestParam(defaultValue = "", required = false) String toDate,
       @RequestParam(defaultValue = "", required = false) String dateType,
-      @RequestParam(defaultValue = "", required = false) String updateStatus,
-      @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     Page<LoanHistory> loans = loanHistoryService.searchAllButLost(artifactQuery, memberQuery, fromDate, toDate,
         dateType, page - 1);
     model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
@@ -45,8 +46,9 @@ public class LoanController {
     model.addAttribute("previousFromDate", fromDate);
     model.addAttribute("previousToDate", toDate);
     model.addAttribute("previousType", dateType);
-    model.addAttribute("previousUpdateStatus", updateStatus);
-    model.addAttribute("previousErrorMessage", errorMessage);
+    model.addAttribute("previousIsSuccess", isSuccess);
+    model.addAttribute("previousSuccessMessage", successMessage);
+    model.addAttribute("previousFailureMessage", failureMessage);
     return "admin/loan/view.html";
   }
 
@@ -81,9 +83,13 @@ public class LoanController {
       @RequestParam(name = "status", required = false) String status,
       @RequestParam(name = "returnOn", required = true) String returnOn,
       @RequestParam(name = "fine", required = false) String fine,
-      @RequestParam(defaultValue = "", required = false) String updateStatus,
-      @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     ActionConclusion actionConclusion = loanHistoryService.update(stringId, isbn, memberID, "", returnOn, fine, status);
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchAllButLost(artifactQuery, memberQuery, fromDate, toDate,
           dateType, page - 1);
@@ -98,9 +104,6 @@ public class LoanController {
       model.addAttribute("previousFromDate", fromDate);
       model.addAttribute("previousToDate", toDate);
       model.addAttribute("previousType", dateType);
-      model.addAttribute("previousUpdateStatus", "success");
-      model.addAttribute("previousUpdateMessage", "Updated Loan Succesfully.");
-      model.addAttribute("previousErrorMessage", "");
       return "admin/loan/view.html";
     } else {
       model.addAttribute("previousISBN", isbn);
@@ -110,9 +113,6 @@ public class LoanController {
       model.addAttribute("previousStatus", status);
       model.addAttribute("previousReturnOn", returnOn);
       model.addAttribute("previousFine", fine);
-      model.addAttribute("previousUpdateStatus", "fail");
-      model.addAttribute("previousUpdateMessage", "");
-      model.addAttribute("previousErrorMessage", "Failed to Update Loan. Please try again.");
       return "admin/loan/create.html";
     }
   }
@@ -131,9 +131,13 @@ public class LoanController {
       @RequestParam(name = "status", required = false) String status,
       @RequestParam(name = "returnOn", required = true) String returnOn,
       @RequestParam(name = "fine", required = false) String fine,
-      @RequestParam(defaultValue = "", required = false) String updateStatus,
-      @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     ActionConclusion actionConclusion = loanHistoryService.create(isbn, memberID, "", returnOn, fine, status);
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchAllButLost(artifactQuery, memberQuery, fromDate, toDate,
           dateType, page - 1);
@@ -148,9 +152,6 @@ public class LoanController {
       model.addAttribute("previousFromDate", fromDate);
       model.addAttribute("previousToDate", toDate);
       model.addAttribute("previousType", dateType);
-      model.addAttribute("previousUpdateStatus", "success");
-      model.addAttribute("previousUpdateMessage", "Created Loan Succesfully.");
-      model.addAttribute("previousErrorMessage", "");
       return "admin/loan/view.html";
     } else {
       model.addAttribute("previousISBN", isbn);
@@ -160,35 +161,32 @@ public class LoanController {
       model.addAttribute("previousStatus", status);
       model.addAttribute("previousReturnOn", returnOn);
       model.addAttribute("previousFine", fine);
-      model.addAttribute("previousUpdateStatus", "fail");
-      model.addAttribute("previousUpdateMessage", "");
-      model.addAttribute("previousErrorMessage", "Failed to Create Loan. Please try again.");
       return "admin/loan/create.html";
     }
   }
 
   @PostMapping("/admin/loans/return")
   @ResponseBody
-  public String loansReturn(@RequestParam(name = "id") String stringId, Model model) {
-    return loanHistoryService.returnn(stringId).toString();
+  public ActionConclusion loansReturn(@RequestParam(name = "id") String stringId, Model model) {
+    return loanHistoryService.returnn(stringId);
   }
 
   @PostMapping("/admin/loans/renew")
   @ResponseBody
-  public String loansRenew(@RequestParam(name = "id") String stringId,
+  public ActionConclusion loansRenew(@RequestParam(name = "id") String stringId,
       @RequestParam(required = false) String daysToRenew, Model model) {
-    return loanHistoryService.renew(stringId, daysToRenew).toString();
+    return loanHistoryService.renew(stringId, daysToRenew);
   }
 
   @PostMapping("/admin/loans/lost")
   @ResponseBody
-  public String loansLost(@RequestParam(name = "id") String stringId, Model model) {
-    return loanHistoryService.lost(stringId).toString();
+  public ActionConclusion loansLost(@RequestParam(name = "id") String stringId, Model model) {
+    return loanHistoryService.lost(stringId);
   }
 
   @PostMapping("/admin/loans/delete")
   @ResponseBody
-  public String loansDelete(@RequestParam(name = "id") String stringId, Model model) {
-    return loanHistoryService.delete(stringId).toString();
+  public ActionConclusion loansDelete(@RequestParam(name = "id") String stringId, Model model) {
+    return loanHistoryService.delete(stringId);
   }
 }

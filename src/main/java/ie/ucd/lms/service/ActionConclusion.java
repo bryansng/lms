@@ -8,8 +8,8 @@ package ie.ucd.lms.service;
 public class ActionConclusion {
 	public Boolean isSuccess;
 	public String message;
-	public String successMessage;
-	public String failMessage;
+	private String successMessage;
+	private String failureMessage;
 
 	public ActionConclusion(Boolean isSuccess) {
 		setIsSuccess(isSuccess);
@@ -31,7 +31,7 @@ public class ActionConclusion {
 		}
 		message = "Unable to execute action. Please try again.";
 		setMessage(message);
-		setFailMessage(message);
+		setFailureMessage(message);
 	}
 
 	public void setIsSuccess(Boolean isSuccess) {
@@ -47,8 +47,8 @@ public class ActionConclusion {
 		this.message = successMessage;
 	}
 
-	public void setFailMessage(String failMessage) {
-		this.failMessage = failMessage;
-		this.message = failMessage;
+	public void setFailureMessage(String failureMessage) {
+		this.failureMessage = failureMessage;
+		this.message = failureMessage;
 	}
 }

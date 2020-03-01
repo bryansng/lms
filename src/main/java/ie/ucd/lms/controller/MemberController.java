@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ import ie.ucd.lms.entity.Member;
 import ie.ucd.lms.entity.Artifact;
 import ie.ucd.lms.service.Common;
 import ie.ucd.lms.service.MemberService;
+import ie.ucd.lms.service.ActionConclusion;
 import ie.ucd.lms.service.ArtifactService;
 import ie.ucd.lms.service.LoanHistoryService;
 
@@ -81,8 +83,9 @@ public class MemberController {
 	@GetMapping("/admin/members/view")
 	public String membersView(@RequestParam(defaultValue = "1", required = false) Integer page,
 			@RequestParam(defaultValue = "", required = false) String searchQuery,
-			@RequestParam(defaultValue = "", required = false) String updateStatus,
-			@RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+			@RequestParam(defaultValue = "", required = false) String isSuccess,
+			@RequestParam(defaultValue = "", required = false) String successMessage,
+			@RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
 		Page<Member> members = memberService.search(searchQuery, page - 1);
 		model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - members.getTotalElements());
 		model.addAttribute("totalPages", members.getTotalPages());
@@ -90,8 +93,9 @@ public class MemberController {
 		model.addAttribute("members", members);
 
 		model.addAttribute("previousQuery", searchQuery);
-		model.addAttribute("previousUpdateStatus", updateStatus);
-		model.addAttribute("previousErrorMessage", errorMessage);
+		model.addAttribute("previousIsSuccess", isSuccess);
+		model.addAttribute("previousSuccessMessage", successMessage);
+		model.addAttribute("previousFailureMessage", failureMessage);
 		return "admin/member/view.html";
 	}
 
@@ -101,9 +105,9 @@ public class MemberController {
 		return "admin/member/view.html";
 	}
 
-	// @PostMapping("/admin/members/delete")
-	// @ResponseBody
-	// public String membersDelete(@RequestParam(name = "id") String stringId, Model model) {
-	// 	return memberService.delete(stringId).toString();
-	// }
+	@PostMapping("/admin/members/delete")
+	@ResponseBody
+	public ActionConclusion membersDelete(@RequestParam(name = "id") String stringId, Model model) {
+		return memberService.delete(stringId);
+	}
 }

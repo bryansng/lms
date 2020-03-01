@@ -1,28 +1,3 @@
-function logInForm(id) {
-  var form = $("#logInForm");
-  $.ajax({
-    url: form.attr("action"),
-    data: form.serialize(),
-    type: "post",
-    success: function(result) {
-      // Do something with the response.
-      // Might want to check for errors here.
-      if (result === "true") {
-        // updateStatusSuccess();
-      } else {
-        // updateStatusFail();
-        // updateErrorMessage(
-        //   "Unable to loan. Artifact not in stock. No change made to the database."
-        // );
-      }
-      // triggerRefresh();
-    },
-    error: function(error) {
-      // Here you can handle exceptions thrown by the server or your controller.
-    }
-  });
-}
-
 function loanForm(id) {
   var form = $("#loan-form-" + id);
   $.ajax({
@@ -32,16 +7,14 @@ function loanForm(id) {
     success: function(result) {
       // Do something with the response.
       // Might want to check for errors here.
-      console.log(result);
-      if (result === "true") {
-        updateStatusSuccess();
+      if (result.isSuccess === true) {
+        setIsSuccess();
+        updateSuccessMessage(result.message);
       } else {
-        updateStatusFail();
-        updateErrorMessage(
-          "Unable to loan. Artifact not in stock. No change made to the database."
-        );
+        setIsFailure();
+        updateFailureMessage(result.message);
       }
-      // triggerRefresh();
+      triggerRefresh();
     },
     error: function(error) {
       // Here you can handle exceptions thrown by the server or your controller.
@@ -58,10 +31,12 @@ function returnForm(id) {
     success: function(result) {
       // Do something with the response.
       // Might want to check for errors here.
-      if (result === "true") {
-        updateStatusSuccess();
+      if (result.isSuccess === true) {
+        setIsSuccess();
+        updateSuccessMessage(result.message);
       } else {
-        updateStatusFail();
+        setIsFailure();
+        updateFailureMessage(result.message);
       }
       triggerRefresh();
     },
@@ -80,13 +55,12 @@ function renewForm(id) {
     success: function(result) {
       // Do something with the response.
       // Might want to check for errors here.
-      if (result === "true") {
-        updateStatusSuccess();
+      if (result.isSuccess === true) {
+        setIsSuccess();
+        updateSuccessMessage(result.message);
       } else {
-        updateStatusFail();
-        updateErrorMessage(
-          "Unable to renew. Artifact is reserved for someone else. Artifact has been reserved for this user automatically."
-        );
+        setIsFailure();
+        updateFailureMessage(result.message);
       }
       triggerRefresh();
     },
@@ -105,10 +79,12 @@ function lostForm(id) {
     success: function(result) {
       // Do something with the response.
       // Might want to check for errors here.
-      if (result === "true") {
-        updateStatusSuccess();
+      if (result.isSuccess === true) {
+        setIsSuccess();
+        updateSuccessMessage(result.message);
       } else {
-        updateStatusFail();
+        setIsFailure();
+        updateFailureMessage(result.message);
       }
       triggerRefresh();
     },
@@ -127,10 +103,12 @@ function restockForm(id) {
     success: function(result) {
       // Do something with the response.
       // Might want to check for errors here.
-      if (result === "true") {
-        updateStatusSuccess();
+      if (result.isSuccess === true) {
+        setIsSuccess();
+        updateSuccessMessage(result.message);
       } else {
-        updateStatusFail();
+        setIsFailure();
+        updateFailureMessage(result.message);
       }
       triggerRefresh();
     },
@@ -149,10 +127,12 @@ function deleteForm(id) {
     success: function(result) {
       // Do something with the response.
       // Might want to check for errors here.
-      if (result === "true") {
-        updateStatusSuccess();
+      if (result.isSuccess === true) {
+        setIsSuccess();
+        updateSuccessMessage(result.message);
       } else {
-        updateStatusFail();
+        setIsFailure();
+        updateFailureMessage(result.message);
       }
       triggerRefresh();
     },
@@ -167,17 +147,22 @@ function triggerRefresh() {
   form.submit();
 }
 
-function updateStatusSuccess() {
-  var inputStatus = $("#updateStatus");
-  inputStatus.val("success");
+function setIsSuccess() {
+  var inputStatus = $("#isSuccess");
+  inputStatus.val("true");
 }
 
-function updateStatusFail() {
-  var inputStatus = $("#updateStatus");
-  inputStatus.val("fail");
+function setIsFailure() {
+  var inputStatus = $("#isSuccess");
+  inputStatus.val("false");
 }
 
-function updateErrorMessage(msg) {
-  var inputErrorMsg = $("#errorMessage");
-  inputErrorMsg.val(msg);
+function updateSuccessMessage(msg) {
+  var inputSuccessMsg = $("#successMessage");
+  inputSuccessMsg.val(msg);
+}
+
+function updateFailureMessage(msg) {
+  var inputFailureMsg = $("#failureMessage");
+  inputFailureMsg.val(msg);
 }

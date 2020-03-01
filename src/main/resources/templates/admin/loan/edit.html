@@ -21,10 +21,10 @@
 
   <main>
     <div class="w-100 w-lg-75 my-4 mx-auto container">
-      <div th:classappend="${#strings.isEmpty(previousUpdateStatus)} ? mb-3 : mb-0" class="d-flex flex-row justify-content-between align-items-start">
+      <div th:classappend="${#strings.isEmpty(previousIsSuccess)} ? mb-3 : mb-0" class="d-flex flex-row justify-content-between align-items-start">
         <h3 class="">Edit Loan</h3>
       </div>
-      <div th:replace="admin/fragments/viewUpdateStatus.html"></div>
+      <div th:replace="admin/fragments/actionMessage.html :: showActionMessage"></div>
       <div class="d-flex flex-row justify-content-between w-100 mx-auto py-3 px-0 container">
         <div class="w-25 container mx-2">
           <img th:src="@{~/images/placeholder.jpg}" style="width: 100%;"/> <!-- STAND IN IMAGE - CANNOT ADD/CHANGE  -->

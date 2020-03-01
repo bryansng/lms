@@ -31,8 +31,9 @@ public class LostController {
       @RequestParam(defaultValue = "", required = false) String memberQuery,
       @RequestParam(defaultValue = "", required = false) String fromDate,
       @RequestParam(defaultValue = "", required = false) String toDate,
-      @RequestParam(defaultValue = "", required = false) String updateStatus,
-      @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
     model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
     model.addAttribute("totalPages", loans.getTotalPages());
@@ -44,9 +45,19 @@ public class LostController {
     model.addAttribute("previousMember", memberQuery);
     model.addAttribute("previousFromDate", fromDate);
     model.addAttribute("previousToDate", toDate);
-    model.addAttribute("previousUpdateStatus", updateStatus);
-    model.addAttribute("previousErrorMessage", errorMessage);
+    model.addAttribute("previousIsSuccess", isSuccess);
+    model.addAttribute("previousSuccessMessage", successMessage);
+    model.addAttribute("previousFailureMessage", failureMessage);
     return "admin/lost/view.html";
+  }
+
+  @GetMapping("/admin/losts/edit")
+  public String loansEditGet(@RequestParam(name = "id") String stringId, Model model) {
+    LoanHistory loan = loanHistoryRepository.getOne(Common.convertStringToLong(stringId));
+    model.addAttribute("loan", loan);
+    model.addAttribute("title", loan.getArtifact().getTitle());
+    model.addAttribute("issuedOn", loan.getIssuedOn().format(Common.dateFormatter));
+    return "admin/lost/edit.html";
   }
 
   @PostMapping("/admin/losts/edit")
@@ -64,9 +75,13 @@ public class LostController {
       @RequestParam(name = "status", required = false) String status,
       @RequestParam(name = "issuedOn", required = true) String issuedOn,
       @RequestParam(name = "fine", required = false) String fine,
-      @RequestParam(defaultValue = "", required = false) String updateStatus,
-      @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     ActionConclusion actionConclusion = loanHistoryService.update(stringId, isbn, memberID, issuedOn, "", fine, status);
+    model.addAttribute("previousIsSuccess", isSuccess);
+    model.addAttribute("previousSuccessMessage", successMessage);
+    model.addAttribute("previousFailureMessage", failureMessage);
     if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
@@ -79,8 +94,6 @@ public class LostController {
       model.addAttribute("previousMember", memberQuery);
       model.addAttribute("previousFromDate", fromDate);
       model.addAttribute("previousToDate", toDate);
-      model.addAttribute("previousUpdateStatus", updateStatus);
-      model.addAttribute("previousErrorMessage", errorMessage);
       return "admin/lost/view.html";
     } else {
       model.addAttribute("previousISBN", isbn);
@@ -90,11 +103,15 @@ public class LostController {
       model.addAttribute("previousStatus", status);
       model.addAttribute("previousIssuedOn", issuedOn);
       model.addAttribute("previousFine", fine);
-      model.addAttribute("previousUpdateStatus", "fail");
-      model.addAttribute("previousUpdateMessage", "");
-      model.addAttribute("previousErrorMessage", "Failed to Edit Lost. Please try again.");
       return "admin/lost/edit.html";
     }
+  }
+
+  @GetMapping("/admin/losts/create")
+  public String lostsCreateGet(Model model) {
+    String issuedOn = LocalDate.now().format(Common.dateFormatter);
+    model.addAttribute("issuedOn", issuedOn);
+    return "admin/lost/create.html";
   }
 
   @PostMapping("/admin/losts/create")
@@ -111,14 +128,18 @@ public class LostController {
       @RequestParam(name = "status", required = false) String status,
       @RequestParam(name = "issuedOn", required = true) String issuedOn,
       @RequestParam(name = "fine", required = false) String fine,
-      @RequestParam(defaultValue = "", required = false) String updateStatus,
-      @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     System.out.println(isbn);
     System.out.println(memberID);
     System.out.println(issuedOn);
     System.out.println(fine);
     System.out.println(status);
     ActionConclusion actionConclusion = loanHistoryService.create(isbn, memberID, issuedOn, "", fine, status);
+    model.addAttribute("previousIsSuccess", isSuccess);
+    model.addAttribute("previousSuccessMessage", successMessage);
+    model.addAttribute("previousFailureMessage", failureMessage);
     if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
@@ -131,8 +152,6 @@ public class LostController {
       model.addAttribute("previousMember", memberQuery);
       model.addAttribute("previousFromDate", fromDate);
       model.addAttribute("previousToDate", toDate);
-      model.addAttribute("previousUpdateStatus", updateStatus);
-      model.addAttribute("previousErrorMessage", errorMessage);
       return "admin/lost/view.html";
     } else {
       model.addAttribute("previousISBN", isbn);
@@ -142,38 +161,19 @@ public class LostController {
       model.addAttribute("previousStatus", status);
       model.addAttribute("previousIssuedOn", issuedOn);
       model.addAttribute("previousFine", fine);
-      model.addAttribute("previousUpdateStatus", "fail");
-      model.addAttribute("previousUpdateMessage", "");
-      model.addAttribute("previousErrorMessage", "Failed to Create Lost. Please try again.");
       return "admin/lost/create.html";
     }
   }
 
   @PostMapping("/admin/losts/restock")
   @ResponseBody
-  public String lostsLost(@RequestParam(name = "id") String stringId, Model model) {
-    return loanHistoryService.restocked(stringId).toString();
+  public ActionConclusion lostsRestock(@RequestParam(name = "id") String stringId, Model model) {
+    return loanHistoryService.restocked(stringId);
   }
 
   @PostMapping("/admin/losts/delete")
   @ResponseBody
-  public String lostsDelete(@RequestParam(name = "id") String stringId, Model model) {
-    return loanHistoryService.delete(stringId).toString();
-  }
-
-  @GetMapping("/admin/losts/create")
-  public String lostsCreateGet(Model model) {
-    String issuedOn = LocalDate.now().format(Common.dateFormatter);
-    model.addAttribute("issuedOn", issuedOn);
-    return "admin/lost/create.html";
-  }
-
-  @GetMapping("/admin/losts/edit")
-  public String loansEditGet(@RequestParam(name = "id") String stringId, Model model) {
-    LoanHistory loan = loanHistoryRepository.getOne(Common.convertStringToLong(stringId));
-    model.addAttribute("loan", loan);
-    model.addAttribute("title", loan.getArtifact().getTitle());
-    model.addAttribute("issuedOn", loan.getIssuedOn().format(Common.dateFormatter));
-    return "admin/lost/edit.html";
+  public ActionConclusion lostsDelete(@RequestParam(name = "id") String stringId, Model model) {
+    return loanHistoryService.delete(stringId);
   }
 }

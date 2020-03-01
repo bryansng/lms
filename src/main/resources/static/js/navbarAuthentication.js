@@ -1,5 +1,5 @@
 function logInForm(id) {
-  var form = $("#renew-form-" + id);
+  var form = $("#logInForm");
   $.ajax({
     url: form.attr("action"),
     data: form.serialize(),
@@ -8,14 +8,14 @@ function logInForm(id) {
       // Do something with the response.
       // Might want to check for errors here.
       if (result === "true") {
-        updateStatusSuccess();
+        // updateStatusSuccess();
       } else {
-        updateStatusFail();
-        updateErrorMessage(
-          "Unable to renew. Artifact is reserved for someone else. Artifact has been reserved for this user automatically."
-        );
+        // updateStatusFail();
+        // updateErrorMessage(
+        //   "Unable to loan. Artifact not in stock. No change made to the database."
+        // );
       }
-      triggerRefresh();
+      // triggerRefresh();
     },
     error: function(error) {
       // Here you can handle exceptions thrown by the server or your controller.

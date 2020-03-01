@@ -71,6 +71,12 @@ public class TestController {
         " MemberService search() method incorrect.");
     Assert.isTrue(memberService.search("ucd", 0).getTotalElements() == 4, " MemberService search() method incorrect.");
     Assert.isTrue(memberService.search("1", 0).getTotalElements() == 2, " MemberService search() method incorrect.");
+
+    memberService.update("2", "hone.james@ucdconnect.ie", "James Hone", "007", "MI6", "", "", "member");
+    Assert.isTrue(memberService.search("Bond", 0).getTotalElements() == 0, " MemberService update() method incorrect.");
+    Assert.isTrue(memberService.search("Hone", 0).getTotalElements() == 1, " MemberService update() method incorrect.");
+
+    // Did not test for delete method.
   }
 
   public void testArtifactService() {
@@ -184,16 +190,16 @@ public class TestController {
   public void testLoanFunctionInReserveQueueService() {
     // Loan Id 6 has no more stock.
     reserveQueueService.loan("6", "7");
-    Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 5,
+    Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 4,
         " reserveQueueService loan() method when no more artifact stock incorrect.");
-    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "issued date", 0).getTotalElements() == 3,
+    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "issued date", 0).getTotalElements() == 4,
         " reserveQueueService loan() method when no more artifact stock incorrect.");
 
     // Loan Id 3 has stock.
     reserveQueueService.loan("3", "7");
-    Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 4,
+    Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 3,
         " reserveQueueService loan() method when artifact in stock incorrect.");
-    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "issued date", 0).getTotalElements() == 4,
+    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "issued date", 0).getTotalElements() == 5,
         " reserveQueueService loan() method when artifact in stock incorrect.");
   }
 
@@ -201,13 +207,13 @@ public class TestController {
     loanHistoryService.create("9780743269513", "4", "", Common.nowPlus3Date, "0.0", "lost");
     Assert.isTrue(loanHistoryService.searchLost("", "", "", "", 0).getTotalElements() == 1,
         " loanHistoryService restocked() method incorrect.");
-    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 4,
+    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 5,
         " loanHistoryService restocked() method incorrect.");
 
-    loanHistoryService.restocked("7");
-    Assert.isTrue(loanHistoryService.searchLost("", "", "", "", 0).getTotalElements() == 1,
+    loanHistoryService.restocked("9");
+    Assert.isTrue(loanHistoryService.searchLost("", "", "", "", 0).getTotalElements() == 0,
         " loanHistoryService restocked() method incorrect.");
-    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 4,
+    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 6,
         " loanHistoryService restocked() method incorrect.");
   }
 
@@ -215,7 +221,7 @@ public class TestController {
     loanHistoryService.returnn("7");
     Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "returned", 0).getTotalElements() == 1,
         " loanHistoryService returnn() method incorrect.");
-    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 4,
+    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 6,
         " loanHistoryService returnn() method incorrect.");
   }
 
@@ -223,30 +229,30 @@ public class TestController {
     loanHistoryService.renew("6", "3");
     Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "renewed", 0).getTotalElements() == 0,
         " loanHistoryService renew() method when artifact is reserved by another user incorrect.");
-    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 4,
+    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 6,
         " loanHistoryService renew() method when artifact is reserved by another user incorrect.");
 
     loanHistoryService.create("9780061241895", "3", "", Common.nowPlus3Date, "0.0", "issued");
-    loanHistoryService.renew("9", "3");
+    loanHistoryService.renew("10", "3");
     Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "renewed", 0).getTotalElements() == 1,
         " loanHistoryService renew() method when artifact not reserved incorrect.");
-    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 5,
+    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 7,
         " loanHistoryService renew() method when artifact not reserved incorrect.");
   }
 
   public void testLostFunctionInLoanHistoryService() {
     loanHistoryService.lost("3");
-    Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "lost", 0).getTotalElements() == 2,
+    Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "lost", 0).getTotalElements() == 1,
         " loanHistoryService lost() method incorrect.");
-    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 4,
+    Assert.isTrue(loanHistoryService.searchAllButLost("", "", "", "", "", 0).getTotalElements() == 6,
         " loanHistoryService lost() method incorrect.");
   }
 
   public void testOnCreateWillAddToReserveQueue() {
     loanHistoryService.create("9780062301239", "3", "", Common.nowPlus3Date, "0.0", "issued");
-    Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "issued", 0).getTotalElements() == 2,
+    Assert.isTrue(loanHistoryService.searchAll("", "", "", "", "issued", 0).getTotalElements() == 3,
         " loanHistoryService create() method incorrect.");
-    Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 5,
+    Assert.isTrue(reserveQueueService.search("", "", "", "", 0).getTotalElements() == 4,
         " loanHistoryService create() method incorrect.");
   }
 

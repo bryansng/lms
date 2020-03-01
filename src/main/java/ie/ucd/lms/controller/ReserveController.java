@@ -24,8 +24,9 @@ public class ReserveController {
 			@RequestParam(defaultValue = "", required = false) String memberQuery,
 			@RequestParam(defaultValue = "", required = false) String fromDate,
 			@RequestParam(defaultValue = "", required = false) String toDate,
-			@RequestParam(defaultValue = "", required = false) String updateStatus,
-			@RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+			@RequestParam(defaultValue = "", required = false) String isSuccess,
+			@RequestParam(defaultValue = "", required = false) String successMessage,
+			@RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
 		Page<ReserveQueue> reserves = reserveQueueService.search(artifactQuery, memberQuery, fromDate, toDate, page - 1);
 		// reserveQueueService.nextInLine(isbn);
 		model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - reserves.getTotalElements());
@@ -38,8 +39,9 @@ public class ReserveController {
 		model.addAttribute("previousMember", memberQuery);
 		model.addAttribute("previousFromDate", fromDate);
 		model.addAttribute("previousToDate", toDate);
-		model.addAttribute("previousUpdateStatus", updateStatus);
-		model.addAttribute("previousErrorMessage", errorMessage);
+		model.addAttribute("previousIsSuccess", isSuccess);
+		model.addAttribute("previousSuccessMessage", successMessage);
+		model.addAttribute("previousFailureMessage", failureMessage);
 		return "admin/reserve/view.html";
 	}
 
@@ -52,7 +54,7 @@ public class ReserveController {
 
 	@PostMapping("/admin/reserves/delete")
 	@ResponseBody
-	public String reservesDelete(@RequestParam(name = "id") String stringId, Model model) {
-		return reserveQueueService.delete(stringId).toString();
+	public ActionConclusion reservesDelete(@RequestParam(name = "id") String stringId, Model model) {
+		return reserveQueueService.delete(stringId);
 	}
 }

@@ -82,7 +82,7 @@ public class ReserveQueueService {
 
     if (reserveQueueRepository.existsById(id)) {
       reserveQueueRepository.deleteById(id);
-      return new ActionConclusion(true, "Deleted successfully.'");
+      return new ActionConclusion(true, "Deleted successfully.");
     }
     return new ActionConclusion(false, "Failed to delete. Reserve ID does not exist.");
   }

@@ -27,7 +27,7 @@
           <img th:src="@{~/images/add_v1.png}" class="create-new-img" />
         </a>
       </div>
-      <div th:classappend="${#strings.isEmpty(previousUpdateStatus)} ? mb-5 : mb-1">
+      <div th:classappend="${#strings.isEmpty(previousIsSuccess)} ? mb-5 : mb-1">
         <form action="#" th:action="@{/admin/artifacts/view}" method="GET" th:id="searchForm">
           <div class="d-flex flex-row justify-content-between align-items-end">
             <div class="w-50">
@@ -47,13 +47,12 @@
                 <option value="pdf" th:selected="${previousType == 'pdf'}">PDF</option>
               </select>
             </div>
-            <input type="text" class="d-none" id="updateStatus" name="updateStatus" />
-            <input type="text" class="d-none" id="errorMessage" name="errorMessage" />
+            <div th:replace="admin/fragments/actionMessage.html :: hiddenInputsForActionMessages"></div>
             <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Search</button>
           </div>
         </form>
       </div>
-      <div th:replace="admin/fragments/viewUpdateStatus.html"></div>
+      <div th:replace="admin/fragments/actionMessage.html :: showActionMessage"></div>
       <div class="row no-gutters">
         <div class="col-12">
           <table class="w-100 divtable">

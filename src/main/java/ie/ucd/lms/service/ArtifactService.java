@@ -69,7 +69,7 @@ public class ArtifactService {
 
 		if (artifactRepository.existsById(id)) {
 			artifactRepository.deleteById(id);
-			return new ActionConclusion(true, "Deleted successfully.'");
+			return new ActionConclusion(true, "Deleted successfully.");
 		}
 		return new ActionConclusion(false, "Failed to delete. Artifact ID does not exist.");
 	}

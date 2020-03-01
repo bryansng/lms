@@ -32,8 +32,27 @@ public class MemberService {
 		return res;
 	}
 
-	public Boolean update() {
-		return false;
+	public ActionConclusion update(String stringId, String email, String fullName, String mobileNumber, String address,
+			String bornOn, String bio, String type) {
+		Long id = Common.convertStringToLong(stringId);
+
+		if (memberRepository.existsById(id)) {
+			Member member = memberRepository.getOne(id);
+			member.setAll(email, fullName, mobileNumber, address, bornOn, bio, type);
+			memberRepository.save(member);
+			return new ActionConclusion(true, "Updated successfully.");
+		}
+		return new ActionConclusion(false, "Failed to update. Member ID does not exist.");
+	}
+
+	public ActionConclusion delete(String stringId) {
+		Long id = Common.convertStringToLong(stringId);
+
+		if (memberRepository.existsById(id)) {
+			memberRepository.deleteById(id);
+			return new ActionConclusion(true, "Deleted successfully.");
+		}
+		return new ActionConclusion(false, "Failed to delete. Member ID does not exist.");
 	}
 
 	public Boolean isMember(String stringToSearch) {
@@ -59,7 +78,6 @@ public class MemberService {
 	public Member createMember(Login login) {
 		Member member = new Member();
 		member.setEmail(login.getEmail());
-
 		return member;
 	}
 

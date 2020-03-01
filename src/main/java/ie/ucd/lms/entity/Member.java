@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.*;
 import java.util.List;
 import javax.persistence.*;
+import ie.ucd.lms.service.Common;
 
 @Entity
 @Table(name = "members")
@@ -21,6 +22,8 @@ public class Member implements Serializable {
 	private String fullName;
 	private String mobileNumber;
 	private String address;
+
+	@Column(nullable = true)
 	private LocalDateTime bornOn;
 	private LocalDateTime joinedOn = LocalDateTime.now();
 	private LocalDateTime lastActiveOn;
@@ -31,11 +34,28 @@ public class Member implements Serializable {
 	@JoinColumn(referencedColumnName = "email")
 	private Login login;
 
-	@OneToMany(mappedBy = "member")
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	private List<LoanHistory> loanHistories;
 
-	@OneToMany(mappedBy = "member")
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	private List<ReserveQueue> reserveQueues;
+
+	public void setAll(String email, String fullName, String mobileNumber, String address, String bornOn, String bio,
+			String type) {
+		setEmail(email);
+		setFullName(fullName);
+		setMobileNumber(mobileNumber);
+		setAddress(address);
+
+		if (bornOn.equals("")) {
+			setBornOn(null);
+		} else {
+			setBornOn(Common.convertStringDateToDateTime(bornOn));
+		}
+
+		setBio(bio);
+		setType(type);
+	}
 
 	public Login getLogin() {
 		return this.login;

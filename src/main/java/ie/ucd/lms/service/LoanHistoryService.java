@@ -152,7 +152,7 @@ public class LoanHistoryService {
     if (loanHistoryRepository.existsById(id)) {
       handleArtifactStock(loanHistoryRepository.getOne(id));
       loanHistoryRepository.deleteById(id);
-      return new ActionConclusion(true, "Deleted successfully.'");
+      return new ActionConclusion(true, "Deleted successfully.");
     }
     return new ActionConclusion(false, "Failed to delete. Loan ID does not exist.");
   }
@@ -249,10 +249,8 @@ public class LoanHistoryService {
    */
   private void handleArtifactStock(LoanHistory loanHistory) {
     String status = loanHistory.getStatus();
-    System.out.println(loanHistory);
     if (status.equals("issued") || status.equals("renewed") || status.equals("delayed") || status.equals("lost")) {
       loanHistory.getArtifact().incrementQuantity();
-      System.out.println("incremented");
     }
   }
 
