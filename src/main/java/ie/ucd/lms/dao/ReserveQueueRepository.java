@@ -26,4 +26,6 @@ public interface ReserveQueueRepository extends JpaRepository<ReserveQueue, Long
   boolean existsByIsbn(String isbn);
 
   boolean existsByArtifactId(String artifactId);
+
+  Integer countByMemberId(Long memberId);
 }

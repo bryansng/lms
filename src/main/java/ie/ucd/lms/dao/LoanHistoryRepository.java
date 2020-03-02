@@ -88,6 +88,8 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Long> 
 
 	Integer countByIssuedOnAfterAndWasLostTrue(LocalDateTime issuedOn);
 
+	Integer countByMemberIdAndStatusContainsIgnoreCase(Long memberId, String status);
+
 	List<LoanHistory> findByMember(Member member);
 
 	/* 	Page<LoanHistory> findByArtifact_IdOrArtifact_TitleContainsIgnoreCaseOrIsbnContainsOrMember_FullNameContainsIgnoreCaseOrMember_EmailContainsIgnoreCaseOrMemberId(

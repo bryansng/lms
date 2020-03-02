@@ -108,6 +108,7 @@ public class LoanHistoryService {
         loanHistoryRepository.save(loanHistory);
         return new ActionConclusion(true, "Updated successfully.");
       }
+      return new ActionConclusion(false, "Failed to update. ISBN or member ID does not exist.");
     }
     return new ActionConclusion(false, "Failed to update. Loan ID does not exist.");
   }
@@ -123,6 +124,12 @@ public class LoanHistoryService {
       issuedOn = LocalDateTime.now().format(Common.dateFormatter);
     } else if (!issuedOn.equals("") && returnOn.equals("")) {
       returnOn = issuedOn;
+    }
+
+    if (status.equals("issued") && loanHistoryRepository.countByMemberIdAndStatusContainsIgnoreCase(aMemberId,
+        "issued") >= Common.MAX_LOANS_PER_USER) {
+      return new ActionConclusion(false,
+          "Unable to create. Member has exceeded the maximum loan amount: " + Common.MAX_LOANS_PER_USER);
     }
 
     // if (!loanHistoryRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {

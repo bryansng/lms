@@ -57,6 +57,7 @@ public class ReserveQueueService {
         reserveQueueRepository.save(reserveQueue);
         return new ActionConclusion(true, "Updated successfully.");
       }
+      return new ActionConclusion(false, "Failed to update. ISBN or member ID does not exist.");
     }
     return new ActionConclusion(false, "Failed to update. Reserve ID does not exist.");
   }
@@ -64,17 +65,21 @@ public class ReserveQueueService {
   public ActionConclusion create(String isbn, String memberId, String expiredOn) {
     Long aMemberId = Common.convertStringToLong(memberId);
 
-    // if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
-    if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
-      Artifact artifact = artifactRepository.findByIsbn(isbn);
-      Member member = memberRepository.getOne(aMemberId);
-      ReserveQueue reserveQueue = new ReserveQueue();
-      reserveQueue.setAll(isbn, memberId, expiredOn, artifact, member);
-      reserveQueueRepository.save(reserveQueue);
-      return new ActionConclusion(true, "Created successfully.");
+    if (reserveQueueRepository.countByMemberId(aMemberId) < Common.MAX_RESERVES_PER_USER) {
+      // if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
+      if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
+        Artifact artifact = artifactRepository.findByIsbn(isbn);
+        Member member = memberRepository.getOne(aMemberId);
+        ReserveQueue reserveQueue = new ReserveQueue();
+        reserveQueue.setAll(isbn, memberId, expiredOn, artifact, member);
+        reserveQueueRepository.save(reserveQueue);
+        return new ActionConclusion(true, "Created successfully.");
+      }
+      // }
+      return new ActionConclusion(false, "Failed to create. ISBN or member ID does not exist.");
     }
-    // }
-    return new ActionConclusion(false, "Failed to create. ISBN or member ID does not exist.");
+    return new ActionConclusion(false,
+        "Unable to create. Member has exceeded the maximum reserve amount: " + Common.MAX_RESERVES_PER_USER);
   }
 
   public ActionConclusion delete(String stringId) {
