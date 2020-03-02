@@ -1,38 +1,47 @@
+let timeoutNavbarArtifactSearch = null;
 function navbarSearchForm(url) {
-  var searchQuery = document.querySelector("#navbarSearchQuery").value;
-  var searchSpinner = document.querySelector(".search-spinner");
-  var searchGlass = document.querySelector(".search-glass");
+  // handle delay.
+  clearTimeout(timeoutNavbarArtifactSearch);
 
-  clearChild(document.querySelector("#cardsContainer"));
-  if (searchQuery !== "") {
-    searchSpinner.style.display = "block";
-    searchGlass.style.display = "none";
+  timeoutNavbarArtifactSearch = setTimeout(function() {
+    var searchQuery = document.querySelector("#navbarSearchQuery").value;
+    var searchSpinner = document.querySelector(".search-spinner");
+    var searchGlass = document.querySelector(".search-glass");
 
-    fetch(url + searchQuery)
-      .then(resp => resp.json())
-      .then(artifactsPage => {
-        for (artifact of artifactsPage.content) {
+    clearChild(document.querySelector("#cardsContainer"));
+    if (searchQuery !== "") {
+      searchSpinner.style.display = "block";
+      searchGlass.style.display = "none";
+
+      fetch(url + searchQuery)
+        .then(resp => resp.json())
+        .then(artifactsPage => {
+          for (artifact of artifactsPage.content) {
+            document
+              .querySelector("#cardsContainer")
+              .appendChild(
+                getSearchCard(
+                  artifact.title,
+                  artifact.authors,
+                  `/artifacts/view?id=${artifact.id}`
+                )
+              );
+          }
+
           document
             .querySelector("#cardsContainer")
             .appendChild(
-              getSearchCard(
-                artifact.title,
-                artifact.authors,
-                `/artifacts/view?id=${artifact.id}`
+              getSeeAllResults(
+                searchQuery,
+                `/search?searchQuery=${searchQuery}`
               )
             );
-        }
 
-        document
-          .querySelector("#cardsContainer")
-          .appendChild(
-            getSeeAllResults(searchQuery, `/search?searchQuery=${searchQuery}`)
-          );
-
-        searchSpinner.style.display = "none";
-        searchGlass.style.display = "block";
-      });
-  }
+          searchSpinner.style.display = "none";
+          searchGlass.style.display = "block";
+        });
+    }
+  }, 250);
 }
 
 function clearChild(aNode) {
