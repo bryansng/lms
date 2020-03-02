@@ -23,12 +23,16 @@ public class MemberService {
 	}
 
 	public Page<Member> search(String stringToSearch, int pageNum) {
+		return this.search(stringToSearch, pageNum, Common.PAGINATION_ROWS);
+	}
+
+	public Page<Member> search(String stringToSearch, int pageNum, int pageSize) {
 		Long id = Common.convertStringToLong(stringToSearch);
 
 		Page<Member> res = memberRepository
 				.findByIdOrFullNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrMobileNumberContainsOrAddressContainsIgnoreCaseOrTypeIgnoreCaseContains(
 						id, stringToSearch, stringToSearch, stringToSearch, stringToSearch, stringToSearch,
-						PageRequest.of(pageNum, Common.PAGINATION_ROWS));
+						PageRequest.of(pageNum, pageSize));
 		return res;
 	}
 

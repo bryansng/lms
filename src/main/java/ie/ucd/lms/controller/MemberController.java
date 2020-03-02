@@ -110,4 +110,10 @@ public class MemberController {
 	public ActionConclusion membersDelete(@RequestParam(name = "id") String stringId, Model model) {
 		return memberService.delete(stringId);
 	}
+
+	@GetMapping("/members/search")
+	@ResponseBody
+	public Page<Member> membersSearch(@RequestParam(defaultValue = "", required = false) String searchQuery) {
+		return memberService.search(searchQuery, 0, Common.QUICK_SEARCH_ROWS);
+	}
 }

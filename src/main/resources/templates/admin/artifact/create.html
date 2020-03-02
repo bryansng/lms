@@ -34,26 +34,26 @@
             <div class="d-flex flex-column justify-content-center">
               <div class="form__group my-1 quick-search-dropdown instant-search-container">
                 <input type="text" name="isbn"
-                id="isbn" placeholder="9781627792127" th:value="${previousISBN}" oninput="inputSearchArtifact('isbn')" required/>
+                id="isbn" placeholder="9781627792127" th:value="${previousISBN}" oninput="inputSearchArtifactViaAPI('isbn')" required/>
                 <label for="isbn">ISBN*</label>
-                <div th:replace="admin/fragments/instantSearch.html :: inputSpinnerArtifact(type='Isbn')"></div>
-                <div th:replace="admin/fragments/instantSearch.html :: inputSearchArtifact(type='Isbn')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='Isbn')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='Isbn')"></div>
               </div>
 
               <div class="form__group my-1 quick-search-dropdown instant-search-container">
                 <input type="text" name="title"
-                id="title" placeholder="SISTEM Handbook" th:value="${previousTitle}" oninput="inputSearchArtifact('title')" />
+                id="title" placeholder="SISTEM Handbook" th:value="${previousTitle}" oninput="inputSearchArtifactViaAPI('title')" />
                 <label for="title">Title</label>
-                <div th:replace="admin/fragments/instantSearch.html :: inputSpinnerArtifact(type='Title')"></div>
-                <div th:replace="admin/fragments/instantSearch.html :: inputSearchArtifact(type='Title')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='Title')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='Title')"></div>
               </div>
 
               <div class="form__group my-1 quick-search-dropdown instant-search-container">
                 <input type="text" name="authors"
-                id="authors" placeholder="John Doe, Jane Smith" th:value="${previousAuthors}" oninput="inputSearchArtifact('authors')" />
+                id="authors" placeholder="John Doe, Jane Smith" th:value="${previousAuthors}" oninput="inputSearchArtifactViaAPI('authors')" />
                 <label for="authors">Authors</label>
-                <div th:replace="admin/fragments/instantSearch.html :: inputSpinnerArtifact(type='Authors')"></div>
-                <div th:replace="admin/fragments/instantSearch.html :: inputSearchArtifact(type='Authors')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='Authors')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='Authors')"></div>
               </div>
 
               <div class="form__group my-1">
@@ -163,7 +163,7 @@
   </script>
 
   <!-- Include JavaScript from static folder -->
-  <script type="text/javascript" src="/js/instantSearch.js"></script>
+  <script type="text/javascript" src="/js/instantSearchArtifact.js"></script>
 </body>
 
 </html>

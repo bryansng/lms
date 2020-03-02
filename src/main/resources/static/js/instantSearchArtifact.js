@@ -3,7 +3,7 @@
 // introduce delay.
 // https://schier.co/blog/wait-for-user-to-stop-typing-using-javascript
 let timeout = null;
-function inputSearchArtifact(inputId) {
+function inputSearchArtifactViaAPI(inputId) {
   // handle delay.
   clearTimeout(timeout);
 
@@ -21,7 +21,6 @@ function inputSearchArtifact(inputId) {
     const MAX_RESULTS = 5;
     // var url = `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&maxResults=${MAX_RESULTS}`;
     var url = `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&maxResults=${MAX_RESULTS}&printType=all&projection=full`;
-    console.log(url);
 
     clearChild(focusedCardsContainer);
     if (searchQuery !== "") {
@@ -204,12 +203,7 @@ function getInputSearchArtifactCard(
 
   var publishedDate = document.createElement("p");
   publishedDate.style.width = "90%";
-  publishedDate.classList.add(
-    "w-100",
-    "m-0",
-    "font-weight-light",
-    "text-truncate"
-  );
+  publishedDate.classList.add("m-0", "font-weight-light", "text-truncate");
   publishedDate.textContent = `Published on ${publishedDateText}`;
 
   cardContentDetailsContainer.appendChild(title);

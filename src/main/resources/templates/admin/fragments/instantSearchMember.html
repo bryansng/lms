@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+</head>
+
+<body>
+  <!-- <div th:replace="this :: inputSearchMember(type='Title')"></div> -->
+  <div th:fragment="inputSearchMember(type)" class="quick-search-dropdown-content"
+    th:id="'cardsContainerMember' + ${type}">
+  </div>
+
+  <div th:fragment="inputSpinnerMember(type)" class="search-spinner" th:id="'inputSpinnerMember' + ${type}">
+    <div class="sk-chase">
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+    </div>
+  </div>
+</body>
+
+</html>
