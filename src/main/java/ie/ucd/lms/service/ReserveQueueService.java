@@ -1,7 +1,10 @@
 package ie.ucd.lms.service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
@@ -36,11 +39,36 @@ public class ReserveQueueService {
 
     Page<ReserveQueue> res = reserveQueueRepository.findAllByArtifactAndMemberAndBothDatesAndStatus(artifactId,
         artifact, memberId, member, fromDateTime, toDateTime, pRequest);
+    // Page<ReserveQueue> res = reserveQueueRepository.findAllByArtifactAndMemberAndBothDatesAndStatus(artifactId,
+    //     artifact, memberId, member, fromDateTime, toDateTime, pRequest);
     // Page<ReserveQueue> res = reserveQueueRepository.findByExpiredOnBetween(fromDateTime, toDateTime, pRequest);
     return res;
   }
 
-  public ReserveQueue nextInLine(String isbn) {
+  public Map<Long, Long> searchFirstInQueueByArtifact(String artifact, String member, String fromDate, String toDate,
+      int pageNum) {
+    Long artifactId = Common.convertStringToLong(artifact);
+    Long memberId = Common.convertStringToLong(member);
+    LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
+    LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
+    PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
+
+    List<Object> artifactIdAndPositionInQueue = reserveQueueRepository.findAllFirstPositionInQueueByArtifact(artifactId,
+        artifact, memberId, member, fromDateTime, toDateTime, pRequest).getContent();
+
+    Map<Long, Long> hm = new HashMap<Long, Long>();
+    for (Object data : artifactIdAndPositionInQueue) {
+      Object[] dataArray = (Object[]) data;
+      // String row = "";
+      // row += "artifact.id: " + (Long) dataArray[0] + "\t";
+      // row += "reserveQueue.id: " + (Long) dataArray[1] + "\n";
+      // System.out.println(row);
+      hm.put((Long) dataArray[0], (Long) dataArray[1]);
+    }
+    return hm;
+  }
+
+  public ReserveQueue firstInLine(String isbn) {
     return reserveQueueRepository.findFirstByIsbnOrderById(isbn);
   }
 

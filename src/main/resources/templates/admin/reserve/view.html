@@ -98,8 +98,7 @@
                 <td class="p-2" th:text="${reserve.isbn}"></td>
                 <td class="p-2 text-capitalize" th:text="${reserve.member.fullName}"></td>
                 <td class="p-2" th:text="${reserve.expiredOn}"></td>
-                <!-- TODO: Calculate position in queue here -->
-                <td class="p-2"><span th:text="${reserve.id}"></span></td>
+                <td class="p-2"><span th:text="${reserve.id - positionInQueue.get(reserve.artifact.id) + 1}"></span></td>
                 <td class="p-2">
                   <form th:action="@{/admin/reserves/loan}" method="POST" th:id="'loan-form-' + ${reserve.id}">
                     <div class="d-flex flex-row align-items-center">

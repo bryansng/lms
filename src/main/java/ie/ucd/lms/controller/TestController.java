@@ -260,10 +260,10 @@ public class TestController {
 
 	public void testNextInLineFunctionInReserveQueueService() {
 		loanHistoryService.create("9780307353139", "3", "", Common.nowPlus3Date, "0.0", "issued");
-		Assert.isTrue(reserveQueueService.nextInLine("9780307353139").getMemberId().intValue() == 1,
-				" reserveQueueService nextInLine() method incorrect.");
-		Assert.isTrue(reserveQueueService.nextInLine("9780307353139").getId().intValue() == 2,
-				" reserveQueueService nextInLine() method incorrect.");
+		Assert.isTrue(reserveQueueService.firstInLine("9780307353139").getMemberId().intValue() == 1,
+				" reserveQueueService firstInLine() method incorrect.");
+		Assert.isTrue(reserveQueueService.firstInLine("9780307353139").getId().intValue() == 2,
+				" reserveQueueService firstInLine() method incorrect.");
 	}
 
 	public void testReportService() {

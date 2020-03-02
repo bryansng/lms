@@ -1,5 +1,7 @@
 package ie.ucd.lms.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -28,11 +30,14 @@ public class ReserveController {
 			@RequestParam(defaultValue = "", required = false) String successMessage,
 			@RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
 		Page<ReserveQueue> reserves = reserveQueueService.search(artifactQuery, memberQuery, fromDate, toDate, page - 1);
+		Map<Long, Long> positionInQueue = reserveQueueService.searchFirstInQueueByArtifact(artifactQuery, memberQuery,
+				fromDate, toDate, page - 1);
 		// reserveQueueService.nextInLine(isbn);
 		model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - reserves.getTotalElements());
 		model.addAttribute("totalPages", reserves.getTotalPages());
 		model.addAttribute("currentPage", page);
 		model.addAttribute("reserves", reserves);
+		model.addAttribute("positionInQueue", positionInQueue);
 		model.addAttribute("daysToLoan", Common.DAYS_TO_LOAN);
 
 		model.addAttribute("previousArtifact", artifactQuery);
