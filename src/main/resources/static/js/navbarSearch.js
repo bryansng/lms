@@ -70,13 +70,17 @@ function getSearchCard(titleText, authorsText, link) {
     "align-items-center"
   );
 
+  var cardImgContainer = document.createElement("div");
+  cardImgContainer.classList.add("h-100");
+
   var cardImg = document.createElement("div");
   cardImg.style.width = "2.5rem";
   cardImg.style.height = "2.5rem";
   cardImg.classList.add("bg-dark");
 
-  var titleAuthorsContainer = document.createElement("div");
-  titleAuthorsContainer.classList.add(
+  var cardContentDetailsContainer = document.createElement("div");
+  cardContentDetailsContainer.classList.add(
+    "w-100",
     "ml-2",
     "d-flex",
     "flex-column",
@@ -85,17 +89,20 @@ function getSearchCard(titleText, authorsText, link) {
   );
 
   var title = document.createElement("p");
-  title.classList.add("font-weight-bolder", "m-0", "text-truncate");
+  title.style.width = "90%";
+  title.classList.add("m-0", "font-weight-bolder", "text-truncate");
   title.textContent = titleText;
 
   var authors = document.createElement("p");
+  authors.style.width = "90%";
   authors.classList.add("m-0", "text-truncate");
   authors.textContent = `by ${authorsText}`;
 
-  titleAuthorsContainer.appendChild(title);
-  titleAuthorsContainer.appendChild(authors);
-  cardWrapper.appendChild(cardImg);
-  cardWrapper.appendChild(titleAuthorsContainer);
+  cardContentDetailsContainer.appendChild(title);
+  cardContentDetailsContainer.appendChild(authors);
+  cardImgContainer.appendChild(cardImg);
+  cardWrapper.appendChild(cardImgContainer);
+  cardWrapper.appendChild(cardContentDetailsContainer);
   cardContainer.appendChild(cardWrapper);
 
   return cardContainer;
@@ -115,29 +122,4 @@ function getSeeAllResults(searchQuery, link) {
   seeAllResults.href = link;
   seeAllResults.textContent = `See all results for "${searchQuery}"`;
   return seeAllResults;
-}
-
-function searchBarForm1(id) {
-  var form = $("#searchBarForm");
-  $.ajax({
-    url: form.attr("action"),
-    data: form.serialize(),
-    type: "get",
-    success: function(result) {
-      // Do something with the response.
-      // Might want to check for errors here.
-      if (result === "true") {
-        updateStatusSuccess();
-      } else {
-        updateStatusFail();
-        updateErrorMessage(
-          "Unable to renew. Artifact is reserved for someone else. Artifact has been reserved for this user automatically."
-        );
-      }
-      triggerRefresh();
-    },
-    error: function(error) {
-      // Here you can handle exceptions thrown by the server or your controller.
-    }
-  });
 }

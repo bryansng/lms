@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+</head>
+
+<body>
+  <div th:replace="this :: inputSearchArtifact(type='Title')"></div>
+
+  <div th:fragment="inputSearchArtifact(type)" class="quick-search-dropdown-content"
+    th:id="'cardsContainerArtifact' + ${type}">
+  </div>
+
+  <div th:fragment="inputSpinnerArtifact(type)" class="search-spinner" th:id="'inputSpinnerArtifact' + ${type}">
+    <div class="sk-chase">
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+    </div>
+  </div>
+
+  <div th:fragment="inputSearchArtifact_Version2(type)" class="d-none d-lg-block" style="width: 52.5%;">
+    <div class="quick-search-container quick-search-dropdown">
+      <input type="text" autocomplete="off" class="form-control border border-dark rounded-0 text-dark"
+        th:id="'inputSearchQueryArtifact' + ${type}" th:name="'inputSearchQueryArtifact' + ${type}"
+        th:oninput="'inputSearch(' + ${type} + '\')'" />
+      <div class="quick-search-dropdown-content" id="cardsContainerArtifact">
+      </div>
+    </div>
+  </div>
+
+  <div th:fragment="inputSearchArtifact_Version1" class="d-none d-lg-block" style="width: 52.5%;">
+    <div class="quick-search-container quick-search-dropdown">
+      <input type="text" autocomplete="off" placeholder="Search artifact"
+        class="form-control border border-dark rounded-0 text-dark" id="inputSearchQueryArtifact"
+        name="inputSearchQueryArtifact" oninput="inputSearch('Artifact')" />
+      <label for="inputSearchQueryArtifact">
+        <img th:src="@{~/images/search.png}" class="search-glass hover-no-bg" id="inputGlassArtifact" />
+      </label>
+      <div class="search-spinner" id="inputSpinnerArtifact">
+        <div class="sk-chase">
+          <div class="sk-chase-dot"></div>
+          <div class="sk-chase-dot"></div>
+          <div class="sk-chase-dot"></div>
+          <div class="sk-chase-dot"></div>
+          <div class="sk-chase-dot"></div>
+          <div class="sk-chase-dot"></div>
+        </div>
+      </div>
+      <div class="quick-search-dropdown-content" id="cardsContainerArtifact">
+      </div>
+    </div>
+
+    <!-- Include JavaScript from static folder -->
+    <script type="text/javascript" src="/js/instantSearch.js"></script>
+  </div>
+</body>
+
+</html>

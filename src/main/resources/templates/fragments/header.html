@@ -147,9 +147,9 @@
         class="form-control border border-dark rounded-0 text-dark" id="navbarSearchQuery" name="navbarSearchQuery"
         oninput="navbarSearchForm('/artifacts/search?searchQuery=')" />
       <label for="navbarSearchQuery">
-        <img th:src="@{~/images/search.png}" class="search-glass hover-no-bg" />
+        <img th:src="@{~/images/search.png}" class="search-glass hover-no-bg" id="navbarGlass" />
       </label>
-      <div class="search-spinner">
+      <div class="search-spinner" id="navbarSpinner">
         <div class="sk-chase">
           <div class="sk-chase-dot"></div>
           <div class="sk-chase-dot"></div>

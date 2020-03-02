@@ -22,6 +22,7 @@
   object-fit: contain;
 }
 
+.instant-search-container .search-spinner,
 .quick-search-container .search-spinner {
   position: absolute;
   top: 50%;
