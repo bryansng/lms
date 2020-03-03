@@ -13,14 +13,78 @@
 
   <!-- Import CSS -->
   <link rel="stylesheet" th:href="@{~/css/common.css}" />
-  <title>Home | Wet LMS</title>
+  <title>Edit Reservation | Wet LMS</title>
 </head>
 
 <body class="m-0">
   <header th:replace="admin/fragments/header.html"></header>
 
   <main>
-    It works
+    <div class="w-100 w-lg-75 my-4 mx-auto container">
+      <div th:classappend="${#strings.isEmpty(previousIsSuccess)} ? mb-3 : mb-0" class="d-flex flex-row justify-content-between align-items-start">
+        <h3 class="">Edit Reservation</h3>
+      </div>
+      <div th:replace="admin/fragments/actionMessage.html :: showActionMessage"></div>
+      <div class="d-flex flex-row justify-content-between w-100 mx-auto py-3 px-0 container">
+        <div class="w-25 container mx-2">
+          <img th:src="@{~/images/placeholder.png}" style="width: 100%;"/> <!-- STAND IN IMAGE - CANNOT ADD/CHANGE  -->
+        </div>
+        <div class="w-75 container mx-2">
+          <form th:action="@{/admin/reserves/edit(id=${reserve.id})}" method="POST" th:id="createForm">
+            <div class="d-flex flex-column justify-content-center">
+              <div class="form__group my-1 quick-search-dropdown instant-search-container">
+                <input type="text" name="isbn"
+                id="isbn" th:placeholder="${reserve.isbn}" th:value="${#strings.isEmpty(previousISBN)} ? ${reserve.isbn} : ${previousISBN}" oninput="inputSearchArtifact('isbn', '/artifacts/search?searchQuery=')" required />
+                <label for="isbn">ISBN*</label>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='Isbn')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='Isbn')"></div>
+              </div>
+
+              <div class="form__group my-1 quick-search-dropdown instant-search-container">
+                <input type="text" name="title"
+                id="title" th:placeholder="${reserve.artifact.title}" th:value="${#strings.isEmpty(previousTitle)} ? ${reserve.artifact.title} : ${previousTitle}" oninput="inputSearchArtifact('title', '/artifacts/search?searchQuery=')" />
+                <label for="title">Title</label>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='Title')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='Title')"></div>
+              </div>
+
+              <div class="form__group my-1 quick-search-dropdown instant-search-container">
+                <input type="text" name="artifactID"
+                id="artifactID" th:placeholder="${reserve.id}" th:value="${#strings.isEmpty(previousId)} ? ${reserve.id} : ${previousId}" oninput="inputSearchArtifact('artifactID', '/artifacts/search?searchQuery=')" />
+                <label for="artifactID">Artifact ID</label>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='ArtifactID')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='ArtifactID')"></div>
+              </div>
+
+              <div class="container p-0">
+                <div class="row">
+                  <div class="col">
+                    <div class="form__group my-1 quick-search-dropdown instant-search-container">
+                      <input type="text" name="memberID"
+                      id="memberID" th:placeholder="${reserve.memberId}" th:value="${#strings.isEmpty(previousMemberID)} ? ${reserve.memberId} : ${previousMemberID}" oninput="inputSearchMember('memberID', '/members/search?searchQuery=')" />
+                      <label for="memberID">Reserved to*</label>
+                      <div th:replace="admin/fragments/instantSearchMember.html :: inputSpinnerMember(type='MemberID')"></div>
+                      <div th:replace="admin/fragments/instantSearchMember.html :: inputSearchMember(type='MemberID')"></div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form__group my-1">
+                      <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="expiredOn"
+                      id="expiredOn" th:placeholder="${expiredOn}" th:value="${#strings.isEmpty(previousExpiredOn)} ? ${expiredOn} : ${previousExpiredOn}" required />
+                      <label for="expiredOn">Expiry Date*</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div th:replace="admin/fragments/actionMessage.html :: hiddenInputsForActionMessages"></div>
+            </div>
+            <div class="d-flex justify-content-end my-5">
+              <button type="submit" class="px-4 py-2btn btn-lg border border-dark text-dark hover">Edit Reservation</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </main>
 
   <footer></footer>
@@ -36,6 +100,10 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
   </script>
+
+  <!-- Include JavaScript from static folder -->
+  <script type="text/javascript" src="/js/instantSearchLoanArtifact.js"></script>
+  <script type="text/javascript" src="/js/instantSearchLoanMember.js"></script>
 </body>
 
 </html>
