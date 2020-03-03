@@ -32,6 +32,7 @@ function inputSearchArtifact(inputId, url) {
                 artifact.isbn,
                 artifact.itemPrice,
                 artifact.id,
+                artifact.thumbnailLink,
                 focusedCardsContainer
               )
             );
@@ -71,6 +72,7 @@ function getInputSearchArtifactCard(
   isbnText,
   fineText,
   artifactIdText,
+  thumbnailLink,
   focusedCardsContainer
 ) {
   var cardContainer = document.createElement("div");
@@ -92,10 +94,17 @@ function getInputSearchArtifactCard(
   var cardImgContainer = document.createElement("div");
   cardImgContainer.classList.add("h-100");
 
-  var cardImg = document.createElement("div");
-  cardImg.style.width = "2.5rem";
-  cardImg.style.height = "2.5rem";
-  cardImg.classList.add("bg-dark");
+  var cardImg = document.createElement("img");
+  if (thumbnailLink === "") {
+    // cardImg = document.createElement("div");
+    // cardImg.classList.add("bg-dark");
+    cardImg.src = `${window.location.origin}/images/placeholder.png`;
+  } else {
+    cardImg.src = thumbnailLink;
+  }
+  cardImg.style.width = "3.8rem";
+  cardImg.style.height = "100%";
+  cardImg.style.objectFit = "contain";
 
   var cardContentDetailsContainer = document.createElement("div");
   cardContentDetailsContainer.classList.add(

@@ -38,13 +38,13 @@ public class ArtifactService {
 
 	public ActionConclusion update(String stringId, String isbn, String type, String genre, String authors, String title,
 			String subtitle, String description, String publishers, String publishedOn, String itemPrice, String quantity,
-			String totalQuantity, String rackLocation) {
+			String totalQuantity, String rackLocation, String thumbnailLink) {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (artifactRepository.existsById(id)) {
 			Artifact artifact = artifactRepository.getOne(id);
 			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
-					quantity, totalQuantity, rackLocation);
+					quantity, totalQuantity, rackLocation, thumbnailLink);
 			artifactRepository.save(artifact);
 			return new ActionConclusion(true, "Updated successfully.");
 		}
@@ -53,11 +53,11 @@ public class ArtifactService {
 
 	public ActionConclusion create(String isbn, String type, String genre, String authors, String title, String subtitle,
 			String description, String publishers, String publishedOn, String itemPrice, String quantity,
-			String totalQuantity, String rackLocation) {
+			String totalQuantity, String rackLocation, String thumbnailLink) {
 		if (!artifactRepository.existsByIsbn(isbn)) {
 			Artifact artifact = new Artifact();
 			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
-					quantity, totalQuantity, rackLocation);
+					quantity, totalQuantity, rackLocation, thumbnailLink);
 			artifactRepository.save(artifact);
 			return new ActionConclusion(true, "Created successfully.");
 		}

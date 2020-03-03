@@ -67,11 +67,12 @@ public class ArtifactController {
       @RequestParam(name = "quantity", required = true) String quantity,
       @RequestParam(name = "totalQuantity", required = true) String totalQuantity,
       @RequestParam(name = "rackLocation", required = false) String rackLocation,
+      @RequestParam(name = "thumbnailLink", required = false) String thumbnailLink,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
       @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     ActionConclusion actionConclusion = artifactService.update(stringId, isbn, type, genre, authors, title, subtitle,
-        description, publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation);
+        description, publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
     model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
     model.addAttribute("previousSuccessMessage", actionConclusion.message);
     model.addAttribute("previousFailureMessage", actionConclusion.message);
@@ -101,6 +102,7 @@ public class ArtifactController {
       model.addAttribute("previousQuantity", quantity);
       model.addAttribute("previousTotalQuantity", totalQuantity);
       model.addAttribute("previousRackLocation", rackLocation);
+      model.addAttribute("previousThumbnailLink", thumbnailLink);
       return "admin/artifact/edit.html";
     }
   }
@@ -125,11 +127,13 @@ public class ArtifactController {
       @RequestParam(name = "quantity", defaultValue = "1", required = true) String quantity,
       @RequestParam(name = "totalQuantity", defaultValue = "1", required = true) String totalQuantity,
       @RequestParam(name = "rackLocation", required = false) String rackLocation,
+      @RequestParam(name = "thumbnailLink", required = false) String thumbnailLink,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
       @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+    publishedOn = publishedOn.length() == 4 ? publishedOn.concat("-01-01") : publishedOn;
     ActionConclusion actionConclusion = artifactService.create(isbn, type, genre, authors, title, subtitle, description,
-        publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation);
+        publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
     model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
     model.addAttribute("previousSuccessMessage", actionConclusion.message);
     model.addAttribute("previousFailureMessage", actionConclusion.message);
@@ -156,6 +160,7 @@ public class ArtifactController {
       model.addAttribute("previousQuantity", quantity);
       model.addAttribute("previousTotalQuantity", totalQuantity);
       model.addAttribute("previousRackLocation", rackLocation);
+      model.addAttribute("previousThumbnailLink", thumbnailLink);
       return "admin/artifact/create.html";
     }
   }

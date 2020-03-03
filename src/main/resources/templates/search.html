@@ -52,7 +52,8 @@
             <div href="#" class="w-100-ns w-60-l py-3 border-bottom">
               <div class="mx-3 d-flex justify-content-start align-items-center">
                 <div class="h-100">
-                  <div class="bg-dark" style="width: 3.5rem; height: 3.5rem"></div>
+                  <img th:src="@{~/images/placeholder.png}" th:if="${#strings.isEmpty(artifact.thumbnailLink)}" style="width: 11rem; height: 11rem; object-fit: contain;" />
+                  <img th:src="@{${artifact.thumbnailLink}}" th:unless="${#strings.isEmpty(artifact.thumbnailLink)}" style="width: 11rem; height: 11rem; object-fit: contain;" />
                 </div>
                 <div class="w-100 ml-3 d-flex flex-column justify-content-center align-items-start">
                   <p class="m-0 font-weight-bolder text-truncate text-capitalize" style="width: 90%;" th:text="'' + ${#strings.abbreviate(artifact.title, 100)}"></p>

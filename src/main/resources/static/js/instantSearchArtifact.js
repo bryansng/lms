@@ -9,7 +9,7 @@ function inputSearchArtifactViaAPI(inputId) {
 
   timeout = setTimeout(function() {
     var focusedInput = document.querySelector(`#${inputId}`);
-    var searchQuery = focusedInput.value;
+    var searchQuery = focusedInput.value.trim();
     var cappedInputType = capitalizeFirstLetter(inputId);
     var focusedCardsContainer = document.querySelector(
       `#cardsContainerArtifact${cappedInputType}`
@@ -51,6 +51,11 @@ function inputSearchArtifactViaAPI(inputId) {
               typeof artifactInfo.categories !== "undefined"
                 ? artifactInfo.categories[0]
                 : "";
+            var thumbnail =
+              typeof artifactInfo.imageLinks !== "undefined" &&
+              typeof artifactInfo.imageLinks.thumbnail !== "undefined"
+                ? artifactInfo.imageLinks.thumbnail
+                : "";
             focusedCardsContainer.appendChild(
               getInputSearchArtifactCard(
                 title,
@@ -59,6 +64,7 @@ function inputSearchArtifactViaAPI(inputId) {
                 publisher,
                 publishedOn,
                 category,
+                thumbnail,
                 artifactInfo,
                 artifact.saleInfo,
                 focusedCardsContainer
@@ -82,7 +88,8 @@ function fillArtifactForm(
   genreOrCategory,
   price,
   quantity,
-  totalQuantity
+  totalQuantity,
+  thumbnailLink
 ) {
   document.querySelector(`#isbn`).value = isbn;
   document.querySelector(`#title`).value = title;
@@ -96,6 +103,8 @@ function fillArtifactForm(
   document.querySelector(`#itemPrice`).value = price;
   document.querySelector(`#quantity`).value = quantity;
   document.querySelector(`#totalQuantity`).value = totalQuantity;
+  document.querySelector(`#thumbnailLink`).value = thumbnailLink;
+  document.querySelector(`#imgThumbnailLink`).src = thumbnailLink;
 }
 
 function clearChild(aNode) {
@@ -105,9 +114,11 @@ function clearChild(aNode) {
 }
 
 function getISBN13(industryIdentifiers) {
-  for (industryIdentifier of industryIdentifiers) {
-    if (industryIdentifier.type === "ISBN_13") {
-      return industryIdentifier.identifier;
+  if (typeof industryIdentifiers !== "undefined") {
+    for (industryIdentifier of industryIdentifiers) {
+      if (industryIdentifier.type === "ISBN_13") {
+        return industryIdentifier.identifier;
+      }
     }
   }
   return "";
@@ -138,6 +149,7 @@ function getInputSearchArtifactCard(
   publisherText,
   publishedDateText,
   categoryText,
+  thumbnailLink,
   artifactInfo,
   saleInfo,
   focusedCardsContainer
@@ -161,10 +173,17 @@ function getInputSearchArtifactCard(
   var cardImgContainer = document.createElement("div");
   cardImgContainer.classList.add("h-100");
 
-  var cardImg = document.createElement("div");
-  cardImg.style.width = "2.5rem";
-  cardImg.style.height = "2.5rem";
-  cardImg.classList.add("bg-dark");
+  var cardImg = document.createElement("img");
+  if (thumbnailLink === "") {
+    // cardImg = document.createElement("div");
+    // cardImg.classList.add("bg-dark");
+    cardImg.src = `${window.location.origin}/images/placeholder.png`;
+  } else {
+    cardImg.src = thumbnailLink;
+  }
+  cardImg.style.width = "5rem";
+  cardImg.style.height = "100%";
+  cardImg.style.objectFit = "contain";
 
   var cardContentDetailsContainer = document.createElement("div");
   cardContentDetailsContainer.classList.add(
@@ -229,7 +248,8 @@ function getInputSearchArtifactCard(
       categoryText,
       getRetailPrice(saleInfo),
       1,
-      1
+      1,
+      thumbnailLink
     );
     clearChild(focusedCardsContainer);
   };

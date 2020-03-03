@@ -23,6 +23,7 @@ function navbarSearchForm(url) {
                 getSearchCard(
                   artifact.title,
                   artifact.authors,
+                  artifact.thumbnailLink,
                   `/artifacts/view?id=${artifact.id}`
                 )
               );
@@ -61,7 +62,7 @@ function clearChild(aNode) {
   </div>
 </a>
 */
-function getSearchCard(titleText, authorsText, link) {
+function getSearchCard(titleText, authorsText, thumbnailLink, viewLink) {
   var cardContainer = document.createElement("a");
   cardContainer.classList.add(
     "px-3",
@@ -70,7 +71,7 @@ function getSearchCard(titleText, authorsText, link) {
     "hover-only-bg",
     "border-bottom"
   );
-  cardContainer.href = link;
+  cardContainer.href = viewLink;
 
   var cardWrapper = document.createElement("div");
   cardWrapper.classList.add(
@@ -82,10 +83,17 @@ function getSearchCard(titleText, authorsText, link) {
   var cardImgContainer = document.createElement("div");
   cardImgContainer.classList.add("h-100");
 
-  var cardImg = document.createElement("div");
+  var cardImg = document.createElement("img");
+  if (thumbnailLink === "") {
+    // cardImg = document.createElement("div");
+    // cardImg.classList.add("bg-dark");
+    cardImg.src = `${window.location.origin}/images/placeholder.png`;
+  } else {
+    cardImg.src = thumbnailLink;
+  }
   cardImg.style.width = "2.5rem";
-  cardImg.style.height = "2.5rem";
-  cardImg.classList.add("bg-dark");
+  cardImg.style.height = "3rem";
+  cardImg.style.objectFit = "contain";
 
   var cardContentDetailsContainer = document.createElement("div");
   cardContentDetailsContainer.classList.add(
@@ -120,7 +128,7 @@ function getSearchCard(titleText, authorsText, link) {
 /*
 <a href="#" class="px-3 py-2 quick-search-dropdown-seeAllResults-hover text-center">See all results for "searchQuery HERE"</a>
 */
-function getSeeAllResults(searchQuery, link) {
+function getSeeAllResults(searchQuery, viewLink) {
   var seeAllResults = document.createElement("a");
   seeAllResults.classList.add(
     "px-3",
@@ -128,7 +136,7 @@ function getSeeAllResults(searchQuery, link) {
     "quick-search-dropdown-seeAllResults-hover",
     "text-center"
   );
-  seeAllResults.href = link;
+  seeAllResults.href = viewLink;
   seeAllResults.textContent = `See all results for "${searchQuery}"`;
   return seeAllResults;
 }
