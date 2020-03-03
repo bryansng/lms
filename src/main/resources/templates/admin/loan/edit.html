@@ -72,10 +72,10 @@
                       <select id="status" name="status" required>
                         <option value="" th:selected="${#strings.isEmpty(previousStatus)}" hidden disabled></option>
                         <option value="issued" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'issued': ${previousStatus} == 'issued'">Issued</option>
-                        <!-- <option value="renewed" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'renewed': ${previousStatus} == 'renewed'">Renewed</option>
+                        <option value="renewed" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'renewed': ${previousStatus} == 'renewed'">Renewed</option>
                         <option value="restocked" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'restocked': ${previousStatus} == 'restocked'">Restocked</option>
-                        <option value="delayed" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'delayed': ${previousStatus} == 'delayed'">Delayed</option>
-                        <option value="returned" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'returned': ${previousStatus} == 'returned'">Returned</option> -->
+                        <!-- <option value="delayed" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'delayed': ${previousStatus} == 'delayed'">Delayed</option> -->
+                        <option value="returned" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'returned': ${previousStatus} == 'returned'">Returned</option>
                         <option value="lost" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'lost': ${previousStatus} == 'lost'">Lost</option>
                         <!-- <option value="reserved" th:selected="${#strings.isEmpty(previousStatus)} ? ${loan.status} == 'reserved': ${previousStatus} == 'reserved'">Reserved</option> -->
                       </select>

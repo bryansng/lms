@@ -1,7 +1,10 @@
 package ie.ucd.lms.service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
@@ -102,11 +105,15 @@ public class LoanHistoryService {
     if (loanHistoryRepository.existsById(id)) {
       if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
         Artifact artifact = artifactRepository.findByIsbn(isbn);
-        Member member = memberRepository.getOne(aMemberId);
-        LoanHistory loanHistory = loanHistoryRepository.getOne(id);
-        loanHistory.setAll(isbn, memberId, issuedOn, returnOn, fine, status, artifact, member);
-        loanHistoryRepository.save(loanHistory);
-        return new ActionConclusion(true, "Updated successfully.");
+        if (artifact.getIsbn().equals(isbn) || artifact.inStock()) {
+          Member member = memberRepository.getOne(aMemberId);
+          LoanHistory loanHistory = loanHistoryRepository.getOne(id);
+          handleArtifactStockDuringUpdate(loanHistory, isbn, status);
+          loanHistory.setAll(isbn, memberId, issuedOn, returnOn, fine, status, artifact, member);
+          loanHistoryRepository.save(loanHistory);
+          return new ActionConclusion(true, "Updated successfully.");
+        }
+        return new ActionConclusion(false, "Failed to update. Artifact not in stock.");
       }
       return new ActionConclusion(false, "Failed to update. ISBN or member ID does not exist.");
     }
@@ -135,10 +142,10 @@ public class LoanHistoryService {
     // if (!loanHistoryRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
     if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
       Artifact artifact = artifactRepository.findByIsbn(isbn);
-      Member member = memberRepository.getOne(aMemberId);
       if (artifact.inStock()) {
         artifact.decrementQuantity();
         LoanHistory loanHistory = new LoanHistory();
+        Member member = memberRepository.getOne(aMemberId);
         loanHistory.setAll(isbn, memberId, issuedOn, returnOn, fine, status, artifact, member);
         loanHistoryRepository.save(loanHistory);
         return new ActionConclusion(true, "Created successfully.");
@@ -157,7 +164,7 @@ public class LoanHistoryService {
     Long id = Common.convertStringToLong(stringId);
 
     if (loanHistoryRepository.existsById(id)) {
-      handleArtifactStock(loanHistoryRepository.getOne(id));
+      handleArtifactStockDuringDelete(loanHistoryRepository.getOne(id));
       loanHistoryRepository.deleteById(id);
       return new ActionConclusion(true, "Deleted successfully.");
     }
@@ -254,10 +261,55 @@ public class LoanHistoryService {
    * depending on that status, add it back.
    * @param loanHistory
    */
-  private void handleArtifactStock(LoanHistory loanHistory) {
+  private void handleArtifactStockDuringDelete(LoanHistory loanHistory) {
     String status = loanHistory.getStatus();
     if (status.equals("issued") || status.equals("renewed") || status.equals("delayed") || status.equals("lost")) {
       loanHistory.getArtifact().incrementQuantity();
+    }
+  }
+
+  private void handleArtifactStockDuringUpdate(LoanHistory loanHistory, String nextIsbn, String nextStatus) {
+    String prevIsbn = loanHistory.getIsbn();
+    String prevStatus = loanHistory.getStatus();
+    Artifact prevArtifact = loanHistory.getArtifact();
+    Artifact nextArtifact = artifactRepository.findByIsbn(nextIsbn);
+
+    Set<String> negativeStatus = new HashSet<String>();
+    negativeStatus.add("issued");
+    negativeStatus.add("renewed");
+    negativeStatus.add("delayed");
+    negativeStatus.add("lost");
+
+    Set<String> positiveStatus = new HashSet<String>();
+    positiveStatus.add("restocked");
+    positiveStatus.add("returned");
+
+    // System.out.println("\n");
+    // if same artifact, then check status.
+    if (prevIsbn.equals(nextIsbn)) {
+      // System.out.println("Same artifact");
+      if (negativeStatus.contains(prevStatus) && positiveStatus.contains(nextStatus)) {
+        prevArtifact.incrementQuantity();
+        // System.out.println("prevArtifact increment");
+      } else if (positiveStatus.contains(prevStatus) && negativeStatus.contains(nextStatus)) {
+        prevArtifact.decrementQuantity();
+        // System.out.println("prevArtifact decrement");
+      }
+      // if different artifact, handle status differently.
+    } else {
+      // System.out.println("Different artifact");
+      if (negativeStatus.contains(prevStatus) && positiveStatus.contains(nextStatus)) {
+        prevArtifact.incrementQuantity();
+        // System.out.println("prevArtifact increment");
+      } else if (positiveStatus.contains(prevStatus) && negativeStatus.contains(nextStatus)) {
+        nextArtifact.decrementQuantity();
+        // System.out.println("nextArtifact decrement");
+      } else if (negativeStatus.contains(prevStatus) && negativeStatus.contains(nextStatus)) {
+        prevArtifact.incrementQuantity();
+        nextArtifact.decrementQuantity();
+        // System.out.println("prevArtifact increment");
+        // System.out.println("nextArtifact decrement");
+      }
     }
   }
 
