@@ -37,12 +37,12 @@ public class MemberService {
 	}
 
 	public ActionConclusion update(String stringId, String email, String fullName, String mobileNumber, String address,
-			String bornOn, String bio, String type) {
+			String website, String bornOn, String bio, String type) {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (memberRepository.existsById(id)) {
 			Member member = memberRepository.getOne(id);
-			member.setAll(email, fullName, mobileNumber, address, bornOn, bio, type);
+			member.setAll(email, fullName, mobileNumber, address, website, bornOn, bio, type);
 			memberRepository.save(member);
 			return new ActionConclusion(true, "Updated successfully.");
 		}

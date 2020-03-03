@@ -41,13 +41,14 @@ public class Member implements Serializable {
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
   private List<ReserveQueue> reserveQueues;
 
-  public void setAll(String email, String fullName, String mobileNumber, String address, String bornOn, String bio,
-      String type) {
+  public void setAll(String email, String fullName, String mobileNumber, String address, String website, String bornOn,
+      String bio, String type) {
     System.out.println(email.equals("") ? this.email : email);
     setEmail(email.equals("") ? this.email : email);
     setFullName(fullName.equals("") ? this.fullName : fullName);
     setMobileNumber(mobileNumber.equals("") ? this.mobileNumber : mobileNumber);
     setAddress(address.equals("") ? this.address : address);
+    setWebsite(website.equals("") ? this.website : website);
 
     if (bornOn.equals("")) {
       setBornOn(null);

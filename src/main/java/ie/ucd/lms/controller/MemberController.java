@@ -123,13 +123,14 @@ public class MemberController {
       @RequestParam(name = "fullName", defaultValue = "", required = false) String fullName,
       @RequestParam(name = "mobileNumber", defaultValue = "", required = false) String mobileNumber,
       @RequestParam(name = "address", defaultValue = "", required = false) String address,
+      @RequestParam(name = "website", defaultValue = "", required = false) String website,
       @RequestParam(name = "bornOn", defaultValue = "", required = false) String bornOn,
       @RequestParam(name = "bio", required = false) String bio,
       @RequestParam(name = "type", defaultValue = "member", required = false) String type,
       @RequestParam(name = "joinedOn", required = false) String joinedOn,
       @RequestParam(name = "lastActiveOn", required = false) String lastActiveOn, Model model) {
-    ActionConclusion actionConclusion = memberService.update(stringId, email, fullName, mobileNumber, address, bornOn,
-        bio, type);
+    ActionConclusion actionConclusion = memberService.update(stringId, email, fullName, mobileNumber, address, website,
+        bornOn, bio, type);
     model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
     model.addAttribute("previousSuccessMessage", actionConclusion.message);
     model.addAttribute("previousFailureMessage", actionConclusion.message);
