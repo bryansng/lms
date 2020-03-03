@@ -22,6 +22,7 @@ public class Member implements Serializable {
   private String fullName;
   private String mobileNumber;
   private String address;
+  private String website;
 
   @Column(nullable = true)
   private LocalDateTime bornOn;
@@ -104,6 +105,14 @@ public class Member implements Serializable {
 
   public void setAddress(String address) {
     this.address = address;
+  }
+
+  public String getWebsite() {
+    return website;
+  }
+
+  public void setWebsite(String website) {
+    this.website = website;
   }
 
   public LocalDateTime getBornOn() {

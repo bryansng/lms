@@ -79,9 +79,9 @@ public class LostController {
       @RequestParam(defaultValue = "", required = false) String successMessage,
       @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     ActionConclusion actionConclusion = loanHistoryService.update(stringId, isbn, memberID, issuedOn, "", fine, status);
-    model.addAttribute("previousIsSuccess", isSuccess);
-    model.addAttribute("previousSuccessMessage", successMessage);
-    model.addAttribute("previousFailureMessage", failureMessage);
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
@@ -131,11 +131,6 @@ public class LostController {
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
       @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
-    System.out.println(isbn);
-    System.out.println(memberID);
-    System.out.println(issuedOn);
-    System.out.println(fine);
-    System.out.println(status);
     ActionConclusion actionConclusion = loanHistoryService.create(isbn, memberID, issuedOn, "", fine, status);
     model.addAttribute("previousIsSuccess", isSuccess);
     model.addAttribute("previousSuccessMessage", successMessage);
