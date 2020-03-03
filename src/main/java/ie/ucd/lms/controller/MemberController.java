@@ -124,9 +124,7 @@ public class MemberController {
 		logger.info("days: " + days);
 		ActionConclusion ac = LoanHistoryService.renew(Long.toString(id), days);
 
-		boolean failed = ac.isSuccess;
-
-		redirectAttrs.addFlashAttribute("renewalFailed", failed);
+		redirectAttrs.addFlashAttribute("renewalFailed", ac.isSuccess);
 		redirectAttrs.addFlashAttribute("renewal", true);
 		redirectAttrs.addFlashAttribute("renewalMsg", ac.message);
 

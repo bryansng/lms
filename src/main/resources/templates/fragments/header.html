@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-</head>
+<head> </head>
 
 <body>
   <header th:fragment="signedIn">
@@ -68,8 +67,10 @@
               Log In
             </div>
             <div class="dropdown-content logIn-dropdown-content" id="logInDropdown">
-              <form action="#" th:action="@{/login}" method="POST" th:id="logInForm">
-                <div class="px-4 py-3 text-center font-weight-bold">Log In and Start Reserving!</div>
+              <form action="/login" th:action="@{/login}" method="POST" th:id="logInForm">
+                <div class="px-4 py-3 text-center font-weight-bold">
+                  Log In and Start Reserving!
+                </div>
                 <div class="mx-3 divider"></div>
                 <div class="px-4 py-2">
                   <div class="form__group">
@@ -85,7 +86,9 @@
                   </div>
                 </div>
                 <div class="px-4 py-3 text-right">
-                  <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Log In</button>
+                  <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">
+                    Log In
+                  </button>
                 </div>
                 <!-- <div class="mx-3 mt-1 divider"></div>
                 <div class="px-4 py-2 dropdown-hover text-center" style="font-size: 0.9rem;"
@@ -100,8 +103,10 @@
               Sign Up
             </div>
             <div class="dropdown-content signUp-dropdown-content" id="signUpDropdown">
-              <form action="#" th:action="@{/signup}" method="POST" th:id="signUpForm">
-                <div class="px-4 py-3 text-center font-weight-bold">Sign Up and Start Reading!</div>
+              <form action="/register" th:action="@{/register}" method="POST" th:id="signUpForm">
+                <div class="px-4 py-3 text-center font-weight-bold">
+                  Sign Up and Start Reading!
+                </div>
                 <div class="mx-3 divider"></div>
                 <div class="px-4 py-2">
                   <div class="form__group">
@@ -119,12 +124,15 @@
                 </div>
                 <div class="px-4 py-2">
                   <div class="form__group">
-                    <input type="password" name="password" id="signUpPassword" placeholder="&nbsp;" required />
+                    <input type="password" name="password" minlength="8" id="signUpPassword" placeholder="&nbsp;"
+                      required />
                     <label for="signUpPassword">Password</label>
                   </div>
                 </div>
                 <div class="px-4 py-3 text-right">
-                  <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Sign Up</button>
+                  <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">
+                    Sign Up
+                  </button>
                 </div>
                 <!-- <div class="mx-3 mt-1 divider"></div>
                 <a href="#" class="px-4 py-2 dropdown-hover text-center" style="font-size: 0.9rem;"
@@ -159,12 +167,14 @@
           <div class="sk-chase-dot"></div>
         </div>
       </div>
-      <div class="quick-search-dropdown-content" id="cardsContainer">
-      </div>
+      <div class="quick-search-dropdown-content" id="cardsContainer"></div>
     </div>
 
     <!-- Include JavaScript from static folder -->
     <script type="text/javascript" src="/js/navbarSearch.js"></script>
+    <script>
+      $(".toast").toast("show");
+    </script>
   </div>
 </body>
 
