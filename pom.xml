@@ -13,6 +13,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<start-class>ie.ucd.lms.LMSApplication</start-class>
 	</properties>
 
 	<dependencies>

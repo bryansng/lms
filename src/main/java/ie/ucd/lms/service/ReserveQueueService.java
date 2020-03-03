@@ -1,17 +1,17 @@
 package ie.ucd.lms.service;
 
+import ie.ucd.lms.dao.ArtifactRepository;
+import ie.ucd.lms.dao.MemberRepository;
+import ie.ucd.lms.dao.ReserveQueueRepository;
+import ie.ucd.lms.entity.Artifact;
+import ie.ucd.lms.entity.Member;
+import ie.ucd.lms.entity.ReserveQueue;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ie.ucd.lms.dao.ReserveQueueRepository;
-import ie.ucd.lms.dao.ArtifactRepository;
-import ie.ucd.lms.dao.MemberRepository;
-import ie.ucd.lms.entity.ReserveQueue;
-import ie.ucd.lms.entity.Artifact;
-import ie.ucd.lms.entity.Member;
 
 @Service
 public class ReserveQueueService {
@@ -26,6 +26,10 @@ public class ReserveQueueService {
 
   @Autowired
   LoanHistoryService loanHistoryService;
+
+  public List<ReserveQueue> getReservedLoansForMember(Member member) {
+    return reserveQueueRepository.findByMember(member);
+  }
 
   public Page<ReserveQueue> search(String artifact, String member, String fromDate, String toDate, int pageNum) {
     Long artifactId = Common.convertStringToLong(artifact);

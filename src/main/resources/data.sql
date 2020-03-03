@@ -44,8 +44,12 @@ INSERT INTO loan_history(artifact_id, isbn, member_id, return_on, status, fine, 
 	('1', '9780743269513', '2', NOW() + 3, 'issued', 0.0, NOW(), false),
 	('6', '9780307353139', '2', NOW() + 3, 'issued', 0.0, NOW(), false);
 
+INSERT INTO loan_history(artifact_id, isbn, member_id, returned_on, status, fine, issued_on, was_lost) VALUES
+	('3', '9780671723651', '1', NOW() - 1, 'returned', 0.0, NOW() - 3, false),
+	('4', '9780374275631', '1', NOW() - 1, 'returned', 0.0, NOW() - 3, false);
+	
 INSERT INTO reserve_queue(artifact_id, isbn, member_id, expired_on) VALUES
-	('1', '9780743269513', '3', NOW() + 3),
+	-- ('1', '9780743269513', '3', NOW() + 3),
 	('6', '9780307353139', '1', NOW() + 3),
 	('6', '9780307353139', '3', NOW() + 3),
 	('2', '9780751532715', '2', NOW() + 3),

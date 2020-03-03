@@ -88,4 +88,10 @@ public class Common {
 	public static String getStringNowPlusDays(String daysToLoan) {
 		return LocalDate.now().plusDays(Long.parseLong(daysToLoan)).format(dateFormatter);
 	}
+
+	public static String formatDateAsString(LocalDateTime date) {
+		String strDate = String.format("%02d/%02d", date.getDayOfMonth(), date.getMonthValue()) + " @ "
+			+ String.format("%02d:%02d", date.getHour(), date.getMinute());
+		return strDate;
+	}
 }

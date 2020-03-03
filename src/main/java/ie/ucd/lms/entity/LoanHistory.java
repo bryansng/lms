@@ -1,9 +1,9 @@
 package ie.ucd.lms.entity;
 
-import javax.persistence.*;
 import ie.ucd.lms.service.Common;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "loan_history")
@@ -61,10 +61,12 @@ public class LoanHistory {
 		this.member = member;
 	}
 
-	public String getDueDate() {
-		String date = returnOn.getDayOfMonth() + "/" + returnOn.getMonthValue() + " @ "
-				+ String.format("%02d:%02d", returnOn.getHour(), returnOn.getMinute());
-		return date;
+	public String getReturnOnAsString() {
+		return Common.formatDateAsString(returnOn);
+	}
+
+	public String getReturnedOnAsString() {
+		return Common.formatDateAsString(returnedOn);
 	}
 
 	public Long getId() {
@@ -155,6 +157,7 @@ public class LoanHistory {
 		this.status = status;
 	}
 
+ @Override
 	public String toString() {
 		String buf = " - ";
 		return id + buf + isbn + buf + memberId + buf + issuedOn + buf + fine + buf + status + "\n" + artifact + '\n';
