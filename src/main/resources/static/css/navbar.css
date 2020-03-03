@@ -32,10 +32,10 @@
   background-color: #f3f3f3;
 }
 
-.user-avatar-container {
+.navbar-user-avatar-container {
   width: 3.2rem;
   height: 3.2rem;
-  font-size: 15px;
+  font-size: 1rem;
   background-color: #ededed;
   border-radius: 50%;
 }

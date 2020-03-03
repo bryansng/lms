@@ -1,3 +1,11 @@
+.member-avatar-container {
+  width: 15rem;
+  height: 15rem;
+  font-size: 4rem;
+  background-color: #ededed;
+  border-radius: 50%;
+}
+
 .form__group {
   position: relative;
   padding: 15px 0 0;
