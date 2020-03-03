@@ -148,8 +148,10 @@ public class MemberController {
       Member member = memberRepository.findById(Common.convertStringToLong(stringId)).get();
       model.addAttribute("member", member);
       model.addAttribute("previousFullName", fullName);
-      model.addAttribute("previousJoinedOn", joinedOn);
-      model.addAttribute("previousLastActiveOn", lastActiveOn);
+      model.addAttribute("previousEmail", email);
+      model.addAttribute("previousMobileNumber", mobileNumber);
+      model.addAttribute("previousAddress", address);
+      model.addAttribute("previousWebsite", website);
       model.addAttribute("previousBio", bio);
       model.addAttribute("previousType", type);
       return "admin/member/edit.html";

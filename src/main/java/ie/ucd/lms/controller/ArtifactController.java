@@ -89,7 +89,6 @@ public class ArtifactController {
     } else {
       Artifact artifact = artifactRepository.findById(Common.convertStringToLong(stringId)).get();
       model.addAttribute("artifact", artifact);
-      model.addAttribute("publishedOn", publishedOn);
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousType", type);
       model.addAttribute("previousGenre", genre);

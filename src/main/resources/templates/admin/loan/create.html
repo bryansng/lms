@@ -32,6 +32,15 @@
         <div class="w-75 container mx-2">
           <form th:action="@{/admin/loans/create}" method="POST" th:id="createForm">
             <div class="d-flex flex-column justify-content-center">
+
+              <div class="form__group my-1 quick-search-dropdown instant-search-container">
+                <input type="text" name="title"
+                id="title" placeholder="Search by Artifact Title / Author / ISBN" th:value="${previousTitle}" oninput="inputSearchArtifact('title', '/artifacts/search?searchQuery=')" />
+                <label for="title">Artifact Title</label>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='Title')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='Title')"></div>
+              </div>
+
               <div class="form__group my-1 quick-search-dropdown instant-search-container">
                 <input type="text" name="isbn"
                 id="isbn" placeholder="9781627792127" th:value="${previousISBN}" oninput="inputSearchArtifact('isbn', '/artifacts/search?searchQuery=')" required/>
@@ -40,28 +49,20 @@
                 <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='Isbn')"></div>
               </div>
 
-              <div class="form__group my-1 quick-search-dropdown instant-search-container">
-                <input type="text" name="title"
-                id="title" placeholder="SISTEM Handbook" th:value="${previousTitle}" oninput="inputSearchArtifact('title', '/artifacts/search?searchQuery=')" />
-                <label for="title">Title</label>
-                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='Title')"></div>
-                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='Title')"></div>
-              </div>
-
-              <div class="form__group my-1 quick-search-dropdown instant-search-container">
+              <!-- <div class="form__group my-1 quick-search-dropdown instant-search-container">
                 <input type="text" name="artifactID"
                 id="artifactID" placeholder="1" th:value="${previousId}" oninput="inputSearchArtifact('artifactID', '/artifacts/search?searchQuery=')" />
                 <label for="artifactID">Artifact ID</label>
                 <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='ArtifactID')"></div>
                 <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='ArtifactID')"></div>
-              </div>
+              </div> -->
 
               <div class="container p-0">
                 <div class="row">
                   <div class="col">
                     <div class="form__group my-1 quick-search-dropdown instant-search-container">
                       <input type="text" name="memberID"
-                      id="memberID" placeholder="Member ID" th:value="${previousMemberID}" oninput="inputSearchMember('memberID', '/members/search?searchQuery=')" />
+                      id="memberID" placeholder="Search by Artifact Title / Author / ISBN" th:value="${previousMemberID}" oninput="inputSearchMember('memberID', '/members/search?searchQuery=')" />
                       <label for="memberID">Issued to*</label>
                       <div th:replace="admin/fragments/instantSearchMember.html :: inputSpinnerMember(type='MemberID')"></div>
                       <div th:replace="admin/fragments/instantSearchMember.html :: inputSearchMember(type='MemberID')"></div>
