@@ -20,11 +20,11 @@ INSERT INTO login(email, hash) VALUES
 	('wan.obi@ucdconnect.ie', 'root'),
 	('jobs.steve@ucdconnect.ie', 'root');
 
-INSERT INTO members(full_name, email, mobile_number, address, type, joined_on) VALUES
-	('Bryan Sng', 'hong.sng@ucdconnect.ie', '17205050', 'Mountbrook', 'librarian', NOW()),
-	('James Bond', 'bond.james@ucdconnect.ie', '007', 'MI6', 'member', NOW()),
-	('Obi Wan', 'wan.obi@ucdconnect.ie', '69', 'The High Ground', 'member', NOW()),
-	('Steve Jobs', 'jobs.steve@ucdconnect.ie', '1234', 'Silicon Valley', 'member', NOW());
+INSERT INTO members(full_name, email, mobile_number, address, type, joined_on, last_active_on) VALUES
+	('Bryan Sng', 'hong.sng@ucdconnect.ie', '17205050', 'Mountbrook', 'librarian', NOW(), NOW()),
+	('James Bond', 'bond.james@ucdconnect.ie', '007', 'MI6', 'member', NOW(), NOW()),
+	('Obi Wan', 'wan.obi@ucdconnect.ie', '69', 'The High Ground', 'member', NOW(), NOW()),
+	('Steve Jobs', 'jobs.steve@ucdconnect.ie', '1234', 'Silicon Valley', 'member', NOW(), NOW());
 
 -- INSERT INTO login(login_email, email, hash) VALUES
 -- 	('1', 'hong.sng@ucdconnect.ie', 'root'),

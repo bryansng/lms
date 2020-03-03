@@ -35,7 +35,7 @@
       <div class="row">
         <div class="col d-flex align-items-stretch mb-4" th:each="artifact : ${latestArtifacts}">
           <div class="card artifact-card border border-dark">
-            <img th:src="@{~/images/test.png}" class="card-img-top border-bottom border-dark" alt="..." />
+            <img th:src="@{~/images/placeholder.png}" class="card-img-top border-bottom border-dark" alt="..." />
             <div class="card-body">
               <h5 class="card-title" th:text=${artifact.title}></h5>
               <p class="card-subtitle text-muted mb-4" th:text=${artifact.authors}></p>
@@ -56,7 +56,7 @@
       <div class="row">
         <div class="col d-flex align-items-stretch mb-4" th:each="artifact : ${popularArtifacts}">
           <div class="card artifact-card">
-            <img th:src="@{~/images/test.png}" class="card-img-top border-bottom border-dark" alt="..." />
+            <img th:src="@{~/images/placeholder.png}" class="card-img-top border-bottom border-dark" alt="..." />
             <div class="card-body">
               <h5 class="card-title" th:text=${artifact.title}></h5>
               <p class="card-subtitle text-muted mb-4" th:text=${artifact.authors}>
