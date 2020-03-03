@@ -59,6 +59,17 @@ public class Member implements Serializable {
     setType(type);
   }
 
+  public String getInitials() {
+    String[] words = fullName.split(" ");
+    // return words.length > 1 ? String.valueOf(words[0].charAt(0)) + String.valueOf(words[words.length - 1].charAt(0))
+    //     : String.valueOf(words[0].charAt(0));
+    String initials = "";
+    for (String word : words) {
+      initials += String.valueOf(word.charAt(0)).toUpperCase();
+    }
+    return initials;
+  }
+
   public Login getLogin() {
     return this.login;
   }
@@ -157,7 +168,7 @@ public class Member implements Serializable {
 
   public String toString() {
     String buf = " - ";
-    return id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type;
+    return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type;
   }
 
   public String toStringWithLoanHistory() {

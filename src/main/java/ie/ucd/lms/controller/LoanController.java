@@ -106,6 +106,8 @@ public class LoanController {
       model.addAttribute("previousType", dateType);
       return "admin/loan/view.html";
     } else {
+      LoanHistory loan = loanHistoryRepository.getOne(Common.convertStringToLong(stringId));
+      model.addAttribute("loan", loan);
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousTitle", title);
       model.addAttribute("previousID", artifactID);
@@ -113,7 +115,7 @@ public class LoanController {
       model.addAttribute("previousStatus", status);
       model.addAttribute("previousReturnOn", returnOn);
       model.addAttribute("previousFine", fine);
-      return "admin/loan/create.html";
+      return "admin/loan/edit.html";
     }
   }
 

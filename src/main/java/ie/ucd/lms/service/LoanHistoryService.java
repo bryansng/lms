@@ -34,6 +34,19 @@ public class LoanHistoryService {
   @Autowired
   ReserveQueueService reserveQueueService;
 
+  private Set<String> negativeStatus = new HashSet<String>();
+  private Set<String> positiveStatus = new HashSet<String>();
+
+  public LoanHistoryService() {
+    negativeStatus.add("issued");
+    negativeStatus.add("renewed");
+    negativeStatus.add("delayed");
+    negativeStatus.add("lost");
+
+    positiveStatus.add("restocked");
+    positiveStatus.add("returned");
+  }
+
   public List<LoanHistory> findByMember(Member member) {
     return loanHistoryRepository.findByMember(member);
 
@@ -133,8 +146,8 @@ public class LoanHistoryService {
       returnOn = issuedOn;
     }
 
-    if (status.equals("issued") && loanHistoryRepository.countByMemberIdAndStatusContainsIgnoreCase(aMemberId,
-        "issued") >= Common.MAX_LOANS_PER_USER) {
+    if (negativeStatus.contains(status) && loanHistoryRepository.countAllByMemberIdAndStatus(aMemberId, "issued",
+        "renewed", "delayed") >= Common.MAX_LOANS_PER_USER) {
       return new ActionConclusion(false,
           "Unable to create. Member has exceeded the maximum loan amount: " + Common.MAX_LOANS_PER_USER);
     }
@@ -150,7 +163,11 @@ public class LoanHistoryService {
         loanHistoryRepository.save(loanHistory);
         return new ActionConclusion(true, "Created successfully.");
       } else {
-        return reserveQueueService.create(isbn, memberId, Common.DEFAULT_EXPIRED_ON);
+        ActionConclusion createReservation = reserveQueueService.create(isbn, memberId, Common.DEFAULT_EXPIRED_ON);
+        return createReservation.isSuccess
+            ? new ActionConclusion(true,
+                "Unable to create. Artifact not in stock. Artifact has been successfully reserved for the user.")
+            : new ActionConclusion(false, "Unable to create. Artifact not in stock. Failed to add to reservation.");
       }
     }
     // }
@@ -273,16 +290,6 @@ public class LoanHistoryService {
     String prevStatus = loanHistory.getStatus();
     Artifact prevArtifact = loanHistory.getArtifact();
     Artifact nextArtifact = artifactRepository.findByIsbn(nextIsbn);
-
-    Set<String> negativeStatus = new HashSet<String>();
-    negativeStatus.add("issued");
-    negativeStatus.add("renewed");
-    negativeStatus.add("delayed");
-    negativeStatus.add("lost");
-
-    Set<String> positiveStatus = new HashSet<String>();
-    positiveStatus.add("restocked");
-    positiveStatus.add("returned");
 
     // System.out.println("\n");
     // if same artifact, then check status.

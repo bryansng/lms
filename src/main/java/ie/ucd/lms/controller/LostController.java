@@ -96,6 +96,8 @@ public class LostController {
       model.addAttribute("previousToDate", toDate);
       return "admin/lost/view.html";
     } else {
+      LoanHistory loan = loanHistoryRepository.getOne(Common.convertStringToLong(stringId));
+      model.addAttribute("loan", loan);
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousTitle", title);
       model.addAttribute("previousID", artifactID);
@@ -132,9 +134,11 @@ public class LostController {
       @RequestParam(defaultValue = "", required = false) String successMessage,
       @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     ActionConclusion actionConclusion = loanHistoryService.create(isbn, memberID, issuedOn, "", fine, status);
-    model.addAttribute("previousIsSuccess", isSuccess);
-    model.addAttribute("previousSuccessMessage", successMessage);
-    model.addAttribute("previousFailureMessage", failureMessage);
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
+    System.out.println(actionConclusion.isSuccess);
+    System.out.println(actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
