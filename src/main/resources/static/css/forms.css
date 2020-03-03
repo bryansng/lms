@@ -111,3 +111,12 @@
 .form__field:invalid {
   box-shadow: none;
 }
+
+.fake_label {
+  color: #9b9b9b;
+}
+
+.fake_field {
+  min-height: 1.7em;
+  box-sizing: content-box;
+}
