@@ -78,7 +78,6 @@ public class ReserveController {
       @RequestParam(defaultValue = "", required = false) String dateType,
       @RequestParam(name = "isbn", required = true) String isbn,
       @RequestParam(name = "title", defaultValue = "", required = false) String title,
-      @RequestParam(name = "artifactID", required = false) String artifactID,
       @RequestParam(name = "memberID", required = true) String memberID,
       @RequestParam(name = "status", defaultValue = "", required = false) String status,
       @RequestParam(name = "expiredOn", required = true) String expiredOn,
@@ -109,7 +108,6 @@ public class ReserveController {
     } else {
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousTitle", title);
-      model.addAttribute("previousID", artifactID);
       model.addAttribute("previousMemberID", memberID);
       model.addAttribute("previousExpiredOn", expiredOn);
       return "admin/reserve/create.html";
@@ -126,7 +124,6 @@ public class ReserveController {
       @RequestParam(defaultValue = "", required = false) String dateType,
       @RequestParam(name = "isbn", required = true) String isbn,
       @RequestParam(name = "title", defaultValue = "", required = false) String title,
-      @RequestParam(name = "artifactID", required = false) String artifactID,
       @RequestParam(name = "memberID", required = true) String memberID,
       @RequestParam(name = "status", defaultValue = "", required = false) String status,
       @RequestParam(name = "expiredOn", required = true) String expiredOn,
@@ -157,7 +154,6 @@ public class ReserveController {
     } else {
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousTitle", title);
-      model.addAttribute("previousID", artifactID);
       model.addAttribute("previousMemberID", memberID);
       model.addAttribute("previousExpiredOn", expiredOn);
       return "admin/reserve/edit.html";

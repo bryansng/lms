@@ -3,11 +3,12 @@
 // introduce delay.
 // https://schier.co/blog/wait-for-user-to-stop-typing-using-javascript
 let timeoutArtifact = null;
+
 function inputSearchArtifact(inputId, url) {
   // handle delay.
   clearTimeout(timeoutArtifact);
 
-  timeoutArtifact = setTimeout(function() {
+  timeoutArtifact = setTimeout(function () {
     var focusedInput = document.querySelector(`#${inputId}`);
     var searchQuery = focusedInput.value;
     var cappedInputType = capitalizeFirstLetter(inputId);
@@ -45,7 +46,7 @@ function inputSearchArtifact(inputId, url) {
 function fillArtifactForm(isbn, title, artifactId) {
   document.querySelector(`#isbn`).value = isbn;
   document.querySelector(`#title`).value = title;
-  document.querySelector(`#artifactID`).value = artifactId;
+  // document.querySelector(`#artifactID`).value = artifactId;
 }
 
 function clearChild(aNode) {

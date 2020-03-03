@@ -63,7 +63,6 @@ public class LoanController {
   public String loansEditGet(@RequestParam(name = "id") String stringId, Model model) {
     LoanHistory loan = loanHistoryRepository.getOne(Common.convertStringToLong(stringId));
     model.addAttribute("loan", loan);
-    model.addAttribute("title", loan.getArtifact().getTitle());
     model.addAttribute("returnOn", loan.getReturnOn().format(Common.dateFormatter));
     return "admin/loan/edit.html";
   }
@@ -78,7 +77,6 @@ public class LoanController {
       @RequestParam(defaultValue = "", required = false) String dateType,
       @RequestParam(name = "isbn", required = true) String isbn,
       @RequestParam(name = "title", required = false) String title,
-      @RequestParam(name = "artifactID", required = false) String artifactID,
       @RequestParam(name = "memberID", required = true) String memberID,
       @RequestParam(name = "status", required = false) String status,
       @RequestParam(name = "returnOn", required = true) String returnOn,
@@ -106,14 +104,16 @@ public class LoanController {
       model.addAttribute("previousType", dateType);
       return "admin/loan/view.html";
     } else {
+      LoanHistory loan = loanHistoryRepository.getOne(Common.convertStringToLong(stringId));
+      model.addAttribute("loan", loan);
+      model.addAttribute("returnOn", loan.getReturnOn().format(Common.dateFormatter));
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousTitle", title);
-      model.addAttribute("previousID", artifactID);
       model.addAttribute("previousMemberID", memberID);
       model.addAttribute("previousStatus", status);
       model.addAttribute("previousReturnOn", returnOn);
       model.addAttribute("previousFine", fine);
-      return "admin/loan/create.html";
+      return "admin/loan/edit.html";
     }
   }
 
@@ -126,7 +126,6 @@ public class LoanController {
       @RequestParam(defaultValue = "", required = false) String dateType,
       @RequestParam(name = "isbn", required = true) String isbn,
       @RequestParam(name = "title", required = false) String title,
-      @RequestParam(name = "artifactID", required = false) String artifactID,
       @RequestParam(name = "memberID", required = true) String memberID,
       @RequestParam(name = "status", required = false) String status,
       @RequestParam(name = "returnOn", required = true) String returnOn,
@@ -156,7 +155,6 @@ public class LoanController {
     } else {
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousTitle", title);
-      model.addAttribute("previousID", artifactID);
       model.addAttribute("previousMemberID", memberID);
       model.addAttribute("previousStatus", status);
       model.addAttribute("previousReturnOn", returnOn);

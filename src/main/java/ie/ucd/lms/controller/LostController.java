@@ -55,7 +55,6 @@ public class LostController {
   public String loansEditGet(@RequestParam(name = "id") String stringId, Model model) {
     LoanHistory loan = loanHistoryRepository.getOne(Common.convertStringToLong(stringId));
     model.addAttribute("loan", loan);
-    model.addAttribute("title", loan.getArtifact().getTitle());
     model.addAttribute("issuedOn", loan.getIssuedOn().format(Common.dateFormatter));
     return "admin/lost/edit.html";
   }
@@ -70,7 +69,6 @@ public class LostController {
       @RequestParam(defaultValue = "", required = false) String dateType,
       @RequestParam(name = "isbn", required = true) String isbn,
       @RequestParam(name = "title", required = false) String title,
-      @RequestParam(name = "artifactID", required = false) String artifactID,
       @RequestParam(name = "memberID", required = true) String memberID,
       @RequestParam(name = "status", required = false) String status,
       @RequestParam(name = "issuedOn", required = true) String issuedOn,
@@ -79,9 +77,9 @@ public class LostController {
       @RequestParam(defaultValue = "", required = false) String successMessage,
       @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     ActionConclusion actionConclusion = loanHistoryService.update(stringId, isbn, memberID, issuedOn, "", fine, status);
-    model.addAttribute("previousIsSuccess", isSuccess);
-    model.addAttribute("previousSuccessMessage", successMessage);
-    model.addAttribute("previousFailureMessage", failureMessage);
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
@@ -96,9 +94,11 @@ public class LostController {
       model.addAttribute("previousToDate", toDate);
       return "admin/lost/view.html";
     } else {
+      LoanHistory loan = loanHistoryRepository.getOne(Common.convertStringToLong(stringId));
+      model.addAttribute("loan", loan);
+      model.addAttribute("issuedOn", loan.getIssuedOn().format(Common.dateFormatter));
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousTitle", title);
-      model.addAttribute("previousID", artifactID);
       model.addAttribute("previousMemberID", memberID);
       model.addAttribute("previousStatus", status);
       model.addAttribute("previousIssuedOn", issuedOn);
@@ -123,7 +123,6 @@ public class LostController {
       @RequestParam(defaultValue = "", required = false) String dateType,
       @RequestParam(name = "isbn", required = true) String isbn,
       @RequestParam(name = "title", required = false) String title,
-      @RequestParam(name = "artifactID", required = false) String artifactID,
       @RequestParam(name = "memberID", required = true) String memberID,
       @RequestParam(name = "status", required = false) String status,
       @RequestParam(name = "issuedOn", required = true) String issuedOn,
@@ -131,15 +130,10 @@ public class LostController {
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
       @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
-    System.out.println(isbn);
-    System.out.println(memberID);
-    System.out.println(issuedOn);
-    System.out.println(fine);
-    System.out.println(status);
     ActionConclusion actionConclusion = loanHistoryService.create(isbn, memberID, issuedOn, "", fine, status);
-    model.addAttribute("previousIsSuccess", isSuccess);
-    model.addAttribute("previousSuccessMessage", successMessage);
-    model.addAttribute("previousFailureMessage", failureMessage);
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
@@ -156,7 +150,6 @@ public class LostController {
     } else {
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousTitle", title);
-      model.addAttribute("previousID", artifactID);
       model.addAttribute("previousMemberID", memberID);
       model.addAttribute("previousStatus", status);
       model.addAttribute("previousIssuedOn", issuedOn);
