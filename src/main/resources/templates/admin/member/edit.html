@@ -40,6 +40,10 @@
               <span class="fake_label">Last active</span>
               <span class="fake_field" th:text="${lastActiveOn}"></span>
             </div>
+            <div class="my-1 d-flex flex-column">
+              <span class="fake_label">Email</span>
+              <span class="fake_field" th:text="${member.email}"></span>
+            </div>
           </div>
         </div>
         <div class="w-75 container mx-2">
@@ -52,15 +56,15 @@
               </div>
 
               <div class="form__group my-1">
-                <input type="text" name="email"
-                id="email" th:placeholder="${member.email}" th:value="${#strings.isEmpty(previousEmail)} ? ${member.email} : ${previousEmail}" required />
-                <label for="email">Email</label>
-              </div>
-
-              <div class="form__group my-1">
                 <input type="text" name="mobileNumber"
                 id="mobileNumber" th:placeholder="${member.mobileNumber}" th:value="${#strings.isEmpty(previousMobileNumber)} ? ${member.mobileNumber} : ${previousMobileNumber}" required />
                 <label for="mobileNumber">Mobile Number</label>
+              </div>
+
+              <div class="form__group my-1">
+                <input type="text" name="bornOn" onfocus="(this.type='date')" onblur="(this.type='text')"
+                id="bornOn" th:placeholder="${bornOn}" th:value="${#strings.isEmpty(previousBornOn)} ? ${bornOn} : ${previousBornOn}" required />
+                <label for="bornOn">Birthdate</label>
               </div>
 
               <div class="form__group my-1">

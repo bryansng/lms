@@ -109,6 +109,7 @@ public class MemberController {
     model.addAttribute("member", member);
     model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
     model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
+    model.addAttribute("bornOn", member.getBornOn().format(Common.dateFormatter));
     return "admin/member/edit.html";
   }
 
