@@ -13,14 +13,93 @@
 
   <!-- Import CSS -->
   <link rel="stylesheet" th:href="@{~/css/common.css}" />
-  <title>Home | Wet LMS</title>
+  <title>Edit Member | Wet LMS</title>
 </head>
 
 <body class="m-0">
   <header th:replace="admin/fragments/header.html"></header>
 
   <main>
-    It works
+    <div class="w-100 w-lg-75 my-4 mx-auto container">
+      <div th:classappend="${#strings.isEmpty(previousIsSuccess)} ? mb-3 : mb-0" class="d-flex flex-row justify-content-between align-items-start">
+        <h3 class="">Edit Member</h3>
+      </div>
+      <div th:replace="admin/fragments/actionMessage.html :: showActionMessage"></div>
+      <div class="d-flex flex-row justify-content-between w-100 mx-auto py-3 px-0 container">
+        <div class="w-25 container mx-2">
+          <div class="d-flex justify-content-center align-items-center member-avatar-container">
+            <span class="font-weight-bold" id="memberAvatarInitials" th:text="${member.getInitials()}"></span>
+          </div>
+          <!-- <img th:src="@{~/images/profile/user.png}" style="width: 100%;"/>  -->
+          <div class="container p-0 mx-0 my-3">
+            <div class="my-1 d-flex flex-column">
+              <span class="fake_label">Member since</span>
+              <span class="fake_field" th:text="${joinedOn}"></span>
+            </div>
+            <div class="my-1 d-flex flex-column">
+              <span class="fake_label">Last active</span>
+              <span class="fake_field" th:text="${lastActiveOn}"></span>
+            </div>
+          </div>
+        </div>
+        <div class="w-75 container mx-2">
+          <form th:action="@{/admin/members/edit(id=${member.id})}" method="POST" th:id="editForm">
+            <div class="d-flex flex-column justify-content-center">
+              <div class="form__group my-1">
+                <input type="text" name="fullName"
+                id="fullName" th:placeholder="${member.fullName}" th:value="${#strings.isEmpty(previousFullName)} ? ${member.fullName} : ${previousFullName}" oninput="inputAvatarMember('fullName', 'memberAvatarInitials')" required />
+                <label for="fullName">Full Name</label>
+              </div>
+
+              <div class="form__group my-1">
+                <input type="text" name="email"
+                id="email" th:placeholder="${member.email}" th:value="${#strings.isEmpty(previousEmail)} ? ${member.email} : ${previousEmail}" required />
+                <label for="email">Email</label>
+              </div>
+
+              <div class="form__group my-1">
+                <input type="text" name="mobileNumber"
+                id="mobileNumber" th:placeholder="${member.mobileNumber}" th:value="${#strings.isEmpty(previousMobileNumber)} ? ${member.mobileNumber} : ${previousMobileNumber}" required />
+                <label for="mobileNumber">Mobile Number</label>
+              </div>
+
+              <div class="form__group my-1">
+                <input type="text" name="address"
+                id="address" th:value="${#strings.isEmpty(previousAddress)} ? ${member.address} : ${previousAddress}" th:placeholder="${member.address}" required>
+                <label for="address">Address</label>
+              </div>
+
+              <div class="form__group my-1">
+                <textarea type="text" name="bio"
+                id="bio" style="min-height: 80px;" th:text="${#strings.isEmpty(previousBio)} ? ${member.bio} : ${previousBio}" th:placeholder="${member.bio}" ></textarea>
+                <label for="bio">Bio</label>
+              </div>
+
+              <div class="form__group my-1">
+                <input type="text" name="website"
+                id="website" th:value="${#strings.isEmpty(previousWebsite)} ? ${member.website} : ${previousWebsite}" th:placeholder="${member.website}" required>
+                <label for="website">Website</label>
+              </div>
+
+              <div class="form__group my-1">
+                <select id="type" name="type" required>
+                  <option value="" hidden disabled></option>
+                  <option value="member" th:selected="${#strings.isEmpty(previousType)} ? ${member.type} == 'member': ${previousType} == 'member'">Member</option>
+                  <option value="librarian" th:selected="${#strings.isEmpty(previousType)} ? ${member.type} == 'librarian': ${previousType} == 'librarian'">Librarian</option>
+                </select>
+                <label for="type">Member Type</label>
+              </div>
+
+              <div th:replace="admin/fragments/actionMessage.html :: hiddenInputsForActionMessages"></div>
+            </div>
+            <div class="d-flex justify-content-end my-5">
+              <button type="submit" class="px-4 py-2 btn btn-lg border border-dark text-dark hover">Edit Member</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
   </main>
 
   <footer></footer>
@@ -36,6 +115,9 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
   </script>
+
+  <!-- Include JavaScript from static folder -->
+  <script type="text/javascript" src="/js/instantAvatarMember.js"></script>
 </body>
 
 </html>

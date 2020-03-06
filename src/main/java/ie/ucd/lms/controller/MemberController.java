@@ -10,7 +10,11 @@ import ie.ucd.lms.service.Common;
 import ie.ucd.lms.service.LoanHistoryService;
 import ie.ucd.lms.service.MemberService;
 import ie.ucd.lms.service.ReserveQueueService;
+<<<<<<< HEAD
 import java.time.LocalDate;
+=======
+import ie.ucd.lms.dao.MemberRepository;
+>>>>>>> 2f71a8f9690e328ef33516c599d34b9da5c966dc
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -25,11 +29,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
 public class MemberController {
+<<<<<<< HEAD
 	@Autowired
 	MemberService memberService;
 
@@ -155,4 +161,175 @@ public class MemberController {
 	// public String membersDelete(@RequestParam(name = "id") String stringId, Model model) {
 	// 	return memberService.delete(stringId).toString();
 	// }
+=======
+  @Autowired
+  MemberService memberService;
+
+  @Autowired
+  MemberRepository memberRepository;
+
+  @Autowired
+  ArtifactService artifactService;
+
+  @Autowired
+  LoanHistoryService LoanHistoryService;
+
+  @Autowired
+  ReserveQueueService reserveQueueService;
+
+  private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
+
+  @PostMapping("/member/profile")
+  public String profileView(@Valid @ModelAttribute("member") Member member, BindingResult bindingResult, Model model,
+      RedirectAttributes redirectAttrs) {
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("invalid", "invalid");
+    }
+
+    return "/member/profile";
+  }
+
+  @GetMapping("/member/view")
+  public String artifactView(@RequestParam(name = "id") Long id, Model model) {
+    Optional<Artifact> viewArtifact = artifactService.exists(id);
+
+    if (viewArtifact.isPresent()) {
+      model.addAttribute("artifact", viewArtifact.get());
+    }
+
+    return "member/view";
+  }
+
+  @GetMapping("/member/historical")
+  public String historicalView(Model model) {
+    return "member/historical";
+  }
+
+  @GetMapping("/member/loans")
+  public String loansView(Model model) {
+    // final version will take member entity as parameters from redirectattrs
+    Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
+    List<LoanHistory> loans = LoanHistoryService.findByMember(member);
+    List<ReserveQueue> reservedLoans = reserveQueueService.getReservedLoansForMember(member);
+    // logger.info("loans: " + loans.toString());
+    List<LoanHistory> historicalLoans = LoanHistoryService.getHistoricalLoans(member);
+    // Page<LoanHistory> historicalLoans = LoanHistoryService.getHistorialLoans(member);
+
+    // logger.info(historicalLoans.toString());
+    model.addAttribute("member", member);
+
+    model.addAttribute("loans", loans);
+    model.addAttribute("historicalLoans", historicalLoans);
+    model.addAttribute("reservedLoans", reservedLoans);
+    return "member/loans";
+  }
+
+  @GetMapping("/member/profile")
+  public String indexView(@ModelAttribute("member") Member member, Model model) {
+    model.addAttribute("member", member);
+
+    return "index.html";
+  }
+
+  @GetMapping("/member/reserve")
+  public String artifactReserve(@RequestParam(name = "id", value = "id", required = true) Long id,
+      @RequestParam(name = "isbn") String isbn, Model model, RedirectAttributes redirectAttrs) {
+    // will pass member as a parameter once authentication is set up
+    logger.info(Long.toString(id));
+    logger.info(isbn);
+    Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
+    // finding out what expiredOn is
+    // ActionConclusion ac = reserveQueueService.create(isbn, Long.toString(member.getId()), "21/03/20");
+    redirectAttrs.addFlashAttribute("reserve", true);
+    // redirectAttrs.addFlashAttribute("reserveMsg", ac.message);
+    // redirectAttrs.addFlashAttribute("reserveFailed", ac.isSuccess);
+    return "redirect:/";
+  }
+
+  @GetMapping("/admin/members/view")
+  public String membersView(@RequestParam(defaultValue = "1", required = false) Integer page,
+      @RequestParam(defaultValue = "", required = false) String searchQuery,
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+    Page<Member> members = memberService.search(searchQuery, page - 1);
+    model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - members.getTotalElements());
+    model.addAttribute("totalPages", members.getTotalPages());
+    model.addAttribute("currentPage", page);
+    model.addAttribute("members", members);
+
+    model.addAttribute("previousQuery", searchQuery);
+    model.addAttribute("previousIsSuccess", isSuccess);
+    model.addAttribute("previousSuccessMessage", successMessage);
+    model.addAttribute("previousFailureMessage", failureMessage);
+    return "admin/member/view.html";
+  }
+
+  @GetMapping("/admin/members/edit")
+  public String membersEdit(@RequestParam(name = "id") String stringId, Model model) {
+    Member member = memberRepository.findById(Common.convertStringToLong(stringId)).get();
+    model.addAttribute("member", member);
+    model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
+    model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
+    return "admin/member/edit.html";
+  }
+
+  @PostMapping("admin/members/edit")
+  public String membersEditPost(@RequestParam(defaultValue = "1", required = false) Integer page,
+      @RequestParam(defaultValue = "", required = false) String searchQuery,
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage,
+      @RequestParam(name = "id", required = true) String stringId,
+      @RequestParam(name = "email", defaultValue = "", required = false) String email,
+      @RequestParam(name = "fullName", defaultValue = "", required = false) String fullName,
+      @RequestParam(name = "mobileNumber", defaultValue = "", required = false) String mobileNumber,
+      @RequestParam(name = "address", defaultValue = "", required = false) String address,
+      @RequestParam(name = "website", defaultValue = "", required = false) String website,
+      @RequestParam(name = "bornOn", defaultValue = "", required = false) String bornOn,
+      @RequestParam(name = "bio", required = false) String bio,
+      @RequestParam(name = "type", defaultValue = "member", required = false) String type,
+      @RequestParam(name = "joinedOn", required = false) String joinedOn,
+      @RequestParam(name = "lastActiveOn", required = false) String lastActiveOn, Model model) {
+    ActionConclusion actionConclusion = memberService.update(stringId, email, fullName, mobileNumber, address, website,
+        bornOn, bio, type);
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
+    if (actionConclusion.isSuccess) {
+      Page<Member> members = memberService.search("", page - 1);
+
+      model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - members.getTotalElements());
+      model.addAttribute("totalPages", members.getTotalPages());
+      model.addAttribute("currentPage", page);
+      model.addAttribute("members", members);
+
+      model.addAttribute("previousQuery", "");
+      return "admin/member/view.html";
+    } else {
+      Member member = memberRepository.findById(Common.convertStringToLong(stringId)).get();
+      model.addAttribute("member", member);
+      model.addAttribute("previousFullName", fullName);
+      model.addAttribute("previousEmail", email);
+      model.addAttribute("previousMobileNumber", mobileNumber);
+      model.addAttribute("previousAddress", address);
+      model.addAttribute("previousWebsite", website);
+      model.addAttribute("previousBio", bio);
+      model.addAttribute("previousType", type);
+      return "admin/member/edit.html";
+    }
+  }
+
+  @PostMapping("/admin/members/delete")
+  @ResponseBody
+  public ActionConclusion membersDelete(@RequestParam(name = "id") String stringId, Model model) {
+    return memberService.delete(stringId);
+  }
+
+  @GetMapping("/members/search")
+  @ResponseBody
+  public Page<Member> membersSearch(@RequestParam(defaultValue = "", required = false) String searchQuery) {
+    return memberService.search(searchQuery, 0, Common.QUICK_SEARCH_ROWS);
+  }
+>>>>>>> 2f71a8f9690e328ef33516c599d34b9da5c966dc
 }

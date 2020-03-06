@@ -40,7 +40,7 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Long> 
 			+ "(LH.artifact.id = ?1 or UPPER(LH.artifact.title) like UPPER(CONCAT('%', UPPER(?2), '%')) or UPPER(LH.isbn) like UPPER(CONCAT('%', UPPER(?2), '%'))) and "
 			+ "(LH.memberId = ?3 or UPPER(LH.member.fullName) like UPPER(CONCAT('%', UPPER(?4), '%')) or UPPER(LH.member.email) like UPPER(CONCAT('%', UPPER(?4), '%'))) and "
 			+ "((LH.issuedOn between ?5 and ?6) or (LH.returnOn between ?5 and ?6)) and "
-			+ "UPPER(LH.status) not like UPPER(CONCAT('%', UPPER(?7), '%'))")
+			+ "UPPER(LH.status) not like UPPER(CONCAT('%', UPPER(?7), '%')) " + "ORDER BY LH.status ASC, LH.id DESC")
 	Page<LoanHistory> findAllByArtifactAndMemberAndBothDatesAndStatusNot(Long artifactId, String artifactDetails,
 			Long memberId, String memberDetails, LocalDateTime dateFrom, LocalDateTime dateTo, String status,
 			Pageable pageable);
@@ -56,7 +56,8 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Long> 
 	@Query("SELECT LH " + "FROM LoanHistory LH " + "WHERE "
 			+ "(LH.artifact.id = ?1 or UPPER(LH.artifact.title) like UPPER(CONCAT('%', UPPER(?2), '%')) or UPPER(LH.isbn) like UPPER(CONCAT('%', UPPER(?2), '%'))) and "
 			+ "(LH.memberId = ?3 or UPPER(LH.member.fullName) like UPPER(CONCAT('%', UPPER(?4), '%')) or UPPER(LH.member.email) like UPPER(CONCAT('%', UPPER(?4), '%'))) and "
-			+ "(LH.issuedOn between ?5 and ?6) and " + "UPPER(LH.status) not like UPPER(CONCAT('%', UPPER(?7), '%'))")
+			+ "(LH.issuedOn between ?5 and ?6) and " + "UPPER(LH.status) not like UPPER(CONCAT('%', UPPER(?7), '%')) "
+			+ "ORDER BY LH.status ASC, LH.id DESC")
 	Page<LoanHistory> findAllByArtifactAndMemberAndIssuedDateAndStatusNot(Long artifactId, String artifactDetails,
 			Long memberId, String memberDetails, LocalDateTime dateFrom, LocalDateTime dateTo, String status,
 			Pageable pageable);
@@ -72,7 +73,8 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Long> 
 	@Query("SELECT LH " + "FROM LoanHistory LH " + "WHERE "
 			+ "(LH.artifact.id = ?1 or UPPER(LH.artifact.title) like UPPER(CONCAT('%', UPPER(?2), '%')) or UPPER(LH.isbn) like UPPER(CONCAT('%', UPPER(?2), '%'))) and "
 			+ "(LH.memberId = ?3 or UPPER(LH.member.fullName) like UPPER(CONCAT('%', UPPER(?4), '%')) or UPPER(LH.member.email) like UPPER(CONCAT('%', UPPER(?4), '%'))) and "
-			+ "(LH.returnOn between ?5 and ?6) and " + "UPPER(LH.status) not like UPPER(CONCAT('%', UPPER(?7), '%'))")
+			+ "(LH.returnOn between ?5 and ?6) and " + "UPPER(LH.status) not like UPPER(CONCAT('%', UPPER(?7), '%')) "
+			+ "ORDER BY LH.status ASC, LH.id DESC")
 	Page<LoanHistory> findAllByArtifactAndMemberAndReturnDateAndStatusNot(Long artifactId, String artifactDetails,
 			Long memberId, String memberDetails, LocalDateTime dateFrom, LocalDateTime dateTo, String status,
 			Pageable pageable);
@@ -87,6 +89,10 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Long> 
 	Integer countByReturnedOnAfter(LocalDateTime returnedOn);
 
 	Integer countByIssuedOnAfterAndWasLostTrue(LocalDateTime issuedOn);
+
+	@Query("SELECT COUNT(LH) " + "FROM LoanHistory LH " + "WHERE "
+			+ "LH.memberId = ?1 and (LH.status = ?2 or LH.status = ?3 or LH.status = ?4)")
+	Integer countAllByMemberIdAndStatus(Long memberId, String status1, String status2, String status3);
 
 	List<LoanHistory> findByMember(Member member);
 

@@ -40,8 +40,9 @@ public class ArtifactController {
   public String artifactsView(@RequestParam(defaultValue = "1", required = false) Integer page,
       @RequestParam(defaultValue = "", required = false) String searchQuery,
       @RequestParam(defaultValue = "", required = false) String type,
-      @RequestParam(defaultValue = "", required = false) String updateStatus,
-      @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     Page<Artifact> artifacts = artifactService.search(searchQuery, type, page - 1);
     model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
     model.addAttribute("totalPages", artifacts.getTotalPages());
@@ -50,8 +51,9 @@ public class ArtifactController {
 
     model.addAttribute("previousQuery", searchQuery);
     model.addAttribute("previousType", type);
-    model.addAttribute("previousUpdateStatus", updateStatus);
-    model.addAttribute("previousErrorMessage", errorMessage);
+    model.addAttribute("previousIsSuccess", isSuccess);
+    model.addAttribute("previousSuccessMessage", successMessage);
+    model.addAttribute("previousFailureMessage", failureMessage);
     return "admin/artifact/view.html";
   }
 
@@ -62,11 +64,6 @@ public class ArtifactController {
     model.addAttribute("artifact", artifact);
     model.addAttribute("publishedOn", publishedOn);
     return "admin/artifact/edit.html";
-  }
-
-  @GetMapping("/admin/artifacts/create")
-  public String artifactsCreateGet() {
-    return "admin/artifact/create.html";
   }
 
   @PostMapping("admin/artifacts/edit")
@@ -84,10 +81,15 @@ public class ArtifactController {
       @RequestParam(name = "quantity", required = true) String quantity,
       @RequestParam(name = "totalQuantity", required = true) String totalQuantity,
       @RequestParam(name = "rackLocation", required = false) String rackLocation,
-      @RequestParam(defaultValue = "", required = false) String updateStatus,
-      @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+      @RequestParam(name = "thumbnailLink", required = false) String thumbnailLink,
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     ActionConclusion actionConclusion = artifactService.update(stringId, isbn, type, genre, authors, title, subtitle,
-        description, publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation);
+        description, publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<Artifact> artifacts = artifactService.search("", type, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
@@ -97,14 +99,10 @@ public class ArtifactController {
 
       model.addAttribute("previousQuery", "");
       model.addAttribute("previousType", type);
-      model.addAttribute("previousUpdateStatus", "success");
-      model.addAttribute("previousUpdateMessage", "Updated Succesfully.");
-      model.addAttribute("previousErrorMessage", "");
       return "admin/artifact/view.html";
     } else {
       Artifact artifact = artifactRepository.findById(Common.convertStringToLong(stringId)).get();
       model.addAttribute("artifact", artifact);
-      model.addAttribute("publishedOn", publishedOn);
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousType", type);
       model.addAttribute("previousGenre", genre);
@@ -117,11 +115,14 @@ public class ArtifactController {
       model.addAttribute("previousQuantity", quantity);
       model.addAttribute("previousTotalQuantity", totalQuantity);
       model.addAttribute("previousRackLocation", rackLocation);
-      model.addAttribute("previousUpdateStatus", "fail");
-      model.addAttribute("previousUpdateMessage", "");
-      model.addAttribute("previousErrorMessage", "Failed to Update Artifact. Please try again.");
+      model.addAttribute("previousThumbnailLink", thumbnailLink);
       return "admin/artifact/edit.html";
     }
+  }
+
+  @GetMapping("/admin/artifacts/create")
+  public String artifactsCreateGet() {
+    return "admin/artifact/create.html";
   }
 
   @PostMapping("admin/artifacts/create")
@@ -139,10 +140,16 @@ public class ArtifactController {
       @RequestParam(name = "quantity", defaultValue = "1", required = true) String quantity,
       @RequestParam(name = "totalQuantity", defaultValue = "1", required = true) String totalQuantity,
       @RequestParam(name = "rackLocation", required = false) String rackLocation,
-      @RequestParam(defaultValue = "", required = false) String updateStatus,
-      @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+      @RequestParam(name = "thumbnailLink", required = false) String thumbnailLink,
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+    publishedOn = publishedOn.length() == 4 ? publishedOn.concat("-01-01") : publishedOn;
     ActionConclusion actionConclusion = artifactService.create(isbn, type, genre, authors, title, subtitle, description,
-        publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation);
+        publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<Artifact> artifacts = artifactService.search("", type, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
@@ -152,9 +159,6 @@ public class ArtifactController {
 
       model.addAttribute("previousQuery", "");
       model.addAttribute("previousType", type);
-      model.addAttribute("previousUpdateStatus", "success");
-      model.addAttribute("previousUpdateMessage", "Created Succesfully.");
-      model.addAttribute("previousErrorMessage", "");
       return "admin/artifact/view.html";
     } else {
       model.addAttribute("previousISBN", isbn);
@@ -169,17 +173,15 @@ public class ArtifactController {
       model.addAttribute("previousQuantity", quantity);
       model.addAttribute("previousTotalQuantity", totalQuantity);
       model.addAttribute("previousRackLocation", rackLocation);
-      model.addAttribute("previousUpdateStatus", "fail");
-      model.addAttribute("previousUpdateMessage", "");
-      model.addAttribute("previousErrorMessage", "Failed to Create Artifact. Please try again.");
+      model.addAttribute("previousThumbnailLink", thumbnailLink);
       return "admin/artifact/create.html";
     }
   }
 
   @PostMapping("/admin/artifacts/delete")
   @ResponseBody
-  public String artifactsDelete(@RequestParam(name = "id") String stringId, Model model) {
-    return artifactService.delete(stringId).toString();
+  public ActionConclusion artifactsDelete(@RequestParam(name = "id") String stringId, Model model) {
+    return artifactService.delete(stringId);
   }
 
   @GetMapping("/artifacts/search")
@@ -192,8 +194,9 @@ public class ArtifactController {
   public String searchPage(@RequestParam(defaultValue = "1", required = false) Integer page,
       @RequestParam(defaultValue = "", required = false) String searchQuery,
       @RequestParam(defaultValue = "", required = false) String type,
-      @RequestParam(defaultValue = "", required = false) String updateStatus,
-      @RequestParam(defaultValue = "", required = false) String errorMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
     // if searchQuery empty, dont allow search and return nothing?
     Page<Artifact> artifacts = artifactService.search(searchQuery, "", page - 1, Common.PAGINATION_ROWS);
     model.addAttribute("totalElements", artifacts.getTotalElements());
@@ -203,8 +206,9 @@ public class ArtifactController {
 
     model.addAttribute("previousSearchQuery", searchQuery);
     model.addAttribute("previousType", type);
-    model.addAttribute("previousUpdateStatus", updateStatus);
-    model.addAttribute("previousErrorMessage", errorMessage);
+    model.addAttribute("previousIsSuccess", isSuccess);
+    model.addAttribute("previousSuccessMessage", successMessage);
+    model.addAttribute("previousFailureMessage", failureMessage);
     return "search.html";
   }
 }

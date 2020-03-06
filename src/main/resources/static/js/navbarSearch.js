@@ -1,38 +1,48 @@
+let timeoutNavbarArtifactSearch = null;
 function navbarSearchForm(url) {
-  var searchQuery = document.querySelector("#navbarSearchQuery").value;
-  var searchSpinner = document.querySelector(".search-spinner");
-  var searchGlass = document.querySelector(".search-glass");
+  // handle delay.
+  clearTimeout(timeoutNavbarArtifactSearch);
 
-  clearChild(document.querySelector("#cardsContainer"));
-  if (searchQuery !== "") {
-    searchSpinner.style.display = "block";
-    searchGlass.style.display = "none";
+  timeoutNavbarArtifactSearch = setTimeout(function() {
+    var searchQuery = document.querySelector("#navbarSearchQuery").value;
+    var searchSpinner = document.querySelector(".search-spinner");
+    var searchGlass = document.querySelector(".search-glass");
 
-    fetch(url + searchQuery)
-      .then(resp => resp.json())
-      .then(artifactsPage => {
-        for (artifact of artifactsPage.content) {
+    clearChild(document.querySelector("#cardsContainer"));
+    if (searchQuery !== "") {
+      searchSpinner.style.display = "block";
+      searchGlass.style.display = "none";
+
+      fetch(url + searchQuery)
+        .then(resp => resp.json())
+        .then(artifactsPage => {
+          for (artifact of artifactsPage.content) {
+            document
+              .querySelector("#cardsContainer")
+              .appendChild(
+                getSearchCard(
+                  artifact.title,
+                  artifact.authors,
+                  artifact.thumbnailLink,
+                  `/artifacts/view?id=${artifact.id}`
+                )
+              );
+          }
+
           document
             .querySelector("#cardsContainer")
             .appendChild(
-              getSearchCard(
-                artifact.title,
-                artifact.authors,
-                `/artifacts/view?id=${artifact.id}`
+              getSeeAllResults(
+                searchQuery,
+                `/search?searchQuery=${searchQuery}`
               )
             );
-        }
 
-        document
-          .querySelector("#cardsContainer")
-          .appendChild(
-            getSeeAllResults(searchQuery, `/search?searchQuery=${searchQuery}`)
-          );
-
-        searchSpinner.style.display = "none";
-        searchGlass.style.display = "block";
-      });
-  }
+          searchSpinner.style.display = "none";
+          searchGlass.style.display = "block";
+        });
+    }
+  }, 250);
 }
 
 function clearChild(aNode) {
@@ -52,7 +62,7 @@ function clearChild(aNode) {
   </div>
 </a>
 */
-function getSearchCard(titleText, authorsText, link) {
+function getSearchCard(titleText, authorsText, thumbnailLink, viewLink) {
   var cardContainer = document.createElement("a");
   cardContainer.classList.add(
     "px-3",
@@ -61,7 +71,7 @@ function getSearchCard(titleText, authorsText, link) {
     "hover-only-bg",
     "border-bottom"
   );
-  cardContainer.href = link;
+  cardContainer.href = viewLink;
 
   var cardWrapper = document.createElement("div");
   cardWrapper.classList.add(
@@ -70,13 +80,24 @@ function getSearchCard(titleText, authorsText, link) {
     "align-items-center"
   );
 
-  var cardImg = document.createElement("div");
-  cardImg.style.width = "2.5rem";
-  cardImg.style.height = "2.5rem";
-  cardImg.classList.add("bg-dark");
+  var cardImgContainer = document.createElement("div");
+  cardImgContainer.classList.add("h-100");
 
-  var titleAuthorsContainer = document.createElement("div");
-  titleAuthorsContainer.classList.add(
+  var cardImg = document.createElement("img");
+  if (thumbnailLink === "") {
+    // cardImg = document.createElement("div");
+    // cardImg.classList.add("bg-dark");
+    cardImg.src = `${window.location.origin}/images/placeholder.png`;
+  } else {
+    cardImg.src = thumbnailLink;
+  }
+  cardImg.style.width = "2.5rem";
+  cardImg.style.height = "3rem";
+  cardImg.style.objectFit = "contain";
+
+  var cardContentDetailsContainer = document.createElement("div");
+  cardContentDetailsContainer.classList.add(
+    "w-100",
     "ml-2",
     "d-flex",
     "flex-column",
@@ -85,17 +106,20 @@ function getSearchCard(titleText, authorsText, link) {
   );
 
   var title = document.createElement("p");
-  title.classList.add("font-weight-bolder", "m-0", "text-truncate");
+  title.style.width = "90%";
+  title.classList.add("m-0", "font-weight-bolder", "text-truncate");
   title.textContent = titleText;
 
   var authors = document.createElement("p");
+  authors.style.width = "90%";
   authors.classList.add("m-0", "text-truncate");
   authors.textContent = `by ${authorsText}`;
 
-  titleAuthorsContainer.appendChild(title);
-  titleAuthorsContainer.appendChild(authors);
-  cardWrapper.appendChild(cardImg);
-  cardWrapper.appendChild(titleAuthorsContainer);
+  cardContentDetailsContainer.appendChild(title);
+  cardContentDetailsContainer.appendChild(authors);
+  cardImgContainer.appendChild(cardImg);
+  cardWrapper.appendChild(cardImgContainer);
+  cardWrapper.appendChild(cardContentDetailsContainer);
   cardContainer.appendChild(cardWrapper);
 
   return cardContainer;
@@ -104,7 +128,7 @@ function getSearchCard(titleText, authorsText, link) {
 /*
 <a href="#" class="px-3 py-2 quick-search-dropdown-seeAllResults-hover text-center">See all results for "searchQuery HERE"</a>
 */
-function getSeeAllResults(searchQuery, link) {
+function getSeeAllResults(searchQuery, viewLink) {
   var seeAllResults = document.createElement("a");
   seeAllResults.classList.add(
     "px-3",
@@ -112,32 +136,7 @@ function getSeeAllResults(searchQuery, link) {
     "quick-search-dropdown-seeAllResults-hover",
     "text-center"
   );
-  seeAllResults.href = link;
+  seeAllResults.href = viewLink;
   seeAllResults.textContent = `See all results for "${searchQuery}"`;
   return seeAllResults;
-}
-
-function searchBarForm1(id) {
-  var form = $("#searchBarForm");
-  $.ajax({
-    url: form.attr("action"),
-    data: form.serialize(),
-    type: "get",
-    success: function(result) {
-      // Do something with the response.
-      // Might want to check for errors here.
-      if (result === "true") {
-        updateStatusSuccess();
-      } else {
-        updateStatusFail();
-        updateErrorMessage(
-          "Unable to renew. Artifact is reserved for someone else. Artifact has been reserved for this user automatically."
-        );
-      }
-      triggerRefresh();
-    },
-    error: function(error) {
-      // Here you can handle exceptions thrown by the server or your controller.
-    }
-  });
 }

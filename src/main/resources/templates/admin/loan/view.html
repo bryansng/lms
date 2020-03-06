@@ -27,7 +27,7 @@
           <img th:src="@{~/images/add_v1.png}" class="create-new-img" />
         </a>
       </div>
-      <div th:classappend="${#strings.isEmpty(previousUpdateStatus)} ? mb-5 : mb-1">
+      <div th:classappend="${#strings.isEmpty(previousIsSuccess)} ? mb-5 : mb-1">
         <form action="#" th:action="@{/admin/loans/view}" method="GET" th:id="searchForm">
           <div class="d-flex flex-column justify-content-between align-items-start">
             <div class="d-flex flex-row justify-content-between align-items-end w-75 mb-4">
@@ -63,23 +63,13 @@
                   </select>
                 </div>
               </div>
-              <input type="text" class="d-none" id="updateStatus" name="updateStatus" />
-              <input type="text" class="d-none" id="errorMessage" name="errorMessage" />
+              <div th:replace="admin/fragments/actionMessage.html :: hiddenInputsForActionMessages"></div>
               <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">Search</button>
             </div>
           </div>
         </form>
       </div>
-      <div class="row no-gutters" th:unless="${#strings.isEmpty(previousUpdateStatus)}">
-        <div class="p-3 my-3 w-100" style="background-color: #28a745b6;font-weight: bolder;" th:if="${previousUpdateStatus == 'success'}">
-          &#10004;&nbsp;Updated Successfully.
-        </div>
-        <div class="p-3 my-3 w-100" style="background-color: #dc3546b6;font-weight: bolder;" th:if="${previousUpdateStatus == 'fail'}">
-          &#10008;&nbsp;
-          <span th:if="${#strings.isEmpty(previousErrorMessage)}">Failed to Update. Please try again.</span>
-          <span th:unless="${#strings.isEmpty(previousErrorMessage)}" th:text="${previousErrorMessage}"></span>
-        </div>
-      </div>
+      <div th:replace="admin/fragments/actionMessage.html :: showActionMessage"></div>
       <div class="row no-gutters">
         <div class="col-12">
           <table class="w-100 divtable">

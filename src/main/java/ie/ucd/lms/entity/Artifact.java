@@ -41,6 +41,7 @@ public class Artifact implements Comparable<Artifact> {
 	private Integer quantity; // current quantity in stock.
 	private Integer totalQuantity; // how many quantity we should have for this artifact.
 	private String rackLocation;
+	private String thumbnailLink = "";
 	private Integer totalLoans;
 
 	@OneToMany(mappedBy = "artifact", cascade = CascadeType.ALL)
@@ -51,7 +52,7 @@ public class Artifact implements Comparable<Artifact> {
 
 	public void setAll(String isbn, String type, String genre, String authors, String title, String subtitle,
 			String description, String publishers, String publishedOn, String itemPrice, String quantity,
-			String totalQuantity, String rackLocation, Integer totalLoans) {
+			String totalQuantity, String rackLocation, String thumbnailLink, Integer totalLoans) {
 		setIsbn(isbn);
 		setType(type);
 		setGenre(genre);
@@ -65,25 +66,15 @@ public class Artifact implements Comparable<Artifact> {
 		setQuantity(Common.convertStringToInteger(quantity));
 		setTotalQuantity(Common.convertStringToInteger(totalQuantity));
 		setRackLocation(rackLocation);
+		setThumbnailLink(thumbnailLink);
 		setTotalLoans(totalLoans);
 	}
 
 	public void setAll(String isbn, String type, String genre, String authors, String title, String subtitle,
 			String description, String publishers, String publishedOn, String itemPrice, String quantity,
-			String totalQuantity, String rackLocation) {
-		setIsbn(isbn);
-		setType(type);
-		setGenre(genre);
-		setAuthors(authors);
-		setTitle(title);
-		setSubtitle(subtitle);
-		setDescription(description);
-		setPublishers(publishers);
-		setPublishedOn(Common.convertStringDateToDateTime(publishedOn));
-		setItemPrice(Common.convertStringToBigDecimal(itemPrice));
-		setQuantity(Common.convertStringToInteger(quantity));
-		setTotalQuantity(Common.convertStringToInteger(totalQuantity));
-		setRackLocation(rackLocation);
+			String totalQuantity, String rackLocation, String thumbnailLink) {
+		this.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice, quantity,
+				totalQuantity, rackLocation, thumbnailLink, this.totalLoans);
 	}
 
 	public boolean inStock() {
@@ -232,6 +223,14 @@ public class Artifact implements Comparable<Artifact> {
 
 	public void setRackLocation(String rackLocation) {
 		this.rackLocation = rackLocation;
+	}
+
+	public String getThumbnailLink() {
+		return thumbnailLink;
+	}
+
+	public void setThumbnailLink(String thumbnailLink) {
+		this.thumbnailLink = thumbnailLink;
 	}
 
 	public Integer getTotalLoans() {

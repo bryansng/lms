@@ -1,3 +1,19 @@
+.member-search-avatar-container {
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 1rem;
+  background-color: #ededed;
+  border-radius: 50%;
+}
+
+.member-avatar-container {
+  width: 15rem;
+  height: 15rem;
+  font-size: 4rem;
+  background-color: #ededed;
+  border-radius: 50%;
+}
+
 .form__group {
   position: relative;
   padding: 15px 0 0;
@@ -110,4 +126,13 @@
 .form__field:required,
 .form__field:invalid {
   box-shadow: none;
+}
+
+.fake_label {
+  color: #9b9b9b;
+}
+
+.fake_field {
+  min-height: 1.7em;
+  box-sizing: content-box;
 }

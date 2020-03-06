@@ -21,42 +21,51 @@
 
   <main>
     <div class="w-100 w-lg-75 my-4 mx-auto container">
-      <div th:classappend="${#strings.isEmpty(previousUpdateStatus)} ? mb-3 : mb-0" class="d-flex flex-row justify-content-between align-items-start">
+      <div th:classappend="${#strings.isEmpty(previousIsSuccess)} ? mb-3 : mb-0" class="d-flex flex-row justify-content-between align-items-start">
         <h3 class="">New Lost</h3>
       </div>
-      <div th:replace="admin/fragments/viewUpdateStatus.html"></div>
+      <div th:replace="admin/fragments/actionMessage.html :: showActionMessage"></div>
       <div class="d-flex flex-row justify-content-between w-100 mx-auto py-3 px-0 container">
         <div class="w-25 container mx-2">
-          <img th:src="@{~/images/placeholder.jpg}" style="width: 100%;"/> <!-- STAND IN IMAGE - CANNOT ADD/CHANGE  -->
+          <img th:src="@{~/images/placeholder.png}" style="width: 100%;"/> <!-- STAND IN IMAGE - CANNOT ADD/CHANGE  -->
         </div>
         <div class="w-75 container mx-2">
           <form th:action="@{/admin/losts/create}" method="POST" th:id="createForm">
             <div class="d-flex flex-column justify-content-center">
-              <div class="form__group my-1">
-                <input type="text" name="isbn"
-                id="isbn" placeholder="9781627792127" th:value="${previousISBN}" required />
-                <label for="isbn">ISBN*</label>
-              </div>
 
-              <div class="form__group my-1">
+              <div class="form__group my-1 quick-search-dropdown instant-search-container">
                 <input type="text" name="title"
-                id="title" placeholder="SISTEM Handbook" th:value="${previousTitle}" />
-                <label for="title">Title</label>
+                id="title" placeholder="Search by Artifact Title / Author / ISBN" th:value="${previousTitle}" oninput="inputSearchArtifact('title', '/artifacts/search?searchQuery=')" />
+                <label for="title">Artifact Title</label>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='Title')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='Title')"></div>
               </div>
 
-              <div class="form__group my-1">
-                <input type="text" name="id"
-                id="id" placeholder="1" th:value="${previousId}" />
-                <label for="id">Artifact ID</label>
+              <div class="form__group my-1 quick-search-dropdown instant-search-container">
+                <input type="text" name="isbn"
+                id="isbn" placeholder="9781627792127" th:value="${previousISBN}" oninput="inputSearchArtifact('isbn', '/artifacts/search?searchQuery=')" required/>
+                <label for="isbn">ISBN*</label>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='Isbn')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='Isbn')"></div>
               </div>
+
+              <!-- <div class="form__group my-1 quick-search-dropdown instant-search-container">
+                <input type="text" name="artifactID"
+                id="artifactID" placeholder="1" th:value="${previousId}" oninput="inputSearchArtifact('artifactID', '/artifacts/search?searchQuery=')" />
+                <label for="artifactID">Artifact ID</label>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSpinnerArtifact(type='ArtifactID')"></div>
+                <div th:replace="admin/fragments/instantSearchArtifact.html :: inputSearchArtifact(type='ArtifactID')"></div>
+              </div> -->
 
               <div class="container p-0">
                 <div class="row">
                   <div class="col">
-                    <div class="form__group my-1">
+                    <div class="form__group my-1 quick-search-dropdown instant-search-container">
                       <input type="text" name="memberID"
-                      id="memberID" placeholder="Member ID" th:value="${previousMemberID}" />
-                      <label for="memberID">Issused to*</label>
+                      id="memberID" placeholder="Search by Artifact Title / Author / ISBN" th:value="${previousMemberID}" oninput="inputSearchMember('memberID', '/members/search?searchQuery=')" />
+                      <label for="memberID">Issued to*</label>
+                      <div th:replace="admin/fragments/instantSearchMember.html :: inputSpinnerMember(type='MemberID')"></div>
+                      <div th:replace="admin/fragments/instantSearchMember.html :: inputSearchMember(type='MemberID')"></div>
                     </div>
                   </div>
                   <div class="col">
@@ -87,8 +96,7 @@
                   </div>
                 </div>
               </div>
-              <input type="text" class="d-none" id="updateStatus" name="updateStatus" />
-              <input type="text" class="d-none" id="errorMessage" name="errorMessage" />
+              <div th:replace="admin/fragments/actionMessage.html :: hiddenInputsForActionMessages"></div>
             </div>
             <div class="d-flex justify-content-end my-5">
               <button type="submit" class="px-4 py-2btn btn-lg border border-dark text-dark hover">Create Lost</button>
@@ -113,6 +121,11 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
   </script>
+
+  <!-- Include JavaScript from static folder -->
+  <script type="text/javascript" src="/js/instantAvatarMember.js"></script>
+  <script type="text/javascript" src="/js/instantSearchLoanArtifact.js"></script>
+  <script type="text/javascript" src="/js/instantSearchLoanMember.js"></script>
 </body>
 
 </html>

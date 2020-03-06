@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+</head>
+
+<body>
+  <div th:fragment="hiddenInputsForActionMessages" class="d-none">
+    <input type="text" id="isSuccess" name="isSuccess" />
+    <input type="text" id="successMessage" name="successMessage" />
+    <input type="text" id="failureMessage" name="failureMessage" />
+  </div>
+
+  <div th:fragment="showActionMessage" class="w-100" th:unless="${#strings.isEmpty(previousIsSuccess)}">
+    <div class="p-3 my-3 w-100 font-weight-bolder" style="background-color: #28a745b6;" th:if="${previousIsSuccess == 'true'}">
+      &#10004;&nbsp;
+      <span th:if="${#strings.isEmpty(previousSuccessMessage)}">Updated Successfully.</span>
+      <span th:unless="${#strings.isEmpty(previousSuccessMessage)}" th:text="${previousSuccessMessage}"></span>
+    </div>
+    <div class="p-3 my-3 w-100 font-weight-bolder" style="background-color: #dc3546b6;" th:if="${previousIsSuccess == 'false'}">
+      &#10008;&nbsp;
+      <span th:if="${#strings.isEmpty(previousFailureMessage)}">Failed to Update. Please try again.</span>
+      <span th:unless="${#strings.isEmpty(previousFailureMessage)}" th:text="${previousFailureMessage}"></span>
+    </div>
+  </div>
+</body>
+
+</html>

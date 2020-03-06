@@ -23,17 +23,40 @@ public class MemberService {
 	}
 
 	public Page<Member> search(String stringToSearch, int pageNum) {
+		return this.search(stringToSearch, pageNum, Common.PAGINATION_ROWS);
+	}
+
+	public Page<Member> search(String stringToSearch, int pageNum, int pageSize) {
 		Long id = Common.convertStringToLong(stringToSearch);
 
 		Page<Member> res = memberRepository
 				.findByIdOrFullNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrMobileNumberContainsOrAddressContainsIgnoreCaseOrTypeIgnoreCaseContains(
 						id, stringToSearch, stringToSearch, stringToSearch, stringToSearch, stringToSearch,
-						PageRequest.of(pageNum, Common.PAGINATION_ROWS));
+						PageRequest.of(pageNum, pageSize));
 		return res;
 	}
 
-	public Boolean update() {
-		return false;
+	public ActionConclusion update(String stringId, String email, String fullName, String mobileNumber, String address,
+			String website, String bornOn, String bio, String type) {
+		Long id = Common.convertStringToLong(stringId);
+
+		if (memberRepository.existsById(id)) {
+			Member member = memberRepository.getOne(id);
+			member.setAll(email, fullName, mobileNumber, address, website, bornOn, bio, type);
+			memberRepository.save(member);
+			return new ActionConclusion(true, "Updated successfully.");
+		}
+		return new ActionConclusion(false, "Failed to update. Member ID does not exist.");
+	}
+
+	public ActionConclusion delete(String stringId) {
+		Long id = Common.convertStringToLong(stringId);
+
+		if (memberRepository.existsById(id)) {
+			memberRepository.deleteById(id);
+			return new ActionConclusion(true, "Deleted successfully.");
+		}
+		return new ActionConclusion(false, "Failed to delete. Member ID does not exist.");
 	}
 
 	public Boolean isMember(String stringToSearch) {
@@ -59,7 +82,6 @@ public class MemberService {
 	public Member createMember(Login login) {
 		Member member = new Member();
 		member.setEmail(login.getEmail());
-
 		return member;
 	}
 

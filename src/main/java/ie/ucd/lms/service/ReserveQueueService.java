@@ -7,11 +7,14 @@ import ie.ucd.lms.entity.Artifact;
 import ie.ucd.lms.entity.Member;
 import ie.ucd.lms.entity.ReserveQueue;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class ReserveQueueService {
@@ -41,11 +44,36 @@ public class ReserveQueueService {
 
     Page<ReserveQueue> res = reserveQueueRepository.findAllByArtifactAndMemberAndBothDatesAndStatus(artifactId,
         artifact, memberId, member, fromDateTime, toDateTime, pRequest);
+    // Page<ReserveQueue> res = reserveQueueRepository.findAllByArtifactAndMemberAndBothDatesAndStatus(artifactId,
+    //     artifact, memberId, member, fromDateTime, toDateTime, pRequest);
     // Page<ReserveQueue> res = reserveQueueRepository.findByExpiredOnBetween(fromDateTime, toDateTime, pRequest);
     return res;
   }
 
-  public ReserveQueue nextInLine(String isbn) {
+  public Map<Long, Long> searchFirstInQueueByArtifact(String artifact, String member, String fromDate, String toDate,
+      int pageNum) {
+    Long artifactId = Common.convertStringToLong(artifact);
+    Long memberId = Common.convertStringToLong(member);
+    LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
+    LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
+    PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
+
+    List<Object> artifactIdAndPositionInQueue = reserveQueueRepository.findAllFirstPositionInQueueByArtifact(artifactId,
+        artifact, memberId, member, fromDateTime, toDateTime, pRequest).getContent();
+
+    Map<Long, Long> hm = new HashMap<Long, Long>();
+    for (Object data : artifactIdAndPositionInQueue) {
+      Object[] dataArray = (Object[]) data;
+      // String row = "";
+      // row += "artifact.id: " + (Long) dataArray[0] + "\t";
+      // row += "reserveQueue.id: " + (Long) dataArray[1] + "\n";
+      // System.out.println(row);
+      hm.put((Long) dataArray[0], (Long) dataArray[1]);
+    }
+    return hm;
+  }
+
+  public ReserveQueue firstInLine(String isbn) {
     return reserveQueueRepository.findFirstByIsbnOrderById(isbn);
   }
 
@@ -62,26 +90,28 @@ public class ReserveQueueService {
         reserveQueueRepository.save(reserveQueue);
         return new ActionConclusion(true, "Updated successfully.");
       }
+      return new ActionConclusion(false, "Failed to update. ISBN or member ID does not exist.");
     }
     return new ActionConclusion(false, "Failed to update. Reserve ID does not exist.");
   }
 
   public ActionConclusion create(String isbn, String memberId, String expiredOn) {
     Long aMemberId = Common.convertStringToLong(memberId);
-
-    // if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
-    if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
-      List<ReserveQueue> list = reserveQueueRepository.findByMemberId(aMemberId);
-
-      Artifact artifact = artifactRepository.findByIsbn(isbn);
-      Member member = memberRepository.getOne(aMemberId);
-      ReserveQueue reserveQueue = new ReserveQueue();
-      reserveQueue.setAll(isbn, memberId, expiredOn, artifact, member);
-      reserveQueueRepository.save(reserveQueue);
-      return new ActionConclusion(true, "Artifact reserved successfully.");
+    if (reserveQueueRepository.countByMemberId(aMemberId) < Common.MAX_RESERVES_PER_USER) {
+      // if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
+      if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
+        Artifact artifact = artifactRepository.findByIsbn(isbn);
+        Member member = memberRepository.getOne(aMemberId);
+        ReserveQueue reserveQueue = new ReserveQueue();
+        reserveQueue.setAll(isbn, memberId, expiredOn, artifact, member);
+        reserveQueueRepository.save(reserveQueue);
+        return new ActionConclusion(true, "Created successfully.");
+      }
+      // }
+      return new ActionConclusion(false, "Failed to create. ISBN or member ID does not exist.");
     }
-    // }
-    return new ActionConclusion(false, "Failed to create. ISBN or member ID does not exist.");
+    return new ActionConclusion(false,
+        "Unable to create. Member has exceeded the maximum reserve amount: " + Common.MAX_RESERVES_PER_USER);
   }
 
   public ActionConclusion delete(String stringId) {
@@ -89,7 +119,7 @@ public class ReserveQueueService {
 
     if (reserveQueueRepository.existsById(id)) {
       reserveQueueRepository.deleteById(id);
-      return new ActionConclusion(true, "Deleted successfully.'");
+      return new ActionConclusion(true, "Deleted successfully.");
     }
     return new ActionConclusion(false, "Failed to delete. Reserve ID does not exist.");
   }

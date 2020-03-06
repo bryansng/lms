@@ -66,17 +66,20 @@
           <span th:each="artifact : ${artifacts}" th:remove="tag">
             <div href="#" class="w-100-ns w-60-l py-3 border-bottom">
               <div class="mx-3 d-flex justify-content-start align-items-center">
-                <div class="bg-dark" style="width: 3.5rem; height: 3.5rem"></div>
+                <div class="h-100">
+                  <img th:src="@{~/images/placeholder.png}" th:if="${#strings.isEmpty(artifact.thumbnailLink)}" style="width: 11rem; height: 11rem; object-fit: contain;" />
+                  <img th:src="@{${artifact.thumbnailLink}}" th:unless="${#strings.isEmpty(artifact.thumbnailLink)}" style="width: 11rem; height: 11rem; object-fit: contain;" />
+                </div>
                 <div class="w-100 ml-3 d-flex flex-column justify-content-center align-items-start">
-                  <p class="w-100 font-weight-bolder m-0 text-truncate text-capitalize" th:text="${artifact.title}"></p>
-                  <p class="m-0 mb-2">by
+                  <p class="m-0 font-weight-bolder text-truncate text-capitalize" style="width: 90%;" th:text="'' + ${#strings.abbreviate(artifact.title, 100)}"></p>
+                  <p class="m-0 mb-2" style="width: 90%;">by
                     <span class="text-capitalize text-truncate" th:text="${artifact.authors}"></span>
                   </p>
-                  <p class="m-0 mb-2 font-weight-light" th:text="'' + ${#strings.abbreviate(artifact.description, 255)}"></p>
-                  <p class="m-0 font-weight-lighter">Published by:
+                  <p class="m-0 mb-2 font-weight-light" style="width: 90%;" th:text="'' + ${#strings.abbreviate(artifact.description, 255)}"></p>
+                  <p class="m-0 font-weight-lighter" style="width: 90%;">Published by:
                     <span class="text-truncate" th:text="${artifact.publishers}"></span>
                   </p>
-                  <p class="m-0 mb-2 font-weight-lighter">Published on:
+                  <p class="m-0 mb-2 font-weight-lighter" style="width: 90%;">Published on:
                     <span class="text-truncate" th:text="${artifact.publishedOn}"></span>
                   </p>
                   <div class="w-100 d-flex justify-content-end">

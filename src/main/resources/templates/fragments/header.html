@@ -24,11 +24,17 @@
             <a th:href="@{/member/loans/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Current Loans</a>
           </div>
           <div class="d-flex flex-row justify-content-center align-items-center h-100 dropdown mx-3 px-2">
-            <img th:src="@{~/images/profile/user64px.png}" class="profile-img hover" />
+            <div class="d-flex justify-content-center align-items-center navbar-user-avatar-container hover">
+              <span class="font-weight-bold">BS</span>
+            </div>
+            <!-- <img th:src="@{~/images/profile/user64px.png}" class="profile-img hover" /> -->
             <div class="dropdown-content profile-dropdown-content">
               <a href="#" class="px-4 py-2 dropdown-hover">
                 <div class="d-flex flex-row justify-content-start align-items-center dropdown-profile-img hover-no-bg">
-                  <img th:src="@{~/images/profile/user64px.png}" class="profile-img" />
+                  <div class="d-flex justify-content-center align-items-center navbar-user-avatar-container">
+                    <span class="font-weight-bold">BS</span>
+                  </div>
+                  <!-- <img th:src="@{~/images/profile/user64px.png}" class="profile-img" /> -->
                   <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
                     <div>Full Name HERE</div>
                     <div>Email HERE</div>
@@ -155,9 +161,9 @@
         class="form-control border border-dark rounded-0 text-dark" id="navbarSearchQuery" name="navbarSearchQuery"
         oninput="navbarSearchForm('/artifacts/search?searchQuery=')" />
       <label for="navbarSearchQuery">
-        <img th:src="@{~/images/search.png}" class="search-glass hover-no-bg" />
+        <img th:src="@{~/images/search.png}" class="search-glass hover-no-bg" id="navbarGlass" />
       </label>
-      <div class="search-spinner">
+      <div class="search-spinner" id="navbarSpinner">
         <div class="sk-chase">
           <div class="sk-chase-dot"></div>
           <div class="sk-chase-dot"></div>

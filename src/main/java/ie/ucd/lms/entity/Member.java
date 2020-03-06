@@ -4,147 +4,189 @@ import java.io.Serializable;
 import java.time.*;
 import java.util.List;
 import javax.persistence.*;
+import ie.ucd.lms.service.Common;
 
 @Entity
 @Table(name = "members")
 public class Member implements Serializable {
 
-	public Member() {
-	}
+  public Member() {
+  }
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-	@Column(name = "email")
-	private String email;
-	private String fullName;
-	private String mobileNumber;
-	private String address;
-	private LocalDateTime bornOn;
-	private LocalDateTime joinedOn = LocalDateTime.now();
-	private LocalDateTime lastActiveOn;
-	private String bio;
-	private String type = "member";
+  @Column(name = "email")
+  private String email;
+  private String fullName;
+  private String mobileNumber;
+  private String address;
+  private String website;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(referencedColumnName = "email")
-	private Login login;
+  @Column(nullable = true)
+  private LocalDateTime bornOn;
+  private LocalDateTime joinedOn = LocalDateTime.now();
+  private LocalDateTime lastActiveOn = LocalDateTime.now();
+  private String bio;
+  private String type = "member";
 
-	@OneToMany(mappedBy = "member")
-	private List<LoanHistory> loanHistories;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(referencedColumnName = "email")
+  private Login login;
 
-	@OneToMany(mappedBy = "member")
-	private List<ReserveQueue> reserveQueues;
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+  private List<LoanHistory> loanHistories;
 
-	public Login getLogin() {
-		return this.login;
-	}
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+  private List<ReserveQueue> reserveQueues;
 
-	public void setLogin(Login login) {
-		this.login = login;
-	}
+  public void setAll(String email, String fullName, String mobileNumber, String address, String website, String bornOn,
+      String bio, String type) {
+    System.out.println(email.equals("") ? this.email : email);
+    setEmail(email.equals("") ? this.email : email);
+    setFullName(fullName.equals("") ? this.fullName : fullName);
+    setMobileNumber(mobileNumber.equals("") ? this.mobileNumber : mobileNumber);
+    setAddress(address.equals("") ? this.address : address);
+    setWebsite(website.equals("") ? this.website : website);
 
-	public Long getId() {
-		return id;
-	}
+    if (bornOn.equals("")) {
+      setBornOn(null);
+    } else {
+      setBornOn(Common.convertStringDateToDateTime(bornOn));
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    setBio(bio);
+    setType(type);
+  }
 
-	public String getEmail() {
-		return email;
-	}
+  public String getInitials() {
+    String[] words = fullName.split(" ");
+    // return words.length > 1 ? String.valueOf(words[0].charAt(0)) + String.valueOf(words[words.length - 1].charAt(0))
+    //     : String.valueOf(words[0].charAt(0));
+    String initials = "";
+    for (String word : words) {
+      initials += String.valueOf(word.charAt(0)).toUpperCase();
+    }
+    return initials;
+  }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public Login getLogin() {
+    return this.login;
+  }
 
-	public String getFullName() {
-		return fullName;
-	}
+  public void setLogin(Login login) {
+    this.login = login;
+  }
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+  public Long getId() {
+    return id;
+  }
 
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public String getAddress() {
-		return address;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+  public String getFullName() {
+    return fullName;
+  }
 
-	public LocalDateTime getBornOn() {
-		return bornOn;
-	}
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
 
-	public void setBornOn(LocalDateTime bornOn) {
-		this.bornOn = bornOn;
-	}
+  public String getMobileNumber() {
+    return mobileNumber;
+  }
 
-	public LocalDateTime getJoinedOn() {
-		return joinedOn;
-	}
+  public void setMobileNumber(String mobileNumber) {
+    this.mobileNumber = mobileNumber;
+  }
 
-	public void setJoinedOn(LocalDateTime joinedOn) {
-		this.joinedOn = joinedOn;
-	}
+  public String getAddress() {
+    return address;
+  }
 
-	public LocalDateTime getLastActiveOn() {
-		return lastActiveOn;
-	}
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-	public void setLastActiveOn(LocalDateTime lastActiveOn) {
-		this.lastActiveOn = lastActiveOn;
-	}
+  public String getWebsite() {
+    return website;
+  }
 
-	public String getBio() {
-		return bio;
-	}
+  public void setWebsite(String website) {
+    this.website = website;
+  }
 
-	public void setBio(String bio) {
-		this.bio = bio;
-	}
+  public LocalDateTime getBornOn() {
+    return bornOn;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public void setBornOn(LocalDateTime bornOn) {
+    this.bornOn = bornOn;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public LocalDateTime getJoinedOn() {
+    return joinedOn;
+  }
 
-	public String toString() {
-		String buf = " - ";
-		return id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type;
-	}
+  public void setJoinedOn(LocalDateTime joinedOn) {
+    this.joinedOn = joinedOn;
+  }
 
-	public String toStringWithLoanHistory() {
-		String buf = " - ";
-		String res = id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type + "\n";
-		for (LoanHistory loanHistory : loanHistories) {
-			res += "\t" + loanHistory.toStringWithoutArtifact() + "\n";
-		}
-		return res;
-	}
+  public LocalDateTime getLastActiveOn() {
+    return lastActiveOn;
+  }
 
-	public String toStringWithReserveQueue() {
-		String buf = " - ";
-		String res = id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type + "\n";
-		for (ReserveQueue reserveQueue : reserveQueues) {
-			res += "\t" + reserveQueue.toStringWithoutArtifact() + "\n";
-		}
-		return res;
-	}
+  public void setLastActiveOn(LocalDateTime lastActiveOn) {
+    this.lastActiveOn = lastActiveOn;
+  }
+
+  public String getBio() {
+    return bio;
+  }
+
+  public void setBio(String bio) {
+    this.bio = bio;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String toString() {
+    String buf = " - ";
+    return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type;
+  }
+
+  public String toStringWithLoanHistory() {
+    String buf = " - ";
+    String res = id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type + "\n";
+    for (LoanHistory loanHistory : loanHistories) {
+      res += "\t" + loanHistory.toStringWithoutArtifact() + "\n";
+    }
+    return res;
+  }
+
+  public String toStringWithReserveQueue() {
+    String buf = " - ";
+    String res = id + buf + fullName + buf + email + buf + mobileNumber + buf + address + buf + type + "\n";
+    for (ReserveQueue reserveQueue : reserveQueues) {
+      res += "\t" + reserveQueue.toStringWithoutArtifact() + "\n";
+    }
+    return res;
+  }
 }

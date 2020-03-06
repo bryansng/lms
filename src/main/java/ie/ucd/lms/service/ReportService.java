@@ -21,9 +21,11 @@ public class ReportService {
 	@Autowired
 	LoanHistoryRepository loanHistoryRepository;
 
-	public LocalDateTime today = LocalDate.now().atStartOfDay();
-	public LocalDateTime thisMonth = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay();
-	public LocalDateTime thisYear = LocalDate.now().with(TemporalAdjusters.firstDayOfYear()).atStartOfDay();
+	public LocalDateTime today = LocalDate.now().atStartOfDay().minusSeconds(1);
+	public LocalDateTime thisMonth = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay()
+			.minusSeconds(1);
+	public LocalDateTime thisYear = LocalDate.now().with(TemporalAdjusters.firstDayOfYear()).atStartOfDay()
+			.minusSeconds(1);
 
 	public BigDecimal fine(LocalDateTime fromDate) {
 		return loanHistoryRepository.sumFineByIssuedOnAfter(fromDate);

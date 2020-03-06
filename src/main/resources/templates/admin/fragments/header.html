@@ -9,15 +9,15 @@
     <nav class="navbar navbar-expand-lg navbar-light border-dark p-0 shadow px-2">
       <div class="d-flex flex-row justify-content-between align-items-center h-100 w-100">
         <a class="navbar-brand m-0 p-0 h-100 hover-no-bg" th:href="@{/admin/dashboard}">
-          <div class="d-flex flex-row justify-content-center align-items-center h-100">
+          <div class="d-flex justify-content-center align-items-center h-100">
             <img th:src="@{~/images/logo/logo.png}" class="logo" />
             <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
               <h4 class="mb-0">Wet LMS</h4>
             </div>
           </div>
         </a>
-        <div class="d-flex flex-row justify-content-between align-items-center h-100">
-          <div class="d-none d-lg-flex flex-row justify-content-between align-items-center nav-a-tag-list h-100">
+        <div class="d-flex justify-content-between align-items-center h-100">
+          <div class="d-none d-lg-flex justify-content-between align-items-center nav-a-tag-list h-100">
             <a th:href="@{/admin/dashboard}" class="navbar-a navbar-hover px-3 py-2 mx-1">Dashboard</a>
             <a th:href="@{/admin/loans/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Loans</a>
             <a th:href="@{/admin/reserves/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Reserves</a>
@@ -25,8 +25,11 @@
             <a th:href="@{/admin/artifacts/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Artifacts</a>
             <a th:href="@{/admin/members/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Members</a>
           </div>
-          <div class="d-flex flex-row justify-content-center align-items-center h-100 dropdown mx-3 px-2">
-            <img th:src="@{~/images/profile/user64px.png}" class="profile-img hover" />
+          <div class="d-flex justify-content-center align-items-center h-100 dropdown mx-3 px-2">
+            <div class="d-flex justify-content-center align-items-center navbar-user-avatar-container hover">
+              <span class="font-weight-bold">BS</span>
+            </div>
+            <!-- <img th:src="@{~/images/profile/user64px.png}" class="profile-img hover" /> -->
             <div class="dropdown-content profile-dropdown-content">
               <a href="#" class="px-4 py-2 dropdown-hover">Profile</a>
               <a th:href="@{/admin/dashboard}" class="px-4 py-2 dropdown-hover">Dashboard</a>
