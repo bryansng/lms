@@ -1,18 +1,24 @@
 package ie.ucd.lms.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.ui.Model;
 import ie.ucd.lms.dao.ArtifactRepository;
+import ie.ucd.lms.dao.MemberRepository;
+import ie.ucd.lms.dao.ReserveQueueRepository;
 import ie.ucd.lms.entity.Artifact;
 import ie.ucd.lms.service.ActionConclusion;
 import ie.ucd.lms.service.ArtifactService;
 import ie.ucd.lms.service.Common;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+
 
 @Controller
 public class ArtifactController {
@@ -21,6 +27,14 @@ public class ArtifactController {
 
   @Autowired
   ArtifactService artifactService;
+
+  @Autowired
+  ReserveQueueRepository reserveQueueRepository;
+
+  @Autowired
+  MemberRepository memberRepository;
+  
+  private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
   @GetMapping("/admin/artifacts/view")
   public String artifactsView(@RequestParam(defaultValue = "1", required = false) Integer page,

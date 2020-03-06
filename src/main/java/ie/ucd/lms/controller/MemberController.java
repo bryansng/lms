@@ -10,6 +10,7 @@ import ie.ucd.lms.service.Common;
 import ie.ucd.lms.service.LoanHistoryService;
 import ie.ucd.lms.service.MemberService;
 import ie.ucd.lms.service.ReserveQueueService;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
 public class MemberController {
@@ -101,14 +103,15 @@ public class MemberController {
 		logger.info(Long.toString(id));
 		logger.info(isbn);
 		Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
-		// finding out what expiredOn is
-		// ActionConclusion ac = reserveQueueService.create(isbn, Long.toString(member.getId()), "21/03/20");
+		ActionConclusion ac = reserveQueueService.create(isbn, Long.toString(member.getId()),
+				LocalDate.now().toString());
+				
 		redirectAttrs.addFlashAttribute("reserve", true);
-		// redirectAttrs.addFlashAttribute("reserveMsg", ac.message);
-		// redirectAttrs.addFlashAttribute("reserveFailed", ac.isSuccess);
-		return "redirect:/";
+		redirectAttrs.addFlashAttribute("reserveMsg", ac.message);
+		redirectAttrs.addFlashAttribute("reserveFailed", ac.isSuccess);
+		return "redirect:/search";
 	}
-
+	
 	@GetMapping("/admin/members/view")
 	public String membersView(@RequestParam(defaultValue = "1", required = false) Integer page,
 			@RequestParam(defaultValue = "", required = false) String searchQuery,
