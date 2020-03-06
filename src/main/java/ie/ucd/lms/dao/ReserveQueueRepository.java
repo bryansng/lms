@@ -29,5 +29,7 @@ public interface ReserveQueueRepository extends JpaRepository<ReserveQueue, Long
 
   boolean existsByArtifactId(String artifactId);
 
+  List<ReserveQueue> findByMemberId(Long memberId);
+
   List<ReserveQueue> findByMember(Member member);
 }

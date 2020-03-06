@@ -38,6 +38,10 @@ public class LoginService {
         loginRepository.save(login);
     }
 
+    public Login findByEmail(String email) {
+        return loginRepository.findByEmail(email);
+    }
+
     public Login createLogin(String email, String password) {
         Login login = new Login();
         login.setEmail(email);

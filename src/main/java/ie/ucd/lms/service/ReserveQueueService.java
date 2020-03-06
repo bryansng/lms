@@ -70,6 +70,12 @@ public class ReserveQueueService {
 
     // if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
     if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
+      List<ReserveQueue> list = reserveQueueRepository.findByMemberId(aMemberId);
+
+      if (list.size() >= 4) {
+        return new ActionConclusion(false, "Maximum number of 4 artifacts already reserved.");
+      }
+
       Artifact artifact = artifactRepository.findByIsbn(isbn);
       Member member = memberRepository.getOne(aMemberId);
       ReserveQueue reserveQueue = new ReserveQueue();

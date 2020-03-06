@@ -80,6 +80,7 @@ public class MemberController {
 
 		// logger.info(historicalLoans.toString());
 		model.addAttribute("member", member);
+
 		model.addAttribute("loans", loans);
 		model.addAttribute("historicalLoans", historicalLoans);
 		model.addAttribute("reservedLoans", reservedLoans);
@@ -91,6 +92,21 @@ public class MemberController {
 		model.addAttribute("member", member);
 
 		return "index.html";
+	}
+
+	@GetMapping("/member/reserve")
+	public String artifactReserve(@RequestParam(name = "id", value = "id", required = true) Long id,
+			@RequestParam(name = "isbn") String isbn, Model model, RedirectAttributes redirectAttrs) {
+		// will pass member as a parameter once authentication is set up
+		logger.info(Long.toString(id));
+		logger.info(isbn);
+		Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
+		// finding out what expiredOn is
+		// ActionConclusion ac = reserveQueueService.create(isbn, Long.toString(member.getId()), "21/03/20");
+		redirectAttrs.addFlashAttribute("reserve", true);
+		// redirectAttrs.addFlashAttribute("reserveMsg", ac.message);
+		// redirectAttrs.addFlashAttribute("reserveFailed", ac.isSuccess);
+		return "redirect:/";
 	}
 
 	@GetMapping("/admin/members/view")
