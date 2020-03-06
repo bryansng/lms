@@ -40,7 +40,8 @@
               <h5 class="card-title" th:text=${artifact.title}></h5>
               <p class="card-subtitle text-muted mb-4" th:text=${artifact.authors}></p>
               <p class="card-text" th:text=${artifact.genre}> </p>
-              <a href="#" class="btn btn-outline-primary view-more">View more</a>
+              <a th:action="@{/artifacts/view(id=${artifact.id})}" class="btn btn-outline-primary view-more">View
+                more</a>
             </div>
           </div>
         </div>
@@ -63,7 +64,7 @@
 
               </p>
               <p class="card-text" th:text=${artifact.genre}> </p>
-              <a href="#" class="btn btn-outline-primary view-more">View more</a>
+              <a th:href="@{/artifacts/view(id=${artifact.id})}" class="btn btn-outline-primary view-more">View more</a>
             </div>
           </div>
         </div>
