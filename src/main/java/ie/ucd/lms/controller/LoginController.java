@@ -29,10 +29,10 @@ public class LoginController {
 		return "restricted";
 	}
 
-	@GetMapping("/login")
-	public String loginView(Login login) {
-		return "member/login";
-	}
+	// @GetMapping("/login")
+	// public String loginView(Login login) {
+	// 	return "member/login";
+	// }
 
 	@PostMapping("/login")
 	public String loginMember(@Valid @ModelAttribute("member") Login login, BindingResult bindingResult, Model model,
@@ -50,6 +50,28 @@ public class LoginController {
 		HttpSession session = request.getSession();
 
 		return "redirect:/member/profile";
+	}
+
+	@GetMapping("/login")
+	public String login(@Valid @ModelAttribute("member") Login login, BindingResult bindingResult, Model model,
+			HttpServletRequest request, RedirectAttributes redirectAttrs) {
+
+		// if (bindingResult.hasErrors() || !loginService.exists(login)) {
+		// 	model.addAttribute("loginError", true);
+		// 	return "member/login";
+		// }
+
+		Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
+		System.out.println(member);
+
+		redirectAttrs.addFlashAttribute("member", member);
+
+		HttpSession session = request.getSession();
+		System.out.println((Member) session.getAttribute("member"));
+		System.out.println(session);
+
+		return "redirect:/";
+		// return "redirect:/member/profile";
 	}
 
 	@GetMapping("/register")
