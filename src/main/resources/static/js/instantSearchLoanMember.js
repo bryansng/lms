@@ -90,10 +90,17 @@ function getInputSearchMemberCard(
   var cardImgContainer = document.createElement("div");
   cardImgContainer.classList.add("h-100");
 
-  var cardImg = document.createElement("div");
-  cardImg.style.width = "2.5rem";
-  cardImg.style.height = "2.5rem";
-  cardImg.classList.add("bg-dark");
+  var cardImgWrapper = document.createElement("div");
+  cardImgWrapper.classList.add(
+    "d-flex",
+    "justify-content-center",
+    "align-items-center",
+    "member-search-avatar-container"
+  );
+
+  var cardImgSpan = document.createElement("span");
+  cardImgSpan.classList.add("font-weight-bold");
+  cardImgSpan.textContent = limitInitialsDisplayed(getInitials(fullNameText));
 
   var cardContentDetailsContainer = document.createElement("div");
   cardContentDetailsContainer.classList.add(
@@ -135,7 +142,8 @@ function getInputSearchMemberCard(
   cardContentDetailsContainer.appendChild(id);
   cardContentDetailsContainer.appendChild(mobileNumber);
   cardContentDetailsContainer.appendChild(type);
-  cardImgContainer.appendChild(cardImg);
+  cardImgContainer.appendChild(cardImgWrapper);
+  cardImgWrapper.appendChild(cardImgSpan);
   cardWrapper.appendChild(cardImgContainer);
   cardWrapper.appendChild(cardContentDetailsContainer);
   cardContainer.appendChild(cardWrapper);

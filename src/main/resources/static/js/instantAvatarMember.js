@@ -3,7 +3,6 @@ function inputAvatarMember(inputId, avatarInitialsSpanId) {
   var fullName = focusedInput.value.trim();
 
   if (fullName !== "") {
-    console.log(getInitials(fullName));
     document.querySelector(
       `#${avatarInitialsSpanId}`
     ).textContent = limitInitialsDisplayed(getInitials(fullName));
