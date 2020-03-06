@@ -22,6 +22,15 @@ public class ArtifactController {
   @Autowired
   ArtifactService artifactService;
 
+  @GetMapping("/artifacts/view")
+  public String artifactViewOne(@RequestParam(name = "id") String stringId, Model model) {
+    Artifact artifact = artifactRepository.findById(Common.convertStringToLong(stringId)).get();
+    String publishedOn = artifact.getPublishedOn().format(Common.dateFormatter);
+    model.addAttribute("artifact", artifact);
+    model.addAttribute("publishedOn", publishedOn);
+    return "artifact.html";
+  }
+
   @GetMapping("/admin/artifacts/view")
   public String artifactsView(@RequestParam(defaultValue = "1", required = false) Integer page,
       @RequestParam(defaultValue = "", required = false) String searchQuery,

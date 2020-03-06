@@ -14,13 +14,13 @@ INSERT INTO login(email, hash) VALUES
 	('xuan.liew@ucdconnect.ie', 'root'),
 	('yeoh.braddy@ucdconnect.ie', 'root');
 
-INSERT INTO members(full_name, email, mobile_number, address, type, joined_on, last_active_on, website) VALUES
-	('Bryan Sng', 'hong.sng@ucdconnect.ie', '339', 'Somewhere on Earth', 'librarian', NOW(), NOW(), 'https://www.bryansng.com/'),
-	('James Bond', 'bond.james@ucdconnect.ie', '007', 'MI6', 'member', NOW(), NOW(), ''),
-	('Obi Wan', 'wan.obi@ucdconnect.ie', '69', 'The High Ground', 'member', NOW(), NOW(), ''),
-	('Steve Jobs', 'jobs.steve@ucdconnect.ie', '1234', 'Silicon Valley', 'member', NOW(), NOW(), ''),
-	('Emily Liew Xuan', 'xuan.liew@ucdconnect.ie', '6954', 'Somewhere in the Universe', 'member', NOW(), NOW(), 'https://lxemily.com/'),
-	('Braddy Yeoh', 'yeoh.braddy@ucdconnect.ie', '7749', 'Somewhere in Ireland', 'member', NOW(), NOW(), 'https://www.yeohbraddy.com/');
+INSERT INTO members(full_name, email, mobile_number, address, type, born_on, joined_on, last_active_on, website) VALUES
+	('Bryan Sng', 'hong.sng@ucdconnect.ie', '339', 'Somewhere on Earth', 'librarian', NOW() - 7665, NOW(), NOW(), 'https://www.bryansng.com/'),
+	('James Bond', 'bond.james@ucdconnect.ie', '007', 'MI6', 'member', NOW() - 7665, NOW(), NOW(), ''),
+	('Obi Wan', 'wan.obi@ucdconnect.ie', '69', 'The High Ground', 'member', NOW() - 7665, NOW(), NOW(), ''),
+	('Steve Jobs', 'jobs.steve@ucdconnect.ie', '1234', 'Silicon Valley', 'member', NOW() - 7665, NOW(), NOW(), ''),
+	('Emily Liew Xuan', 'xuan.liew@ucdconnect.ie', '6954', 'Somewhere in the Universe', 'member', NOW() - 7665, NOW(), NOW(), 'https://lxemily.com/'),
+	('Braddy Yeoh', 'yeoh.braddy@ucdconnect.ie', '7749', 'Somewhere in Ireland', 'member', NOW() - 7665, NOW(), NOW(), 'https://www.yeohbraddy.com/');
 
 INSERT INTO loan_history(artifact_id, isbn, member_id, return_on, status, fine, issued_on, was_lost) VALUES
 	('1', '9780743269513', '1', NOW() + 3, 'issued', 0.0, NOW(), false),
@@ -31,7 +31,7 @@ INSERT INTO loan_history(artifact_id, isbn, member_id, return_on, status, fine, 
 INSERT INTO loan_history(artifact_id, isbn, member_id, returned_on, status, fine, issued_on, was_lost) VALUES
 	('3', '9780671723651', '1', NOW() - 1, 'returned', 0.0, NOW() - 3, false),
 	('4', '9780374275631', '1', NOW() - 1, 'returned', 0.0, NOW() - 3, false);
-	
+
 INSERT INTO reserve_queue(artifact_id, isbn, member_id, expired_on) VALUES
 	-- ('1', '9780743269513', '3', NOW() + 3),
 	('6', '9780307353139', '1', NOW() + 3),

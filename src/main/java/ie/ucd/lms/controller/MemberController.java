@@ -92,11 +92,65 @@ public class MemberController {
     return "member/loans";
   }
 
-  @GetMapping("/member/profile")
-  public String indexView(@ModelAttribute("member") Member member, Model model) {
-    model.addAttribute("member", member);
+  @GetMapping("/member/profile/view")
+  public String profileView(@ModelAttribute("member") Member member, Model model) {
+    model.addAttribute("member", memberRepository.getOne(Long.valueOf("1")));
+    model.addAttribute("bornOn", memberRepository.getOne(Long.valueOf("1")).getBornOn().format(Common.dateFormatter));
+    model.addAttribute("joinedOn",
+        memberRepository.getOne(Long.valueOf("1")).getJoinedOn().format(Common.dateFormatter));
+    model.addAttribute("lastActiveOn",
+        memberRepository.getOne(Long.valueOf("1")).getLastActiveOn().format(Common.dateFormatter));
+    return "member/profile/view.html";
+  }
 
-    return "index.html";
+  @GetMapping("/member/profile/edit")
+  public String profileEditGet(@ModelAttribute("member") Member member, Model model) {
+    model.addAttribute("member", memberRepository.getOne(Long.valueOf("1")));
+    model.addAttribute("bornOn", memberRepository.getOne(Long.valueOf("1")).getBornOn().format(Common.dateFormatter));
+    model.addAttribute("joinedOn",
+        memberRepository.getOne(Long.valueOf("1")).getJoinedOn().format(Common.dateFormatter));
+    model.addAttribute("lastActiveOn",
+        memberRepository.getOne(Long.valueOf("1")).getLastActiveOn().format(Common.dateFormatter));
+    return "member/profile/edit.html";
+  }
+
+  @PostMapping("/member/profile/edit")
+  public String profileEditPost(@RequestParam(defaultValue = "", required = false) String isSuccess,
+      @RequestParam(defaultValue = "", required = false) String successMessage,
+      @RequestParam(defaultValue = "", required = false) String failureMessage,
+      @RequestParam(name = "id", defaultValue = "1", required = false) String stringId,
+      @RequestParam(name = "email", defaultValue = "", required = false) String email,
+      @RequestParam(name = "fullName", defaultValue = "", required = false) String fullName,
+      @RequestParam(name = "mobileNumber", defaultValue = "", required = false) String mobileNumber,
+      @RequestParam(name = "address", defaultValue = "", required = false) String address,
+      @RequestParam(name = "website", defaultValue = "", required = false) String website,
+      @RequestParam(name = "bornOn", defaultValue = "", required = false) String bornOn,
+      @RequestParam(name = "bio", required = false) String bio,
+      @RequestParam(name = "type", defaultValue = "member", required = false) String type,
+      @RequestParam(name = "joinedOn", required = false) String joinedOn,
+      @RequestParam(name = "lastActiveOn", required = false) String lastActiveOn, Model model) {
+    ActionConclusion actionConclusion = memberService.update(stringId, email, fullName, mobileNumber, address, website,
+        bornOn, bio, type);
+    Member member = memberRepository.findById(Common.convertStringToLong(stringId)).get();
+    model.addAttribute("member", member);
+    model.addAttribute("bornOn", member.getBornOn().format(Common.dateFormatter));
+    model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
+    model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
+    if (actionConclusion.isSuccess) {
+      return "member/profile/view.html";
+    } else {
+      model.addAttribute("previousFullName", fullName);
+      model.addAttribute("previousEmail", email);
+      model.addAttribute("previousMobileNumber", mobileNumber);
+      model.addAttribute("previousAddress", address);
+      model.addAttribute("previousWebsite", website);
+      model.addAttribute("previousBio", bio);
+      model.addAttribute("previousType", type);
+      return "member/profile/edit.html";
+    }
   }
 
   @GetMapping("/member/reserve")
@@ -139,6 +193,7 @@ public class MemberController {
     model.addAttribute("member", member);
     model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
     model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
+    model.addAttribute("bornOn", member.getBornOn().format(Common.dateFormatter));
     return "admin/member/edit.html";
   }
 
