@@ -8,8 +8,6 @@ import ie.ucd.lms.entity.Member;
 import ie.ucd.lms.entity.ReserveQueue;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +27,6 @@ public class ReserveQueueService {
   @Autowired
   LoanHistoryService loanHistoryService;
 
-  private static final Logger logger = LoggerFactory.getLogger(ReserveQueueService.class);
 
   public List<ReserveQueue> getReservedLoansForMember(Member member) {
     return reserveQueueRepository.findByMember(member);
@@ -75,13 +72,6 @@ public class ReserveQueueService {
     // if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
     if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
       List<ReserveQueue> list = reserveQueueRepository.findByMemberId(aMemberId);
-
-      if (list.size() >= 4) {
-        return new ActionConclusion(false, "Maximum number of 4 artifacts already reserved.");
-      } else if (reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
-        logger.info("here");
-        return new ActionConclusion(false, "Artifact already reserved");
-      }
 
       Artifact artifact = artifactRepository.findByIsbn(isbn);
       Member member = memberRepository.getOne(aMemberId);
