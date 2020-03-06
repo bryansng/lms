@@ -1,21 +1,27 @@
 package ie.ucd.lms.service;
 
+import ie.ucd.lms.dao.ArtifactRepository;
+import ie.ucd.lms.dao.LoanHistoryRepository;
+import ie.ucd.lms.dao.MemberRepository;
+import ie.ucd.lms.dao.ReserveQueueRepository;
+import ie.ucd.lms.entity.Artifact;
+import ie.ucd.lms.entity.LoanHistory;
+import ie.ucd.lms.entity.Member;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ie.ucd.lms.dao.LoanHistoryRepository;
-import ie.ucd.lms.dao.ReserveQueueRepository;
-import ie.ucd.lms.dao.ArtifactRepository;
-import ie.ucd.lms.dao.MemberRepository;
-import ie.ucd.lms.entity.Artifact;
-import ie.ucd.lms.entity.Member;
-import ie.ucd.lms.entity.LoanHistory;
 
 @Service
 public class LoanHistoryService {
@@ -47,16 +53,41 @@ public class LoanHistoryService {
     positiveStatus.add("returned");
   }
 
+  private static final Logger logger = LoggerFactory.getLogger(LoanHistoryService.class);
+
   public List<LoanHistory> findByMember(Member member) {
-    return loanHistoryRepository.findByMember(member);
-
-    // List<Artifact> artifacts = new ArrayList<Artifact>();
-    // for (LoanHistory loan : list) {
-    //     artifacts.add(artifactRepository.findByIsbn(loan.getIsbn()));
-    // }
-
-    // return artifacts;
+    return filterListByStatus(member, new String[] { "issued", "renewed" });
   }
+
+  public List<LoanHistory> getHistoricalLoans(Member member) {
+    List<LoanHistory> list = filterListByStatus(member, new String[] { "returned" });
+
+    Comparator<LoanHistory> compareByTotalLoans = (LoanHistory l1, LoanHistory l2) -> (l1.getReturnedOn())
+        .compareTo(l2.getReturnedOn());
+
+    Collections.sort(list, compareByTotalLoans);
+    return list;
+  }
+
+  private List<LoanHistory> filterListByStatus(Member member, String[] statuses) {
+    List<LoanHistory> list = loanHistoryRepository.findByMember(member);
+    List<LoanHistory> filteredList = new ArrayList<LoanHistory>();
+
+    List<String> arr = Arrays.asList(statuses);
+
+    for (LoanHistory loan : list) {
+      if (arr.contains(loan.getStatus())) {
+        // logger.info("entry " + loan.toString());
+        filteredList.add(loan);
+      }
+    }
+
+    return filteredList;
+  }
+
+  // public Page<LoanHistory> getHistorialLoans(Member member) {
+  //   return loanHistoryRepository.findAllByLoanIssuedOn(member);
+  // }
 
   public Page<LoanHistory> searchAll(String artifact, String member, String fromDate, String toDate, String status,
       int pageNum) {
@@ -241,7 +272,7 @@ public class LoanHistoryService {
         // ? prompt librarian / member?
         return new ActionConclusion(false, "Unable to renew. Someone else is reserving the same artifact.");
       }
-      loanHistory.setReturnOn(LocalDateTime.now().plusDays(days));
+      loanHistory.setReturnOn(LocalDateTime.now().plusDays(days + 3));
       loanHistory.setStatus("renewed");
       loanHistoryRepository.save(loanHistory);
       return new ActionConclusion(true, "Renewed successfully.");

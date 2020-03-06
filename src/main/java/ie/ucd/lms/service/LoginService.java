@@ -5,6 +5,8 @@ import ie.ucd.lms.dao.LoginRepository;
 import ie.ucd.lms.entity.Login;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;
 
@@ -36,9 +38,29 @@ public class LoginService {
         loginRepository.save(login);
     }
 
-    public Login createLogin(Login login) {
-        login.setHash(loginConfig.getEncoder().encode(login.getHash()));
+    public Login findByEmail(String email) {
+        return loginRepository.findByEmail(email);
+    }
 
+    public Login createLogin(String email, String password) {
+        Login login = new Login();
+        login.setEmail(email);
+        login.setHash(loginConfig.getEncoder().encode(password));
         return login;
+    }
+
+    public ActionConclusion authenticate(String email, String password, boolean isLogin) {
+        if (isLogin && emailExists(email)) {
+            return new ActionConclusion(true, "Email does not exist");
+        } else if (!isLogin && !emailExists(email)) {
+            return new ActionConclusion(false, "Email already exists");
+        } else {
+            String msg = isLogin ? "Successfully Logged In " : "Successfully Signed Up";
+            return new ActionConclusion(true, msg);
+        }
+    }
+
+    private boolean emailExists(String email) {
+        return loginRepository.findEmailByEmail(email) == null;
     }
 }

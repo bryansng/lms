@@ -80,6 +80,10 @@ public class ReserveQueue {
 		this.expiredOn = expiredOn;
 	}
 
+	public String getExpiredOnAsString() {
+		return Common.formatDateAsString(expiredOn);
+	}
+
 	@Override
 	public String toString() {
 		String buf = " - ";

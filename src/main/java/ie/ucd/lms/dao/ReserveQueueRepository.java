@@ -1,12 +1,14 @@
 package ie.ucd.lms.dao;
 
-import org.springframework.data.domain.Pageable;
+import ie.ucd.lms.entity.Member;
+import ie.ucd.lms.entity.ReserveQueue;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import ie.ucd.lms.entity.ReserveQueue;
-import java.time.LocalDateTime;
 
 @Repository
 public interface ReserveQueueRepository extends JpaRepository<ReserveQueue, Long> {
@@ -42,4 +44,8 @@ public interface ReserveQueueRepository extends JpaRepository<ReserveQueue, Long
   boolean existsByArtifactId(String artifactId);
 
   Integer countByMemberId(Long memberId);
+
+  List<ReserveQueue> findByMemberId(Long memberId);
+
+  List<ReserveQueue> findByMember(Member member);
 }
