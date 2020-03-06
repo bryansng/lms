@@ -39,103 +39,75 @@
   </div>
   <main class="container mt-5">
     <div class="mb-5">
-      <div class="row mb-4 ">
-        <h2 class="col">
+      <div class="w-100 mb-4 d-flex justify-content-between align-items-center">
+        <h2>
           Latest Books
         </h2>
-        <a href="#" class="link col my-auto text-right ">Browse All</a>
+        <a href="#" class="link">Browse All</a>
       </div>
-      <div class="row">
-        <div class="col d-flex align-items-stretch mb-4" th:each="artifact : ${latestArtifacts}">
-          <div class="card artifact-card border border-dark">
-            <img th:src="@{~/images/test.png}" class="card-img-top border-bottom border-dark" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title" th:text="${artifact.title}"></h5>
-              <p class="card-subtitle text-muted mb-4" th:text="${artifact.authors}"></p>
-              <p class="card-text" th:text="${artifact.genre}"></p>
-              <a th:href="@{/artifacts/view(id=${artifact.id})}" class="btn btn-outline-primary view-more">View more</a>
+      <div class="d-flex flex-wrap justify-content-center">
+        <div class="my-3 mx-2 card artifact-card shadow bg-light border-0" th:each="artifact : ${latestArtifacts}">
+          <div class="card-img-top d-flex justify-content-center h-50">
+            <img th:src="${#strings.isEmpty(artifact.thumbnailLink)} ? @{~/images/placeholder.png} : ${artifact.thumbnailLink}" th:alt="${artifact.title} + ' image'" />
+          </div>
+          <div class="card-body">
+            <h5 class="card-title" th:text="${artifact.title}"></h5>
+            <p class="card-subtitle text-muted" th:text="${artifact.authors}"></p>
+            <p class="card-text" th:text="${#strings.substring(artifact.description,0,60)} + '..'"></p>
+            <div class="view-more">
+              <a th:href="@{/artifacts/view(id=${artifact.id})}" class="px-3 py-2 btn border border-dark text-dark hover">View more</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="mb-5 pt-5">
-      <div class="row mb-4 ">
-        <h2 class="col">
+    <div class="mb-5">
+      <div class="w-100 mb-4 d-flex justify-content-between align-items-center">
+        <h2>
           Popular Books
         </h2>
-        <a href="#" class="link col my-auto text-right">Show All</a>
+        <a href="#" class="link">Browse All</a>
       </div>
-      <div class="row">
-        <div class="col d-flex align-items-stretch mb-4" th:each="artifact : ${popularArtifacts}">
-          <div class="card artifact-card">
-            <img th:src="@{~/images/test.png}" class="card-img-top border-bottom border-dark" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title" th:text="${artifact.title}"></h5>
-              <p class="card-subtitle text-muted mb-4" th:text="${artifact.authors}"></p>
-              <p class="card-text" th:text="${artifact.genre}"></p>
-              <a th:href="@{/artifacts/view(id=${artifact.id})}" class="btn btn-outline-primary view-more">View more</a>
+      <div class="d-flex flex-wrap justify-content-center">
+        <div class="my-3 mx-2 card artifact-card shadow bg-light border-0" th:each="artifact : ${popularArtifacts}">
+          <div class="card-img-top d-flex justify-content-center h-50">
+            <img
+              th:src="${#strings.isEmpty(artifact.thumbnailLink)} ? @{~/images/placeholder.png} : ${artifact.thumbnailLink}" alt="${artifact.title} + ' image'" />
+          </div>
+          <div class="card-body">
+            <h5 class="card-title" th:text="${artifact.title}"></h5>
+            <p class="card-subtitle text-muted" th:text="${artifact.authors}"></p>
+            <p class="card-text" th:text="${#strings.substring(artifact.description,0,60)} + '..'"></p>
+            <div class="view-more">
+              <a th:href="@{/artifacts/view(id=${artifact.id})}" class="px-3 py-2 btn border border-dark text-dark hover">View more</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="mb-5 pt-5">
-      <div class="row mb-4 ">
-        <h2 class="col">
+    <div class="mb-5">
+      <div class="w-100 mb-4 d-flex justify-content-between align-items-center">
+        <h2>
           Upcoming Artifacts
         </h2>
-        <a class="link col my-auto text-right text-decoration-none">Request an Artifact</a>
+        <a href="#" class="link">Request an Artifact</a>
       </div>
-      <div class="row">
-        <div class="col ">
-          <div class="card artifact-card">
-            <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <a href="#" class="btn btn-outline-primary view-more">View more</a>
+      <div class="d-flex flex-wrap justify-content-center">
+        <div class="my-3 mx-2 card artifact-card shadow bg-light border-0" th:each="artifact : ${latestArtifacts}">
+          <div class="card-img-top d-flex justify-content-center h-50">
+            <img th:src="${#strings.isEmpty(artifact.thumbnailLink)} ? @{~/images/placeholder.png} : ${artifact.thumbnailLink}" class="card-img-top border-bottom border-dark" th:alt="${artifact.title} + ' image'" />
+          </div>
+          <div class="card-body">
+            <h5 class="card-title" th:text="${artifact.title}"></h5>
+            <p class="card-text" th:text="${artifact.authors}"></p>
+            <div class="view-more">
+              <div th:href="@{/artifacts/view(id=${artifact.id})}" class="px-3 py-2 btn border border-dark text-dark hover">Comming soon</div>
             </div>
-          </div>
-          <div class="text-center mt-3 border border-primary">
-            <div>Coming in .. days</div>
-          </div>
-        </div>
-        <div class=" col">
-          <div class="card artifact-card">
-            <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <a href="#" class="btn btn-outline-primary view-more">View more</a>
-            </div>
-          </div>
-          <div class="text-center mt-3 border border-primary">
-            <div>Coming in .. days</div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="card artifact-card">
-            <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <a href="#" class="btn btn-outline-primary view-more">View more</a>
-            </div>
-          </div>
-          <div class="text-center mt-3 border border-primary">
-            <div>Coming in .. days</div>
           </div>
         </div>
       </div>
     </div>
+
   </main>
 
   <footer></footer>
