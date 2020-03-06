@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+
+  <!-- Import CSS -->
+  <link rel="stylesheet" th:href="@{~/css/common.css}" />
+  <title>Edit Member | Wet LMS</title>
+</head>
+
+<body class="m-0">
+  <header th:replace="fragments/header.html :: notSignedIn"></header>
+
+  <main>
+    <div class="w-100 w-lg-75 my-4 mx-auto container">
+      <div th:classappend="${#strings.isEmpty(previousIsSuccess)} ? mb-3 : mb-0" class="d-flex flex-row justify-content-between align-items-start">
+        <h3 class="">Edit Profile</h3>
+      </div>
+      <div th:replace="admin/fragments/actionMessage.html :: showActionMessage"></div>
+      <div class="d-flex flex-row justify-content-between w-100 mx-auto py-3 px-0 container">
+        <div class="w-25 container mx-2">
+          <div class="d-flex justify-content-center align-items-center member-avatar-container">
+            <span class="font-weight-bold" id="memberAvatarInitials" th:text="${member.getInitials()}"></span>
+          </div>
+          <!-- <img th:src="@{~/images/profile/user.png}" style="width: 100%;"/>  -->
+          <div class="container p-0 mx-0 my-3">
+            <div class="my-1 d-flex flex-column">
+              <span class="fake_label">Member since</span>
+              <span class="fake_field" th:text="${joinedOn}"></span>
+            </div>
+            <div class="my-1 d-flex flex-column">
+              <span class="fake_label">Last active</span>
+              <span class="fake_field" th:text="${lastActiveOn}"></span>
+            </div>
+            <div class="my-1 d-flex flex-column">
+              <span class="fake_label">Email</span>
+              <span class="fake_field" th:text="${member.email}"></span>
+            </div>
+          </div>
+        </div>
+        <div class="w-75 container mx-2">
+          <form th:action="@{/member/profile/edit}" method="POST" th:id="editForm">
+            <div class="d-flex flex-column justify-content-center">
+              <div class="form__group my-1">
+                <input type="text" name="fullName"
+                id="fullName" th:placeholder="${member.fullName}" th:value="${#strings.isEmpty(previousFullName)} ? ${member.fullName} : ${previousFullName}" oninput="inputAvatarMember('fullName', 'memberAvatarInitials')" required />
+                <label for="fullName">Full Name</label>
+              </div>
+
+              <div class="form__group my-1">
+                <input type="text" name="mobileNumber"
+                id="mobileNumber" th:placeholder="${member.mobileNumber}" th:value="${#strings.isEmpty(previousMobileNumber)} ? ${member.mobileNumber} : ${previousMobileNumber}" required />
+                <label for="mobileNumber">Mobile Number</label>
+              </div>
+
+              <div class="form__group my-1">
+                <input type="text" name="bornOn" onfocus="(this.type='date')" onblur="(this.type='text')"
+                id="bornOn" th:placeholder="${bornOn}" th:value="${#strings.isEmpty(previousBornOn)} ? ${bornOn} : ${previousBornOn}" required />
+                <label for="bornOn">Birthdate</label>
+              </div>
+
+              <div class="form__group my-1">
+                <input type="text" name="address"
+                id="address" th:value="${#strings.isEmpty(previousAddress)} ? ${member.address} : ${previousAddress}" th:placeholder="${member.address}" required>
+                <label for="address">Address</label>
+              </div>
+
+              <div class="form__group my-1">
+                <textarea type="text" name="bio"
+                id="bio" style="min-height: 80px;" th:text="${#strings.isEmpty(previousBio)} ? ${member.bio} : ${previousBio}" th:placeholder="${member.bio}" ></textarea>
+                <label for="bio">Bio</label>
+              </div>
+
+              <div class="form__group my-1">
+                <input type="text" name="website"
+                id="website" th:value="${#strings.isEmpty(previousWebsite)} ? ${member.website} : ${previousWebsite}" th:placeholder="${member.website}" required>
+                <label for="website">Website</label>
+              </div>
+
+              <div th:replace="admin/fragments/actionMessage.html :: hiddenInputsForActionMessages"></div>
+            </div>
+            <div class="d-flex justify-content-end my-5">
+              <button type="submit" class="px-4 py-2 btn btn-lg border border-dark text-dark hover">Edit Profile</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer></footer>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+  </script>
+
+  <!-- Include JavaScript from static folder -->
+  <script type="text/javascript" src="/js/instantAvatarMember.js"></script>
+</body>
+
+</html>
