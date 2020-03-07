@@ -94,4 +94,10 @@ public class Common {
 			+ String.format("%02d:%02d", date.getHour(), date.getMinute());
 		return strDate;
 	}
+
+	public static String formatDateAsStringPeriod(LocalDateTime date1, LocalDateTime date2) {
+		String strDate = String.format("%02d/%02d", date1.getDayOfMonth(), date1.getMonthValue()) + " - " + String
+				.format("%02d/%02d", date2.getDayOfMonth(), date2.getMonthValue());
+		return strDate;
+	}
 }

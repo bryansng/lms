@@ -1,278 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
-    />
+<head>
+  <!-- Required meta tags -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <!-- Import CSS -->
-    <link rel="stylesheet" type="text/css" th:href="@{~/css/common.css}" />
-    <title>Home | Wet LMS</title>
-  </head>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
 
-  <body class="m-0">
-  
-   <header th:replace="fragments/header.html :: notSignedIn"></header>
+  <!-- Import CSS -->
+  <link rel="stylesheet" type="text/css" th:href="@{~/css/common.css}" />
+  <title>Home | Wet LMS</title>
+</head>
 
-    <main class="container mt-5">
-      <div class="row">
-        <div class="col">
-          <div class="title">
-            Historical loans
+<body class="m-0">
+
+  <header th:replace="fragments/header.html :: notSignedIn"></header>
+
+  <main class="container mt-5">
+    <div class="row">
+      <div class="col">
+        <div class="title">
+          Historical loans
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col text-right">Sort by: <button class="ml-1" data-toggle="modal"
+          data-target="#sortModal"><span>Date</span></button></div>
+      <div class="modal modal-fade text-center" id="sortModal" role="dialog">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title mx-auto">
+                Sort by?
+              </h4>
+            </div>
+            <div class="modal-body span1">
+              <a th:href="@{/member/historical-loans(sortBy='newest')}"
+                class="btn btn-block btn-outline-dark">Newest</a>
+              <a th:href="@{/member/historical-loans(sortBy='oldest')}"
+                class="btn btn-block btn-outline-dark">Oldest</a>
+            </div>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col text-right">Sort by: <span>Date</span></div>
-      </div>
+    </div>
+    <div th:each="list : ${lists}">
       <div class="row">
         <div class="col">
           <div class="loan-year">
-            2019
+            <span th:text=${list[0].getIssuedOn().getYear()}></span>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col">
+        <div th:each="loan : ${list}" class="col">
           <div class="card artifact-card">
-            <img
-              src="..."
-              class="card-img-top border-bottom border-dark"
-              alt="..."
-            />
+            <img th:src="@{~/images/test.png}" class="card-img-top border-bottom border-dark" alt="..." />
             <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
+              <h5 class="card-title" th:text=${loan.getArtifact().title}></h5>
+              <p class="card-text" th:text=${loan.getArtifact().authors}>
               </p>
               <h4>Loan period</h4>
-              <div class="view-more">
-                <a href="#" class="my-auto mr-2">Review Artifact</a>
-                <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-                <a href="#" class="btn btn-outline-primary ">View more</a>
+              <div class="view-more row">
+                <a href="#" class="my-auto col mr-2">Review Artifact</a>
+                <button type="button" data-toggle="modal" data-target="#reserveModal"
+                  th:attrappend="data-target=${loan.getArtifact().id}"
+                  class="mr-2 px-4 py-2 btn border border-dark text-dark hover"><span>Reserve</button>
+                <a th:href="@{/artifacts/view(id=${loan.getArtifact().id})}" class="btn btn-outline-primary ">View
+                  more</a>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col">
-          <div class="card artifact-card">
-            <img
-              src="..."
-              class="card-img-top border-bottom border-dark"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <h4>Loan period</h4>
-              <div class="view-more">
-                <a href="#" class="my-auto mr-2">Review Artifact</a>
-                <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-                <a href="#" class="btn btn-outline-primary ">View more</a>
+          <div class="modal fade text-center" id="reserveModal" role="dialog"
+            th:attrappend="id=${loan.getArtifact().id}">
+            <div class="modal-dialog modal-dialog-centered">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title mx-auto">
+                    Reserve?
+                  </h4>
+                </div>
+                <div class="modal-body span1">
+                  <a th:href="@{/member/reserve(id=${loan.getArtifact().id}, isbn=${loan.isbn})}"
+                    class="btn btn-block border border-dark btn-success">Yes </a>
+                  <button data-dismiss="modal" type="button" class="btn btn-block btn-outline-danger">No</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col">
-          <div class="card artifact-card">
-            <img
-              src="..."
-              class="card-img-top border-bottom border-dark"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <h4>Loan period</h4>
-              <div class="view-more">
-                <a href="#" class="my-auto mr-2">Review Artifact</a>
-                <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-                <a href="#" class="btn btn-outline-primary ">View more</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="loan-year">
-            2018
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="card artifact-card">
-            <img
-              src="..."
-              class="card-img-top border-bottom border-dark"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <h4>Loan period</h4>
-              <div class="view-more">
-                <a href="#" class="my-auto mr-2">Review Artifact</a>
-                <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-                <a href="#" class="btn btn-outline-primary ">View more</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card artifact-card">
-            <img
-              src="..."
-              class="card-img-top border-bottom border-dark"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <h4>Loan period</h4>
-              <div class="view-more">
-                <a href="#" class="my-auto mr-2">Review Artifact</a>
-                <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-                <a href="#" class="btn btn-outline-primary ">View more</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card artifact-card">
-            <img
-              src="..."
-              class="card-img-top border-bottom border-dark"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <h4>Loan period</h4>
-              <div class="view-more">
-                <a href="#" class="my-auto mr-2">Review Artifact</a>
-                <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-                <a href="#" class="btn btn-outline-primary ">View more</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="loan-year">
-            2017
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="card artifact-card">
-            <img
-              src="..."
-              class="card-img-top border-bottom border-dark"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <h4>Loan period</h4>
-              <div class="view-more">
-                <a href="#" class="my-auto mr-2">Review Artifact</a>
-                <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-                <a href="#" class="btn btn-outline-primary ">View more</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card artifact-card">
-            <img
-              src="..."
-              class="card-img-top border-bottom border-dark"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <h4>Loan period</h4>
-              <div class="view-more">
-                <a href="#" class="my-auto mr-2">Review Artifact</a>
-                <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-                <a href="#" class="btn btn-outline-primary ">View more</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card artifact-card">
-            <img
-              src="..."
-              class="card-img-top border-bottom border-dark"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">Artifact title</h5>
-              <p class="card-text">
-                Author
-              </p>
-              <h4>Loan period</h4>
-              <div class="view-more">
-                <a href="#" class="my-auto mr-2">Review Artifact</a>
-                <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-                <a href="#" class="btn btn-outline-primary ">View more</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
 
-    <footer></footer>
+        </div>
+      </div>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+    </div>
+
+  </main>
+
+  <footer></footer>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+  </script>
+</body>
+
 </html>

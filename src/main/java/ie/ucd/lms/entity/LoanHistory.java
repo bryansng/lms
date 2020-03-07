@@ -1,3 +1,4 @@
+
 package ie.ucd.lms.entity;
 
 import ie.ucd.lms.service.Common;

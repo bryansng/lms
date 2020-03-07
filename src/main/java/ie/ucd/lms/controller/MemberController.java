@@ -69,19 +69,24 @@ public class MemberController {
 		return "member/view";
 	}
 
-	@GetMapping("/member/historical")
-	public String historicalView(Model model) {
+	@GetMapping("/member/historical-loans")
+	public String historicalView(@RequestParam(name = "sortBy", value = "sortBy") String sortBy, Model model) {
+		// logger.info("sortBy " + sortBy);
+		Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
+		List<List<LoanHistory>> list = LoanHistoryService.getIssuedOn(member, sortBy);
+		model.addAttribute("lists", list);
+		logger.info("newest " + list.toString());
 		return "member/historical";
 	}
 
-	@GetMapping("/member/loans")
+	@GetMapping("/member/current-loans")
 	public String loansView(Model model) {
 		// final version will take member entity as parameters from redirectattrs
 		Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
 		List<LoanHistory> loans = LoanHistoryService.findByMember(member);
 		List<ReserveQueue> reservedLoans = reserveQueueService.getReservedLoansForMember(member);
 		// logger.info("loans: " + loans.toString());
-		List<LoanHistory> historicalLoans = LoanHistoryService.getHistoricalLoans(member);
+		List<LoanHistory> historicalLoans = LoanHistoryService.getReturnedOnLoans(member);
 		// Page<LoanHistory> historicalLoans = LoanHistoryService.getHistorialLoans(member);
 
 		// logger.info(historicalLoans.toString());
@@ -90,7 +95,7 @@ public class MemberController {
 		model.addAttribute("loans", loans);
 		model.addAttribute("historicalLoans", historicalLoans);
 		model.addAttribute("reservedLoans", reservedLoans);
-		return "member/loans";
+		return "member/current-loans";
 	}
 
 	@GetMapping("/member/profile")
@@ -101,19 +106,19 @@ public class MemberController {
 	}
 
 	@GetMapping("/member/renew")
-		public String artifactRenew(@RequestParam(name = "id", value = "id", required = true) Long id,
-				@RequestParam(name = "days", value = "days") String days, Model model, RedirectAttributes redirectAttrs) {
-			// logger.info("Long id " + Long.toString(id));
-			logger.info(Long.toString(id));
-			logger.info("days: " + days);
-			ActionConclusion ac = LoanHistoryService.renew(Long.toString(id), days);
+	public String artifactRenew(@RequestParam(name = "id", value = "id", required = true) Long id,
+			@RequestParam(name = "days", value = "days") String days, Model model, RedirectAttributes redirectAttrs) {
+		// logger.info("Long id " + Long.toString(id));
+		logger.info(Long.toString(id));
+		logger.info("days: " + days);
+		ActionConclusion ac = LoanHistoryService.renew(Long.toString(id), days);
 
-			redirectAttrs.addFlashAttribute("renewalFailed", ac.isSuccess);
-			redirectAttrs.addFlashAttribute("renewal", true);
-			redirectAttrs.addFlashAttribute("renewalMsg", ac.message);
+		redirectAttrs.addFlashAttribute("renewalFailed", ac.isSuccess);
+		redirectAttrs.addFlashAttribute("renewal", true);
+		redirectAttrs.addFlashAttribute("renewalMsg", ac.message);
 
-			return "redirect:/member/loans";
-		}
+		return "redirect:/member/current-loans";
+	}
 
 	@GetMapping("/member/reserve")
 	public String artifactReserve(@RequestParam(name = "id", value = "id", required = true) Long id,
@@ -123,7 +128,8 @@ public class MemberController {
 		logger.info(isbn);
 		Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
 		// finding out what expiredOn is
-		ActionConclusion ac = reserveQueueService.create(isbn, Long.toString(member.getId()), LocalDate.now().toString());
+		ActionConclusion ac = reserveQueueService.create(isbn, Long.toString(member.getId()),
+				LocalDate.now().toString());
 		redirectAttrs.addFlashAttribute("reserve", true);
 		redirectAttrs.addFlashAttribute("reserveMsg", ac.message);
 		redirectAttrs.addFlashAttribute("reserveFailed", ac.isSuccess);
