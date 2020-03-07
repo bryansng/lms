@@ -1,6 +1,7 @@
 package ie.ucd.lms.entity;
 
 import java.io.Serializable;
+import javax.validation.constraints.NotEmpty;
 import java.time.*;
 import java.util.List;
 import javax.persistence.*;
@@ -9,20 +10,18 @@ import ie.ucd.lms.service.Common;
 @Entity
 @Table(name = "members")
 public class Member implements Serializable {
-
-  public Member() {
-  }
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "email")
+  @NotEmpty
+  @Column(name = "email", insertable = false, updatable = false)
   private String email;
   private String fullName;
   private String mobileNumber;
   private String address;
   private String website;
+  private String roles;
 
   @Column(nullable = true)
   private LocalDateTime bornOn;
@@ -31,8 +30,9 @@ public class Member implements Serializable {
   private String bio;
   private String type = "member";
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(referencedColumnName = "email")
+  // @OneToOne(cascade = CascadeType.ALL)
+  // @JoinColumn(referencedColumnName = "email")
+  @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
   private Login login;
 
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
@@ -72,7 +72,7 @@ public class Member implements Serializable {
   }
 
   public Login getLogin() {
-    return this.login;
+    return login;
   }
 
   public void setLogin(Login login) {
@@ -167,7 +167,21 @@ public class Member implements Serializable {
     this.type = type;
   }
 
+  public String getRoles() {
+    return roles;
+  }
+
+  public void setRoles(String roles) {
+    this.roles = roles;
+  }
+
   public String toString() {
+    String buf = " - ";
+    return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type
+        + "\n" + login.getEmail() + buf + login.getHash();
+  }
+
+  public String toStringDefault() {
     String buf = " - ";
     return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type;
   }

@@ -17,12 +17,11 @@
 </head>
 
 <body class="m-0">
-  <!-- self create the condition to check if authenticated or not.
-  isAuthenticated here is just for display, it is not implemented. -->
-  <header th:replace="fragments/header.html :: ${isAuthenticated} ? signedIn : notSignedIn"></header>
+  <!-- <header th:replace="fragments/header.html :: ${isAuthenticated()} ? signedIn : notSignedIn"></header> -->
+  <!-- <header th:replace="${#authentication.principal.isAdmin()} ? ~{fragments/header.html :: signedIn} : ~{fragments/header.html :: notSignedIn}"></header> -->
+  <header sec:authorize="isAuthenticated()" th:replace="fragments/header.html :: signedIn"></header>
+  <header sec:authorize="!isAuthenticated()" th:replace="fragments/header.html :: notSignedIn"></header>
 
-  <!-- <header th:replace="fragments/header.html :: notSignedIn"></header>  -->
-  <!-- <header th:replace="fragments/header.html :: signedIn"></header> -->
   <div th:if="${onClick}" class="toast shadow-lg position-fixed w-50 mt-1 mr-1" data-autohide="false" role="alert"
     aria-live="assertive" aria-atomic="true" style="z-index: 100; right: 0; top: 10; min-height: 100px;">
     <div class="toast-header">

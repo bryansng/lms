@@ -20,12 +20,7 @@
 </head>
 
 <body class="m-0">
-  <!-- self create the condition to check if authenticated or not.
-  isAuthenticated here is just for display, it is not implemented. -->
-  <!-- <header th:replace="fragments/header.html :: ${isAuthenticated()} ? signedIn : notSignedIn"></header> -->
-
-  <header th:replace="fragments/header.html :: notSignedIn"></header>
-  <!-- <header th:replace="fragments/header.html :: signedIn"></header> -->
+  <header th:replace="fragments/header.html :: ${isAuthenticated} ? signedIn : notSignedIn"></header>
 
   <div th:if="${reserve}" class="toast shadow-lg position-fixed w-50 mb-4 mr-3" data-autohide="false" role="alert"
     aria-live="assertive" aria-atomic="true" style="z-index: 100; right: 0; bottom: 0; min-height: 100px;">
@@ -92,23 +87,23 @@
                 </div>
               </div>
             </div>
-             <div class="modal fade text-center" id="reserveModal" role="dialog" th:attrappend="id=${artifact.id}">
-               <div class="modal-dialog modal-dialog-centered">
-                 <!-- Modal content-->
-                 <div class="modal-content">
-                   <div class="modal-header">
-                     <h4 class="modal-title mx-auto">
-                       Reserve? <span th:text=${artifact.id}></span>
-                     </h4>
-                   </div>
-                   <div class="modal-body span1">
-                     <a th:href="@{/member/reserve(id=${artifact.id}, isbn=${artifact.isbn})}"
-                       class="btn btn-block border border-dark btn-success">Yes</a>
-                     <button data-dismiss="modal" type="button" class="btn btn-block btn-outline-danger">No</button>
-                   </div>
-                 </div>
-               </div>
-             </div>
+            <div class="modal fade text-center" id="reserveModal" role="dialog" th:attrappend="id=${artifact.id}">
+              <div class="modal-dialog modal-dialog-centered">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title mx-auto">
+                      Reserve? <span th:text=${artifact.id}></span>
+                    </h4>
+                  </div>
+                  <div class="modal-body span1">
+                    <a th:href="@{/member/reserve(id=${artifact.id}, isbn=${artifact.isbn})}"
+                      class="btn btn-block border border-dark btn-success">Yes</a>
+                    <button data-dismiss="modal" type="button" class="btn btn-block btn-outline-danger">No</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </span>
         </div>
         <div class="w-100-ns w-60-l mx-3 my-4" th:if="${totalElements} == 0">
@@ -137,7 +132,7 @@
   </script>
 
   <script>
-   $(".toast").toast("show");
+    $(".toast").toast("show");
   </script>
 </body>
 

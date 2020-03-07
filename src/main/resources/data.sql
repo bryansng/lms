@@ -6,21 +6,25 @@ INSERT INTO artifacts(isbn, type, genre, authors, title, original_title, subtitl
 	('9780061241895', 'book', 'Business & Economics', 'Robert B. Cialdini', 'Influence', 'Influence', 'The Psychology of Persuasion', 'Dr Robert Cialdini explains the six psychological principles that drive the human impulse to comply to the pressures of others and reveals how to defend oneself against manipulation.', 'ICON Group International', PARSEDATETIME('2007','yyyy','en'), 10.00, 2, 2, '9981', NOW() + 2, 'http://books.google.com/books/content?id=E5p5qVbkl1IC&printsec=frontcover&img=1&zoom=1&source=gbs_api', 2),
 	('9780307353139', 'book', 'Business & Economics', 'Timothy Ferriss', 'The 4-Hour Work Week', 'The 4-Hour Work Week', 'Escape 9-5, Live Anywhere, and Join the New Rich', 'Offers techniques and strategies for increasing income while cutting work time in half, and includes advice for leading a more fulfilling life.', 'Crown Business', PARSEDATETIME('2007','yyyy','en'), 10.00, 0, 1, '339', NOW() + 1, 'http://books.google.com/books/content?id=E3HVzZQh88wC&printsec=frontcover&img=1&zoom=1&source=gbs_api', 1);
 
-INSERT INTO login(email, hash) VALUES
-	('hong.sng@ucdconnect.ie', 'root'),
-	('bond.james@ucdconnect.ie', 'root'),
-	('wan.obi@ucdconnect.ie', 'root'),
-	('jobs.steve@ucdconnect.ie', 'root'),
-	('xuan.liew@ucdconnect.ie', 'root'),
-	('yeoh.braddy@ucdconnect.ie', 'root');
+INSERT INTO members(full_name, email, mobile_number, address, type, born_on, joined_on, last_active_on, website, roles) VALUES
+	('Bryan Sng', 'hong.sng@ucdconnect.ie', '339', 'Somewhere on Earth', 'librarian', NOW() - 7665, NOW(), NOW(), 'https://www.bryansng.com/', 'ADMIN'),
+	('James Bond', 'bond.james@ucdconnect.ie', '007', 'MI6', 'member', NOW() - 7665, NOW(), NOW(), '', 'USER'),
+	('Obi Wan', 'wan.obi@ucdconnect.ie', '69', 'The High Ground', 'member', NOW() - 7665, NOW(), NOW(), '', 'USER'),
+	('Steve Jobs', 'jobs.steve@ucdconnect.ie', '1234', 'Silicon Valley', 'member', NOW() - 7665, NOW(), NOW(), '', 'USER'),
+	('Emily Liew Xuan', 'xuan.liew@ucdconnect.ie', '6954', 'Somewhere in the Universe', 'member', NOW() - 7665, NOW(), NOW(), 'https://lxemily.com/', 'ADMIN'),
+	('Braddy Yeoh', 'yeoh.braddy@ucdconnect.ie', '7749', 'Somewhere in Ireland', 'member', NOW() - 7665, NOW(), NOW(), 'https://www.yeohbraddy.com/', 'ADMIN'),
+	('Yao', 'admin', '7749', 'Somewhere in Ireland', 'librarian', NOW() - 7665, NOW(), NOW(), '', 'ADMIN'),
+	('Yao', 'user', '7749', 'Somewhere in Ireland', 'member', NOW() - 7665, NOW(), NOW(), '', 'USER');
 
-INSERT INTO members(full_name, email, mobile_number, address, type, born_on, joined_on, last_active_on, website) VALUES
-	('Bryan Sng', 'hong.sng@ucdconnect.ie', '339', 'Somewhere on Earth', 'librarian', NOW() - 7665, NOW(), NOW(), 'https://www.bryansng.com/'),
-	('James Bond', 'bond.james@ucdconnect.ie', '007', 'MI6', 'member', NOW() - 7665, NOW(), NOW(), ''),
-	('Obi Wan', 'wan.obi@ucdconnect.ie', '69', 'The High Ground', 'member', NOW() - 7665, NOW(), NOW(), ''),
-	('Steve Jobs', 'jobs.steve@ucdconnect.ie', '1234', 'Silicon Valley', 'member', NOW() - 7665, NOW(), NOW(), ''),
-	('Emily Liew Xuan', 'xuan.liew@ucdconnect.ie', '6954', 'Somewhere in the Universe', 'member', NOW() - 7665, NOW(), NOW(), 'https://lxemily.com/'),
-	('Braddy Yeoh', 'yeoh.braddy@ucdconnect.ie', '7749', 'Somewhere in Ireland', 'member', NOW() - 7665, NOW(), NOW(), 'https://www.yeohbraddy.com/');
+INSERT INTO login(email, hash, member_id) VALUES
+	('hong.sng@ucdconnect.ie', 'root', '1'),
+	('bond.james@ucdconnect.ie', 'root', '2'),
+	('wan.obi@ucdconnect.ie', 'root', '3'),
+	('jobs.steve@ucdconnect.ie', 'root', '4'),
+	('xuan.liew@ucdconnect.ie', 'root', '5'),
+	('yeoh.braddy@ucdconnect.ie', 'root', '6'),
+	('admin', '1234', '7'),
+	('user', '1234', '8');
 
 INSERT INTO loan_history(artifact_id, isbn, member_id, return_on, status, fine, issued_on, was_lost) VALUES
 	('1', '9780743269513', '1', NOW() + 3, 'issued', 0.0, NOW(), false),

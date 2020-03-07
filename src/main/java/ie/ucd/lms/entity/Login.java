@@ -8,28 +8,26 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "login")
 public class Login implements Serializable {
-
-	public Login() {
-	}
-
 	// @Id
-	// @GeneratedValue(strategy = GenerationType.AUTO)
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	// Long id;
 
 	@Id
 	@NotEmpty
-	@Column(name = "email", nullable = false, unique = true)
+	// @Column(name = "email", nullable = false, unique = true)
+	@Column(name = "email", insertable = false, updatable = false)
 	private String email;
 
 	@NotEmpty
 	@Size(min = 4)
 	private String hash;
 
-	@OneToOne(mappedBy = "login")
+	// @OneToOne(mappedBy = "login")
+	@OneToOne(fetch = FetchType.LAZY)
 	private Member member;
 
 	public Member getMember() {
-		return this.member;
+		return member;
 	}
 
 	public void setMember(Member member) {

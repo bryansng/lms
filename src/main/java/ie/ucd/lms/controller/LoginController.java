@@ -69,75 +69,75 @@ public class LoginController {
 	// 	return "redirect:/member/profile";
 	// }
 
-	@PostMapping("/login")
-	public String loginMember(@RequestParam(name = "email") String email,
-			@RequestParam(name = "password") String password, Model model, HttpServletRequest request,
-			RedirectAttributes redirectAttrs) {
+	// @PostMapping("/login")
+	// public String loginMember(@RequestParam(name = "email") String email,
+	// 		@RequestParam(name = "password") String password, Model model, HttpServletRequest request,
+	// 		RedirectAttributes redirectAttrs) {
 
-		ActionConclusion ac = loginService.authenticate(email, password, true);
-		if (ac.isSuccess) {
-			Member member = memberService.findByEmail(email);
-			Login login = loginService.findByEmail(email);
-			redirectAttrs.addFlashAttribute("member", member);
-			redirectAttrs.addFlashAttribute("isAuthenticated", true);
-			authenticateUserAndSetSession(login, request);
-		}
+	// 	ActionConclusion ac = loginService.authenticate(email, password, true);
+	// 	if (ac.isSuccess) {
+	// 		Member member = memberService.findByEmail(email);
+	// 		Login login = loginService.findByEmail(email);
+	// 		redirectAttrs.addFlashAttribute("member", member);
+	// 		redirectAttrs.addFlashAttribute("isAuthenticated", true);
+	// 		authenticateUserAndSetSession(login, request);
+	// 	}
 
-		redirectAttrs.addFlashAttribute("invalidCredentials", ac.isSuccess);
-		redirectAttrs.addFlashAttribute("onClick", true);
-		redirectAttrs.addFlashAttribute("credentialsMsg", ac.message);
+	// 	redirectAttrs.addFlashAttribute("invalidCredentials", ac.isSuccess);
+	// 	redirectAttrs.addFlashAttribute("onClick", true);
+	// 	redirectAttrs.addFlashAttribute("credentialsMsg", ac.message);
 
-		return "redirect:/";
-	}
+	// 	return "redirect:/";
+	// }
 
 	// @GetMapping("/register")
 	// public String registerView(Login loginModel) {
 	// 	return "member/register";
 	// }
 
-	@PostMapping("/register")
-	public String registerMember(@RequestParam(name = "fullName") String fullName,
-			@RequestParam(name = "email") String email, @RequestParam(name = "password") String password, Model model,
-			HttpServletRequest request, RedirectAttributes redirectAttrs) {
+	// @PostMapping("/register")
+	// public String registerMember(@RequestParam(name = "fullName") String fullName,
+	// 		@RequestParam(name = "email") String email, @RequestParam(name = "password") String password, Model model,
+	// 		HttpServletRequest request, RedirectAttributes redirectAttrs) {
 
-		ActionConclusion ac = loginService.authenticate(email, password, false);
-		if (ac.isSuccess) {
-			logger.info(ac.message);
-			Login login = loginService.createLogin(email, password);
-			Member member = memberService.createMember(login);
-			memberService.save(member, login);
-			securityConfig.configAuth(login, loginConfig.getAuth(), "USER");
-			authenticateUserAndSetSession(login, request);
-		}
+	// 	ActionConclusion ac = loginService.authenticate(email, password, false);
+	// 	if (ac.isSuccess) {
+	// 		logger.info(ac.message);
+	// 		Login login = loginService.createLogin(email, password);
+	// 		Member member = memberService.createMember(login);
+	// 		memberService.save(member, login);
+	// 		securityConfig.configAuth(login, loginConfig.getAuth(), "USER");
+	// 		authenticateUserAndSetSession(login, request);
+	// 	}
 
-		redirectAttrs.addFlashAttribute("invalidCredentials", ac.isSuccess);
-		redirectAttrs.addFlashAttribute("onClick", true);
-		redirectAttrs.addFlashAttribute("credentialsMsg", ac.message);
-		return "redirect:/";
-	}
+	// 	redirectAttrs.addFlashAttribute("invalidCredentials", ac.isSuccess);
+	// 	redirectAttrs.addFlashAttribute("onClick", true);
+	// 	redirectAttrs.addFlashAttribute("credentialsMsg", ac.message);
+	// 	return "redirect:/";
+	// }
 
-	private void authenticateUserAndSetSession(Login login, HttpServletRequest request) {
-		String username = login.getEmail();
-		String password = login.getHash();
-		logger.info(password);
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+	// private void authenticateUserAndSetSession(Login login, HttpServletRequest request) {
+	// 	String username = login.getEmail();
+	// 	String password = login.getHash();
+	// 	logger.info(password);
+	// 	UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
 
-		// generate session if one doesn't exist
-		request.getSession();
+	// 	// generate session if one doesn't exist
+	// 	request.getSession();
 
-		token.setDetails(new WebAuthenticationDetails(request));
+	// 	token.setDetails(new WebAuthenticationDetails(request));
 
-		try {
-			Authentication authenticatedUser = securityConfig.authenticationManager().authenticate(token);
-			SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
-		} catch (AuthenticationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	// 	try {
+	// 		Authentication authenticatedUser = securityConfig.authenticationManager().authenticate(token);
+	// 		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+	// 	} catch (AuthenticationException e) {
+	// 		// TODO Auto-generated catch block
+	// 		e.printStackTrace();
+	// 	} catch (Exception e) {
+	// 		// TODO Auto-generated catch block
+	// 		e.printStackTrace();
+	// 	}
+	// }
 
 	// @PostMapping("/register")
 	// public String registerMember(@Valid Login login, BindingResult bindingResult, Model model) {

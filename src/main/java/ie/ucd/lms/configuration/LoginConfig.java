@@ -8,8 +8,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
-
 @Configuration
 public class LoginConfig {
 
@@ -18,10 +16,10 @@ public class LoginConfig {
     @Autowired
     AuthenticationManagerBuilder auth;
 
-    @Bean
-    public PasswordEncoder getEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    // @Bean
+    // public PasswordEncoder getEncoder() {
+    //     return new BCryptPasswordEncoder();
+    // }
 
     // public void login(HttpServletRequest request, String email, String password) {
     //     UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(email, password);
@@ -33,7 +31,7 @@ public class LoginConfig {
     //     session.setAttribute("SPRING_SECURITY_CONTEXT_KEY", sc);
     // }
 
-    public AuthenticationManagerBuilder getAuth() {
-        return auth;
-    }
+    // public AuthenticationManagerBuilder getAuth() {
+    //     return auth;
+    // }
 }
