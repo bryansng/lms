@@ -30,7 +30,6 @@ public class ReserveQueueService {
   @Autowired
   LoanHistoryService loanHistoryService;
 
-
   public List<ReserveQueue> getReservedLoansForMember(Member member) {
     return reserveQueueRepository.findByMember(member);
   }
@@ -97,16 +96,19 @@ public class ReserveQueueService {
 
   public ActionConclusion create(String isbn, String memberId, String expiredOn) {
     Long aMemberId = Common.convertStringToLong(memberId);
+
     if (reserveQueueRepository.countByMemberId(aMemberId) < Common.MAX_RESERVES_PER_USER) {
       // if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
-      if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
+      if (reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
+        return new ActionConclusion(false, "Artifact already reserved.");
+      } else if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
         Artifact artifact = artifactRepository.findByIsbn(isbn);
         Member member = memberRepository.getOne(aMemberId);
         ReserveQueue reserveQueue = new ReserveQueue();
         reserveQueue.setAll(isbn, memberId, expiredOn, artifact, member);
         reserveQueueRepository.save(reserveQueue);
-        return new ActionConclusion(true, "Created successfully.");
-      }
+        return new ActionConclusion(true, "Artifact reserved successfully.");
+      } 
       // }
       return new ActionConclusion(false, "Failed to create. ISBN or member ID does not exist.");
     }
