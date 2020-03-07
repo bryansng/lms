@@ -54,9 +54,9 @@
             <h5 class="card-title" th:text="${artifact.title}"></h5>
             <p class="card-subtitle text-muted" th:text="${artifact.authors}"></p>
             <p class="card-text" th:text="${#strings.substring(artifact.description,0,60)} + '..'"></p>
-            <div class="view-more">
-              <a th:href="@{/artifacts/view(id=${artifact.id})}" class="px-3 py-2 btn border border-dark text-dark hover">View more</a>
-            </div>
+          </div>
+          <div class="d-flex justify-content-end m-3">
+            <a th:href="@{/artifacts/view(id=${artifact.id})}" class="px-3 py-2 btn border border-dark text-dark hover">View more</a>
           </div>
         </div>
       </div>
@@ -78,9 +78,9 @@
             <h5 class="card-title" th:text="${artifact.title}"></h5>
             <p class="card-subtitle text-muted" th:text="${artifact.authors}"></p>
             <p class="card-text" th:text="${#strings.substring(artifact.description,0,60)} + '..'"></p>
-            <div class="view-more">
-              <a th:href="@{/artifacts/view(id=${artifact.id})}" class="px-3 py-2 btn border border-dark text-dark hover">View more</a>
-            </div>
+          </div>
+          <div class="d-flex justify-content-end m-3">
+            <a th:href="@{/artifacts/view(id=${artifact.id})}" class="px-3 py-2 btn border border-dark text-dark hover">View more</a>
           </div>
         </div>
       </div>
@@ -100,9 +100,9 @@
           <div class="card-body">
             <h5 class="card-title" th:text="${artifact.title}"></h5>
             <p class="card-text" th:text="${artifact.authors}"></p>
-            <div class="view-more">
-              <div th:href="@{/artifacts/view(id=${artifact.id})}" class="px-3 py-2 btn border border-dark text-dark hover">Comming soon</div>
-            </div>
+          </div>
+          <div class="d-flex justify-content-end m-3">
+            <a th:href="@{/artifacts/view(id=${artifact.id})}" class="px-3 py-2 btn border border-dark text-dark hover">Coming Soon</a>
           </div>
         </div>
       </div>
