@@ -13,7 +13,7 @@
 
   <!-- Import CSS -->
   <link rel="stylesheet" type="text/css" th:href="@{~/css/common.css}" />
-  <title>Home | Wet LMS</title>
+  <title>Historial Loans | Wet LMS</title>
 </head>
 
 <body class="m-0">
@@ -21,7 +21,10 @@
   <header th:replace="fragments/header.html :: notSignedIn"></header>
 
   <main class="container mt-5">
-    <div class="title mb-3">Historical Loans</div>
+    <div class="hello-title w-100 mb-4 d-flex justify-content-between align-items-center"
+      th:text="'Hello ' + ${member.fullName} + '!'">
+    </div>
+    <div class="title mb-3 border-bottom border-dark">Historical Loans</div>
     <!-- <div class="row">
       <div class="col text-right">Sort by: <span>Date</span></div>
     </div> -->

@@ -47,37 +47,29 @@ public class MemberController {
 
   private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
-  @PostMapping("/member/profile")
-  public String profileView(@Valid @ModelAttribute("member") Member member, BindingResult bindingResult, Model model,
-      RedirectAttributes redirectAttrs) {
-    if (bindingResult.hasErrors()) {
-      model.addAttribute("invalid", "invalid");
-    }
+  // @PostMapping("/member/profile")
+  // public String profileView(@Valid @ModelAttribute("member") Member member, BindingResult bindingResult, Model model,
+  //     RedirectAttributes redirectAttrs) {
+  //   if (bindingResult.hasErrors()) {
+  //     model.addAttribute("invalid", "invalid");
+  //   }
 
-    return "/member/profile";
-  }
+  //   return "/member/profile";
+  // }
 
-  @GetMapping("/member/view")
-  public String artifactView(@RequestParam(name = "id") Long id, Model model) {
-    Optional<Artifact> viewArtifact = artifactService.exists(id);
+  // @GetMapping("/member/view")
+  // public String artifactView(@RequestParam(name = "id") Long id, Model model) {
+  //   Optional<Artifact> viewArtifact = artifactService.exists(id);
 
-    if (viewArtifact.isPresent()) {
-      model.addAttribute("artifact", viewArtifact.get());
-    }
+  //   if (viewArtifact.isPresent()) {
+  //     model.addAttribute("artifact", viewArtifact.get());
+  //   }
 
-    return "member/view";
-  }
+  //   return "member/view";
+  // }
 
-  @GetMapping("/member/historical")
-  public String historicalView(Model model) {
-    Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
-    List<LoanHistory> historicalLoans = LoanHistoryService.getHistoricalLoans(member);
-    model.addAttribute("historicalLoans", historicalLoans);
-    return "member/historical";
-  }
-
-  @GetMapping("/member/loans")
-  public String loansView(Model model) {
+  @GetMapping("/member/dashboard")
+  public String dashboard(Model model) {
     // final version will take member entity as parameters from redirectattrs
     Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
     List<LoanHistory> loans = LoanHistoryService.findByMember(member);
@@ -88,12 +80,39 @@ public class MemberController {
 
     // logger.info(historicalLoans.toString());
     model.addAttribute("member", member);
-
     model.addAttribute("loans", loans);
     model.addAttribute("historicalLoans", historicalLoans);
     model.addAttribute("reservedLoans", reservedLoans);
-    return "member/loans";
+    return "member/dashboard.html";
   }
+
+  @GetMapping("/member/historical")
+  public String historicalView(Model model) {
+    Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
+    List<LoanHistory> historicalLoans = LoanHistoryService.getHistoricalLoans(member);
+    model.addAttribute("member", member);
+    model.addAttribute("historicalLoans", historicalLoans);
+    return "member/historical";
+  }
+
+  // @GetMapping("/member/loans")
+  // public String loansView(Model model) {
+  //   // final version will take member entity as parameters from redirectattrs
+  //   Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
+  //   List<LoanHistory> loans = LoanHistoryService.findByMember(member);
+  //   List<ReserveQueue> reservedLoans = reserveQueueService.getReservedLoansForMember(member);
+  //   // logger.info("loans: " + loans.toString());
+  //   List<LoanHistory> historicalLoans = LoanHistoryService.getHistoricalLoans(member);
+  //   // Page<LoanHistory> historicalLoans = LoanHistoryService.getHistorialLoans(member);
+
+  //   // logger.info(historicalLoans.toString());
+  //   model.addAttribute("member", member);
+
+  //   model.addAttribute("loans", loans);
+  //   // model.addAttribute("historicalLoans", historicalLoans);
+  //   // model.addAttribute("reservedLoans", reservedLoans);
+  //   return "member/loans";
+  // }
 
   @GetMapping("/member/profile/view")
   public String profileView(@ModelAttribute("member") Member member, Model model) {
@@ -154,6 +173,21 @@ public class MemberController {
       model.addAttribute("previousType", type);
       return "member/profile/edit.html";
     }
+  }
+
+  @GetMapping("/member/renew")
+  public String artifactRenew(@RequestParam(name = "id", value = "id", required = true) Long id,
+      @RequestParam(name = "days", value = "days") String days, Model model, RedirectAttributes redirectAttrs) {
+    // logger.info("Long id " + Long.toString(id));
+    logger.info(Long.toString(id));
+    logger.info("days: " + days);
+    ActionConclusion ac = LoanHistoryService.renew(Long.toString(id), days);
+
+    redirectAttrs.addFlashAttribute("renewalFailed", ac.isSuccess);
+    redirectAttrs.addFlashAttribute("renewal", true);
+    redirectAttrs.addFlashAttribute("renewalMsg", ac.message);
+
+    return "redirect:/member/loans";
   }
 
   @GetMapping("/member/reserve")

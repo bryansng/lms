@@ -13,7 +13,7 @@
 
   <!-- Import CSS -->
   <link rel="stylesheet" type="text/css" th:href="@{~/css/common.css}" />
-  <title>Member Loans | Wet LMS</title>
+  <title>Member Dashboard | Wet LMS</title>
 </head>
 
 <body class="m-0">
@@ -39,7 +39,7 @@
       th:text="'Hello ' + ${member.fullName} + '!'">
     </div>
 
-    <div class="title mb-3 border-bottom border-dark">
+    <div class="title mb-3 border-bottom border-dark" id="current-loans">
       Current Loans
     </div>
     <div class="mb-5">
