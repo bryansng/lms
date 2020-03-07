@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import ie.ucd.lms.configuration.SecurityConfig;
 import ie.ucd.lms.dao.MemberRepository;
 import ie.ucd.lms.entity.Login;
 import ie.ucd.lms.entity.Member;
@@ -14,6 +16,9 @@ import ie.ucd.lms.entity.Member;
 public class MemberService {
 	@Autowired
 	MemberRepository memberRepository;
+
+	@Autowired
+	SecurityConfig securityConfig;
 
 	public void save(Member member, Login login) {
 		login.setMember(member);
@@ -49,6 +54,27 @@ public class MemberService {
 		return new ActionConclusion(false, "Failed to update. Member ID does not exist.");
 	}
 
+	public ActionConclusion create(String email, String password, String fullName, String mobileNumber, String address,
+			String website, String bornOn, String bio, String type, String roles) {
+		if (!memberRepository.existsByEmail(email)) {
+			Member member = new Member();
+			Login login = new Login();
+			login.setAll(email, securityConfig.getPasswordEncoder().encode(password));
+			member.setAll(email, fullName, mobileNumber, address, website, bornOn, bio, type, login);
+			memberRepository.save(member);
+			System.out.println(member);
+			return new ActionConclusion(true, "Created successfully.");
+		}
+		return new ActionConclusion(false, "Failed to create. Member email already exists.");
+	}
+
+	public Member createMember(Login login) {
+		Member member = new Member();
+		member.setEmail(login.getEmail());
+		member.setRoles("USER"); // set as ROLE_USER by default.
+		return member;
+	}
+
 	public ActionConclusion delete(String stringId) {
 		Long id = Common.convertStringToLong(stringId);
 
@@ -73,20 +99,6 @@ public class MemberService {
 			}
 		}
 		return false;
-	}
-
-	public Optional<Member> findById(Long id) {
-		return memberRepository.findById(id);
-	}
-
-	public Member createMember(Login login) {
-		Member member = new Member();
-		member.setEmail(login.getEmail());
-		return member;
-	}
-
-	public Member findByEmail(String email) {
-		return memberRepository.findByEmail(email);
 	}
 
 	public void printMe(List<Member> arr) {

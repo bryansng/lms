@@ -26,7 +26,7 @@ public class MemberDetailsService implements UserDetailsService {
         return toUserDetails(member.get());
     }
 
-    private UserDetails toUserDetails(Member member) {
+    public UserDetails toUserDetails(Member member) {
         return User.withUsername(member.getEmail()).password(member.getLogin().getHash()).roles(member.getRoles())
                 .build();
     }

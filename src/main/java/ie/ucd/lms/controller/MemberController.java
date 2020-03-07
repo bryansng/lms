@@ -14,8 +14,6 @@ import ie.ucd.lms.dao.MemberRepository;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -27,9 +25,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ie.ucd.lms.service.LoginService;
+import org.springframework.security.core.Authentication;
 
 @Controller
 public class MemberController {
+  @Autowired
+  LoginService loginService;
+
   @Autowired
   MemberService memberService;
 
@@ -45,11 +48,10 @@ public class MemberController {
   @Autowired
   ReserveQueueService reserveQueueService;
 
-  private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
-
   @PostMapping("/member/profile")
   public String profileView(@Valid @ModelAttribute("member") Member member, BindingResult bindingResult, Model model,
-      RedirectAttributes redirectAttrs) {
+      Authentication authentication, RedirectAttributes redirectAttrs) {
+    loginService.addMemberToModel(model, authentication);
     if (bindingResult.hasErrors()) {
       model.addAttribute("invalid", "invalid");
     }
@@ -58,7 +60,8 @@ public class MemberController {
   }
 
   @GetMapping("/member/view")
-  public String artifactView(@RequestParam(name = "id") Long id, Model model) {
+  public String artifactView(@RequestParam(name = "id") Long id, Model model, Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     Optional<Artifact> viewArtifact = artifactService.exists(id);
 
     if (viewArtifact.isPresent()) {
@@ -69,22 +72,19 @@ public class MemberController {
   }
 
   @GetMapping("/member/historical")
-  public String historicalView(Model model) {
+  public String historicalView(Model model, Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     return "member/historical";
   }
 
   @GetMapping("/member/loans")
-  public String loansView(Model model) {
-    // final version will take member entity as parameters from redirectattrs
-    Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
+  public String loansView(Model model, Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
+    Member member = loginService.getMemberFromUserObject(authentication);
     List<LoanHistory> loans = LoanHistoryService.findByMember(member);
     List<ReserveQueue> reservedLoans = reserveQueueService.getReservedLoansForMember(member);
-    // logger.info("loans: " + loans.toString());
     List<LoanHistory> historicalLoans = LoanHistoryService.getHistoricalLoans(member);
     // Page<LoanHistory> historicalLoans = LoanHistoryService.getHistorialLoans(member);
-
-    // logger.info(historicalLoans.toString());
-    model.addAttribute("member", member);
 
     model.addAttribute("loans", loans);
     model.addAttribute("historicalLoans", historicalLoans);
@@ -93,24 +93,24 @@ public class MemberController {
   }
 
   @GetMapping("/member/profile/view")
-  public String profileView(@ModelAttribute("member") Member member, Model model) {
-    model.addAttribute("member", memberRepository.getOne(Long.valueOf("1")));
-    model.addAttribute("bornOn", memberRepository.getOne(Long.valueOf("1")).getBornOn().format(Common.dateFormatter));
-    model.addAttribute("joinedOn",
-        memberRepository.getOne(Long.valueOf("1")).getJoinedOn().format(Common.dateFormatter));
-    model.addAttribute("lastActiveOn",
-        memberRepository.getOne(Long.valueOf("1")).getLastActiveOn().format(Common.dateFormatter));
+  public String profileView(Model model, Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
+    Member member = loginService.getMemberFromUserObject(authentication);
+    model.addAttribute("member", member);
+    model.addAttribute("bornOn", member.getBornOn().format(Common.dateFormatter));
+    model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
+    model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
     return "member/profile/view.html";
   }
 
   @GetMapping("/member/profile/edit")
-  public String profileEditGet(@ModelAttribute("member") Member member, Model model) {
-    model.addAttribute("member", memberRepository.getOne(Long.valueOf("1")));
-    model.addAttribute("bornOn", memberRepository.getOne(Long.valueOf("1")).getBornOn().format(Common.dateFormatter));
-    model.addAttribute("joinedOn",
-        memberRepository.getOne(Long.valueOf("1")).getJoinedOn().format(Common.dateFormatter));
-    model.addAttribute("lastActiveOn",
-        memberRepository.getOne(Long.valueOf("1")).getLastActiveOn().format(Common.dateFormatter));
+  public String profileEditGet(Model model, Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
+    Member member = loginService.getMemberFromUserObject(authentication);
+    model.addAttribute("member", member);
+    model.addAttribute("bornOn", member.getBornOn().format(Common.dateFormatter));
+    model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
+    model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
     return "member/profile/edit.html";
   }
 
@@ -128,7 +128,9 @@ public class MemberController {
       @RequestParam(name = "bio", required = false) String bio,
       @RequestParam(name = "type", defaultValue = "member", required = false) String type,
       @RequestParam(name = "joinedOn", required = false) String joinedOn,
-      @RequestParam(name = "lastActiveOn", required = false) String lastActiveOn, Model model) {
+      @RequestParam(name = "lastActiveOn", required = false) String lastActiveOn, Model model,
+      Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     ActionConclusion actionConclusion = memberService.update(stringId, email, fullName, mobileNumber, address, website,
         bornOn, bio, type);
     Member member = memberRepository.findById(Common.convertStringToLong(stringId)).get();
@@ -155,11 +157,10 @@ public class MemberController {
 
   @GetMapping("/member/reserve")
   public String artifactReserve(@RequestParam(name = "id", value = "id", required = true) Long id,
-      @RequestParam(name = "isbn") String isbn, Model model, RedirectAttributes redirectAttrs) {
-    // will pass member as a parameter once authentication is set up
-    logger.info(Long.toString(id));
-    logger.info(isbn);
-    Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
+      @RequestParam(name = "isbn") String isbn, Model model, Authentication authentication,
+      RedirectAttributes redirectAttrs) {
+    loginService.addMemberToModel(model, authentication);
+    Member member = loginService.getMemberFromUserObject(authentication);
     // finding out what expiredOn is
     // ActionConclusion ac = reserveQueueService.create(isbn, Long.toString(member.getId()), "21/03/20");
     redirectAttrs.addFlashAttribute("reserve", true);
@@ -173,7 +174,9 @@ public class MemberController {
       @RequestParam(defaultValue = "", required = false) String searchQuery,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
-      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
+      Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     Page<Member> members = memberService.search(searchQuery, page - 1);
     model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - members.getTotalElements());
     model.addAttribute("totalPages", members.getTotalPages());
@@ -188,7 +191,8 @@ public class MemberController {
   }
 
   @GetMapping("/admin/members/edit")
-  public String membersEdit(@RequestParam(name = "id") String stringId, Model model) {
+  public String membersEdit(@RequestParam(name = "id") String stringId, Model model, Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     Member member = memberRepository.findById(Common.convertStringToLong(stringId)).get();
     model.addAttribute("member", member);
     model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
@@ -197,7 +201,7 @@ public class MemberController {
     return "admin/member/edit.html";
   }
 
-  @PostMapping("admin/members/edit")
+  @PostMapping("/admin/members/edit")
   public String membersEditPost(@RequestParam(defaultValue = "1", required = false) Integer page,
       @RequestParam(defaultValue = "", required = false) String searchQuery,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
@@ -213,7 +217,9 @@ public class MemberController {
       @RequestParam(name = "bio", required = false) String bio,
       @RequestParam(name = "type", defaultValue = "member", required = false) String type,
       @RequestParam(name = "joinedOn", required = false) String joinedOn,
-      @RequestParam(name = "lastActiveOn", required = false) String lastActiveOn, Model model) {
+      @RequestParam(name = "lastActiveOn", required = false) String lastActiveOn, Model model,
+      Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     ActionConclusion actionConclusion = memberService.update(stringId, email, fullName, mobileNumber, address, website,
         bornOn, bio, type);
     model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
@@ -245,7 +251,7 @@ public class MemberController {
 
   @PostMapping("/admin/members/delete")
   @ResponseBody
-  public ActionConclusion membersDelete(@RequestParam(name = "id") String stringId, Model model) {
+  public ActionConclusion membersDelete(@RequestParam(name = "id") String stringId) {
     return memberService.delete(stringId);
   }
 

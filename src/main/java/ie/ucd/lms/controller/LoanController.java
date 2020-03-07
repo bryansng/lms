@@ -14,9 +14,14 @@ import ie.ucd.lms.entity.LoanHistory;
 import ie.ucd.lms.service.ActionConclusion;
 import ie.ucd.lms.service.Common;
 import ie.ucd.lms.service.LoanHistoryService;
+import ie.ucd.lms.service.LoginService;
+import org.springframework.security.core.Authentication;
 
 @Controller
 public class LoanController {
+  @Autowired
+  LoginService loginService;
+
   @Autowired
   LoanHistoryService loanHistoryService;
 
@@ -32,7 +37,9 @@ public class LoanController {
       @RequestParam(defaultValue = "", required = false) String dateType,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
-      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
+      Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     Page<LoanHistory> loans = loanHistoryService.searchAllButLost(artifactQuery, memberQuery, fromDate, toDate,
         dateType, page - 1);
     model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
@@ -53,14 +60,16 @@ public class LoanController {
   }
 
   @GetMapping("/admin/loans/create")
-  public String loansCreateGet(Model model) {
+  public String loansCreateGet(Model model, Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     String returnOn = LocalDate.now().plusDays(7).format(Common.dateFormatter);
     model.addAttribute("returnOn", returnOn);
     return "admin/loan/create.html";
   }
 
   @GetMapping("/admin/loans/edit")
-  public String loansEditGet(@RequestParam(name = "id") String stringId, Model model) {
+  public String loansEditGet(@RequestParam(name = "id") String stringId, Model model, Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     LoanHistory loan = loanHistoryRepository.getOne(Common.convertStringToLong(stringId));
     model.addAttribute("loan", loan);
     model.addAttribute("returnOn", loan.getReturnOn().format(Common.dateFormatter));
@@ -83,7 +92,9 @@ public class LoanController {
       @RequestParam(name = "fine", required = false) String fine,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
-      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
+      Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     ActionConclusion actionConclusion = loanHistoryService.update(stringId, isbn, memberID, "", returnOn, fine, status);
     model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
     model.addAttribute("previousSuccessMessage", actionConclusion.message);
@@ -131,7 +142,9 @@ public class LoanController {
       @RequestParam(name = "fine", required = false) String fine,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
-      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
+      Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     ActionConclusion actionConclusion = loanHistoryService.create(isbn, memberID, "", returnOn, fine, status);
     model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
     model.addAttribute("previousSuccessMessage", actionConclusion.message);
@@ -164,26 +177,26 @@ public class LoanController {
 
   @PostMapping("/admin/loans/return")
   @ResponseBody
-  public ActionConclusion loansReturn(@RequestParam(name = "id") String stringId, Model model) {
+  public ActionConclusion loansReturn(@RequestParam(name = "id") String stringId) {
     return loanHistoryService.returnn(stringId);
   }
 
   @PostMapping("/admin/loans/renew")
   @ResponseBody
   public ActionConclusion loansRenew(@RequestParam(name = "id") String stringId,
-      @RequestParam(required = false) String daysToRenew, Model model) {
+      @RequestParam(required = false) String daysToRenew) {
     return loanHistoryService.renew(stringId, daysToRenew);
   }
 
   @PostMapping("/admin/loans/lost")
   @ResponseBody
-  public ActionConclusion loansLost(@RequestParam(name = "id") String stringId, Model model) {
+  public ActionConclusion loansLost(@RequestParam(name = "id") String stringId) {
     return loanHistoryService.lost(stringId);
   }
 
   @PostMapping("/admin/loans/delete")
   @ResponseBody
-  public ActionConclusion loansDelete(@RequestParam(name = "id") String stringId, Model model) {
+  public ActionConclusion loansDelete(@RequestParam(name = "id") String stringId) {
     return loanHistoryService.delete(stringId);
   }
 }

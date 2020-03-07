@@ -15,9 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,8 +49,6 @@ public class LoanHistoryService {
     positiveStatus.add("restocked");
     positiveStatus.add("returned");
   }
-
-  private static final Logger logger = LoggerFactory.getLogger(LoanHistoryService.class);
 
   public List<LoanHistory> findByMember(Member member) {
     return filterListByStatus(member, new String[] { "issued", "renewed" });

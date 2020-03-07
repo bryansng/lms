@@ -2,6 +2,7 @@ package ie.ucd.lms.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,21 +14,31 @@ import ie.ucd.lms.entity.Artifact;
 import ie.ucd.lms.service.ActionConclusion;
 import ie.ucd.lms.service.ArtifactService;
 import ie.ucd.lms.service.Common;
+import ie.ucd.lms.service.LoginService;
+import ie.ucd.lms.service.MemberService;
 
 @Controller
 public class ArtifactController {
+  @Autowired
+  LoginService loginService;
+
   @Autowired
   ArtifactRepository artifactRepository;
 
   @Autowired
   ArtifactService artifactService;
 
+  @Autowired
+  MemberService memberService;
+
   @GetMapping("/artifacts/view")
-  public String artifactViewOne(@RequestParam(name = "id") String stringId, Model model) {
+  public String artifactViewOne(@RequestParam(name = "id") String stringId, Model model,
+      Authentication authentication) {
     Artifact artifact = artifactRepository.findById(Common.convertStringToLong(stringId)).get();
     String publishedOn = artifact.getPublishedOn().format(Common.dateFormatter);
     model.addAttribute("artifact", artifact);
     model.addAttribute("publishedOn", publishedOn);
+    loginService.addMemberToModel(model, authentication);
     return "artifact.html";
   }
 
@@ -37,7 +48,8 @@ public class ArtifactController {
       @RequestParam(defaultValue = "", required = false) String type,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
-      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
+      Authentication authentication) {
     Page<Artifact> artifacts = artifactService.search(searchQuery, type, page - 1);
     model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
     model.addAttribute("totalPages", artifacts.getTotalPages());
@@ -49,15 +61,18 @@ public class ArtifactController {
     model.addAttribute("previousIsSuccess", isSuccess);
     model.addAttribute("previousSuccessMessage", successMessage);
     model.addAttribute("previousFailureMessage", failureMessage);
+    loginService.addMemberToModel(model, authentication);
     return "admin/artifact/view.html";
   }
 
   @GetMapping("/admin/artifacts/edit")
-  public String artifactsEditGet(@RequestParam(name = "id") String stringId, Model model) {
+  public String artifactsEditGet(@RequestParam(name = "id") String stringId, Model model,
+      Authentication authentication) {
     Artifact artifact = artifactRepository.findById(Common.convertStringToLong(stringId)).get();
     String publishedOn = artifact.getPublishedOn().format(Common.dateFormatter);
     model.addAttribute("artifact", artifact);
     model.addAttribute("publishedOn", publishedOn);
+    loginService.addMemberToModel(model, authentication);
     return "admin/artifact/edit.html";
   }
 
@@ -79,7 +94,9 @@ public class ArtifactController {
       @RequestParam(name = "thumbnailLink", required = false) String thumbnailLink,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
-      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
+      Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     ActionConclusion actionConclusion = artifactService.update(stringId, isbn, type, genre, authors, title, subtitle,
         description, publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
     model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
@@ -116,7 +133,8 @@ public class ArtifactController {
   }
 
   @GetMapping("/admin/artifacts/create")
-  public String artifactsCreateGet() {
+  public String artifactsCreateGet(Model model, Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     return "admin/artifact/create.html";
   }
 
@@ -138,7 +156,9 @@ public class ArtifactController {
       @RequestParam(name = "thumbnailLink", required = false) String thumbnailLink,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
-      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
+      Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     publishedOn = publishedOn.length() == 4 ? publishedOn.concat("-01-01") : publishedOn;
     ActionConclusion actionConclusion = artifactService.create(isbn, type, genre, authors, title, subtitle, description,
         publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
@@ -191,7 +211,8 @@ public class ArtifactController {
       @RequestParam(defaultValue = "", required = false) String type,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
-      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
+      Authentication authentication) {
     // if searchQuery empty, dont allow search and return nothing?
     Page<Artifact> artifacts = artifactService.search(searchQuery, "", page - 1, Common.PAGINATION_ROWS);
     model.addAttribute("totalElements", artifacts.getTotalElements());
@@ -204,6 +225,7 @@ public class ArtifactController {
     model.addAttribute("previousIsSuccess", isSuccess);
     model.addAttribute("previousSuccessMessage", successMessage);
     model.addAttribute("previousFailureMessage", failureMessage);
+    loginService.addMemberToModel(model, authentication);
     return "search.html";
   }
 }

@@ -17,7 +17,8 @@
 </head>
 
 <body class="m-0">
-  <header th:replace="fragments/header.html :: notSignedIn"></header>
+  <header sec:authorize="isAuthenticated()" th:replace="fragments/header.html :: signedIn"></header>
+  <header sec:authorize="!isAuthenticated()" th:replace="fragments/header.html :: notSignedIn"></header>
 
   <main>
     <div class="w-100 w-lg-75 my-4 mx-auto container">

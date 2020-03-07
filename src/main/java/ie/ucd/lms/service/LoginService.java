@@ -1,11 +1,15 @@
 package ie.ucd.lms.service;
 
-import ie.ucd.lms.configuration.LoginConfig;
+import ie.ucd.lms.configuration.SecurityConfig;
 import ie.ucd.lms.dao.LoginRepository;
+import ie.ucd.lms.dao.MemberRepository;
 import ie.ucd.lms.entity.Login;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.ui.Model;
+import ie.ucd.lms.entity.Member;
 
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;
@@ -13,13 +17,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginService {
     @Autowired
-    private LoginRepository loginRepository;
+    LoginRepository loginRepository;
 
     @Autowired
-    private LoginConfig loginConfig;
+    SecurityConfig securityConfig;
 
-    // Debugging purposes
-    // private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
+    @Autowired
+    MemberService memberService;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     public boolean exists(Login login) {
         String email = login.getEmail();
@@ -31,36 +38,54 @@ public class LoginService {
             return false;
         }
 
-        return loginConfig.getEncoder().matches(password, aLogin.getHash());
+        return securityConfig.getPasswordEncoder().matches(password, aLogin.getHash());
     }
 
-    public void save(Login login) {
-        loginRepository.save(login);
-    }
-
-    public Login findByEmail(String email) {
-        return loginRepository.findByEmail(email);
-    }
-
-    public Login createLogin(String email, String password) {
-        Login login = new Login();
-        login.setEmail(email);
-        login.setHash(loginConfig.getEncoder().encode(password));
-        return login;
-    }
+    // public ActionConclusion create(String email, String password) {
+    //     if (!loginRepository.existsByEmail(email)) {
+    //         if (memberRepository.existsByEmail(email)) {
+    //             Login login = new Login();
+    //             Member member = memberRepository.findByEmail(email);
+    //             login.setAll(email, securityConfig.getPasswordEncoder().encode(password), member);
+    //             loginRepository.save(login);
+    //             return new ActionConclusion(true, "Created successfully.");
+    //         }
+    //         return new ActionConclusion(false, "Failed to create Login, Member email does not exist.");
+    //     }
+    //     return new ActionConclusion(false, "Failed to create. Login email already exists.");
+    // }
 
     public ActionConclusion authenticate(String email, String password, boolean isLogin) {
-        if (isLogin && emailExists(email)) {
-            return new ActionConclusion(true, "Email does not exist");
-        } else if (!isLogin && !emailExists(email)) {
-            return new ActionConclusion(false, "Email already exists");
+        if (isLogin && !loginRepository.existsByEmail(email)) {
+            return new ActionConclusion(true, "Email does not exist.");
+        } else if (!isLogin && loginRepository.existsByEmail(email)) {
+            return new ActionConclusion(false, "Email already exists.");
         } else {
-            String msg = isLogin ? "Successfully Logged In " : "Successfully Signed Up";
+            String msg = isLogin ? "Successfully Logged In." : "Successfully Signed Up.";
             return new ActionConclusion(true, msg);
         }
     }
 
-    private boolean emailExists(String email) {
-        return loginRepository.findEmailByEmail(email) == null;
+    public void addMemberToModel(Model model, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            Member member = getMemberFromUserObject(authentication);
+            System.out.println("is authenticated");
+            model.addAttribute("member", member);
+            model.addAttribute("memberInitials", member.getInitials());
+        } else {
+            System.out.println("not authenticated");
+        }
+    }
+
+    /**
+     * @param authentication
+     * @return member if authentication is true, null if not.
+     */
+    public Member getMemberFromUserObject(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User user = (User) authentication.getPrincipal();
+            return memberRepository.findByEmail(user.getUsername());
+        }
+        return null;
     }
 }

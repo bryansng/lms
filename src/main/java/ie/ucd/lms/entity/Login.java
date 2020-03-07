@@ -23,8 +23,13 @@ public class Login implements Serializable {
 	private String hash;
 
 	// @OneToOne(mappedBy = "login")
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "login", fetch = FetchType.LAZY)
 	private Member member;
+
+	public void setAll(String email, String hash) {
+		setEmail(email);
+		setHash(hash);
+	}
 
 	public Member getMember() {
 		return member;
@@ -48,5 +53,10 @@ public class Login implements Serializable {
 
 	public void setHash(String hash) {
 		this.hash = hash;
+	}
+
+	public String toStringWithMember() {
+		String buf = " - ";
+		return email + buf + hash + "\n" + member.toString();
 	}
 }

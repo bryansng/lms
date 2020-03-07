@@ -1,18 +1,24 @@
 package ie.ucd.lms.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import ie.ucd.lms.service.ReportService;
+import ie.ucd.lms.service.LoginService;
 
 @Controller
 public class OtherController {
 	@Autowired
+	LoginService loginService;
+
+	@Autowired
 	ReportService reportService;
 
 	@GetMapping("/admin/dashboard")
-	public String dashboardView(Model model) {
+	public String dashboardView(Model model, Authentication authentication) {
+		loginService.addMemberToModel(model, authentication);
 		model.addAttribute("todayFine", reportService.fine(reportService.today));
 		model.addAttribute("monthFine", reportService.fine(reportService.thisMonth));
 		model.addAttribute("yearFine", reportService.fine(reportService.thisYear));

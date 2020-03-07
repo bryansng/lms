@@ -16,9 +16,14 @@ import ie.ucd.lms.entity.LoanHistory;
 import ie.ucd.lms.service.ActionConclusion;
 import ie.ucd.lms.service.Common;
 import ie.ucd.lms.service.LoanHistoryService;
+import ie.ucd.lms.service.LoginService;
+import org.springframework.security.core.Authentication;
 
 @Controller
 public class LostController {
+  @Autowired
+  LoginService loginService;
+
   @Autowired
   LoanHistoryService loanHistoryService;
 
@@ -33,7 +38,9 @@ public class LostController {
       @RequestParam(defaultValue = "", required = false) String toDate,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
-      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
+      Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
     model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
     model.addAttribute("totalPages", loans.getTotalPages());
@@ -52,7 +59,8 @@ public class LostController {
   }
 
   @GetMapping("/admin/losts/edit")
-  public String loansEditGet(@RequestParam(name = "id") String stringId, Model model) {
+  public String loansEditGet(@RequestParam(name = "id") String stringId, Model model, Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     LoanHistory loan = loanHistoryRepository.getOne(Common.convertStringToLong(stringId));
     model.addAttribute("loan", loan);
     model.addAttribute("issuedOn", loan.getIssuedOn().format(Common.dateFormatter));
@@ -75,7 +83,9 @@ public class LostController {
       @RequestParam(name = "fine", required = false) String fine,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
-      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
+      Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     ActionConclusion actionConclusion = loanHistoryService.update(stringId, isbn, memberID, issuedOn, "", fine, status);
     model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
     model.addAttribute("previousSuccessMessage", actionConclusion.message);
@@ -108,9 +118,10 @@ public class LostController {
   }
 
   @GetMapping("/admin/losts/create")
-  public String lostsCreateGet(Model model) {
+  public String lostsCreateGet(Model model, Authentication authentication) {
     String issuedOn = LocalDate.now().format(Common.dateFormatter);
     model.addAttribute("issuedOn", issuedOn);
+    loginService.addMemberToModel(model, authentication);
     return "admin/lost/create.html";
   }
 
@@ -129,7 +140,9 @@ public class LostController {
       @RequestParam(name = "fine", required = false) String fine,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
-      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model) {
+      @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
+      Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
     ActionConclusion actionConclusion = loanHistoryService.create(isbn, memberID, issuedOn, "", fine, status);
     model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
     model.addAttribute("previousSuccessMessage", actionConclusion.message);
@@ -160,13 +173,13 @@ public class LostController {
 
   @PostMapping("/admin/losts/restock")
   @ResponseBody
-  public ActionConclusion lostsRestock(@RequestParam(name = "id") String stringId, Model model) {
+  public ActionConclusion lostsRestock(@RequestParam(name = "id") String stringId) {
     return loanHistoryService.restocked(stringId);
   }
 
   @PostMapping("/admin/losts/delete")
   @ResponseBody
-  public ActionConclusion lostsDelete(@RequestParam(name = "id") String stringId, Model model) {
+  public ActionConclusion lostsDelete(@RequestParam(name = "id") String stringId) {
     return loanHistoryService.delete(stringId);
   }
 }

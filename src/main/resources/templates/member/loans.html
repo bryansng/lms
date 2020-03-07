@@ -17,7 +17,8 @@
 </head>
 
 <body class="m-0">
-  <header th:replace="fragments/header.html :: notSignedIn"></header>
+  <header sec:authorize="isAuthenticated()" th:replace="fragments/header.html :: signedIn"></header>
+  <header sec:authorize="!isAuthenticated()" th:replace="fragments/header.html :: notSignedIn"></header>
 
   <div th:if="${renewal}" class="toast shadow-lg position-fixed w-50 mb-4 mr-3" data-autohide="false" role="alert"
     aria-live="assertive" aria-atomic="true" style="z-index: 100; right: 0; bottom: 0; min-height: 100px;">

@@ -15,13 +15,13 @@ public class Member implements Serializable {
   private Long id;
 
   @NotEmpty
-  @Column(name = "email", insertable = false, updatable = false)
+  // @Column(name = "email", insertable = false, updatable = false)
   private String email;
   private String fullName;
-  private String mobileNumber;
-  private String address;
-  private String website;
-  private String roles;
+  private String mobileNumber = "";
+  private String address = "";
+  private String website = "";
+  private String roles = "USER";
 
   @Column(nullable = true)
   private LocalDateTime bornOn;
@@ -32,7 +32,7 @@ public class Member implements Serializable {
 
   // @OneToOne(cascade = CascadeType.ALL)
   // @JoinColumn(referencedColumnName = "email")
-  @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
   private Login login;
 
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
@@ -43,7 +43,11 @@ public class Member implements Serializable {
 
   public void setAll(String email, String fullName, String mobileNumber, String address, String website, String bornOn,
       String bio, String type) {
-    System.out.println(email.equals("") ? this.email : email);
+    setAll(email, fullName, mobileNumber, address, website, bornOn, bio, type, this.login);
+  }
+
+  public void setAll(String email, String fullName, String mobileNumber, String address, String website, String bornOn,
+      String bio, String type, Login login) {
     setEmail(email.equals("") ? this.email : email);
     setFullName(fullName.equals("") ? this.fullName : fullName);
     setMobileNumber(mobileNumber.equals("") ? this.mobileNumber : mobileNumber);
@@ -58,6 +62,7 @@ public class Member implements Serializable {
 
     setBio(bio);
     setType(type);
+    setLogin(login);
   }
 
   public String getInitials() {
@@ -176,14 +181,17 @@ public class Member implements Serializable {
   }
 
   public String toString() {
+    // String buf = " - ";
+    // return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type;
     String buf = " - ";
     return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type
         + "\n" + login.getEmail() + buf + login.getHash();
   }
 
-  public String toStringDefault() {
+  public String toStringWithLogin() {
     String buf = " - ";
-    return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type;
+    return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type
+        + "\n" + login.getEmail() + buf + login.getHash();
   }
 
   public String toStringWithLoanHistory() {

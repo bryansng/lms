@@ -25,19 +25,19 @@
           </div>
           <div class="d-flex flex-row justify-content-center align-items-center h-100 dropdown mx-3 px-2">
             <div class="d-flex justify-content-center align-items-center navbar-user-avatar-container hover">
-              <span class="font-weight-bold">BS</span>
+              <span class="font-weight-bold" th:text="${memberInitials}"></span>
             </div>
             <!-- <img th:src="@{~/images/profile/user64px.png}" class="profile-img hover" /> -->
             <div class="dropdown-content profile-dropdown-content">
               <a href="#" class="px-4 py-2 dropdown-hover">
                 <div class="d-flex flex-row justify-content-start align-items-center dropdown-profile-img hover-no-bg">
                   <div class="d-flex justify-content-center align-items-center navbar-user-avatar-container">
-                    <span class="font-weight-bold">BS</span>
+                    <span class="font-weight-bold" th:text="${memberInitials}"></span>
                   </div>
                   <!-- <img th:src="@{~/images/profile/user64px.png}" class="profile-img" /> -->
                   <div class="ml-2 d-flex flex-column justify-content-center align-items-start">
-                    <div>Full Name HERE</div>
-                    <div>Email HERE</div>
+                    <div class="text-capitalize" th:text="${member.fullName}"></div>
+                    <div th:text="${member.email}"></div>
                   </div>
                 </div>
               </a>
@@ -45,7 +45,7 @@
               <a th:href="@{/member/current-loans}" class="px-4 py-2 dropdown-hover">Current Loans</a>
               <a th:href="@{/member/historical-loans}" class="px-4 py-2 dropdown-hover">Historical Loans</a>
               <div class="mx-3 divider"></div>
-              <a href="#" class="px-4 py-2 dropdown-hover">Logout</a>
+              <a th:href="@{/logout}" class="px-4 py-2 dropdown-hover">Logout</a>
             </div>
           </div>
         </div>

@@ -11,4 +11,6 @@ public interface LoginRepository extends JpaRepository<Login, String> {
 
     @Query("SELECT email FROM Login LOGIN WHERE LOGIN.email = ?1")
     String findEmailByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

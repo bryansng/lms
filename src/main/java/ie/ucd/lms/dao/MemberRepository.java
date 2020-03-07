@@ -15,8 +15,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
   Page<Member> findByIdOrFullNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrMobileNumberContainsOrAddressContainsIgnoreCaseOrTypeIgnoreCaseContains(
       Long id, String fullName, String email, String mobileNumber, String address, String type, Pageable pageable);
 
+  boolean existsByEmail(String email);
+
   Member findByEmail(String email);
 
   @Query("SELECT m FROM Member m WHERE m.email = ?1")
   Optional<Member> findByEmailOptional(String email);
+
 }

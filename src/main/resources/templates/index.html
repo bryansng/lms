@@ -17,8 +17,6 @@
 </head>
 
 <body class="m-0">
-  <!-- <header th:replace="fragments/header.html :: ${isAuthenticated()} ? signedIn : notSignedIn"></header> -->
-  <!-- <header th:replace="${#authentication.principal.isAdmin()} ? ~{fragments/header.html :: signedIn} : ~{fragments/header.html :: notSignedIn}"></header> -->
   <header sec:authorize="isAuthenticated()" th:replace="fragments/header.html :: signedIn"></header>
   <header sec:authorize="!isAuthenticated()" th:replace="fragments/header.html :: notSignedIn"></header>
 
