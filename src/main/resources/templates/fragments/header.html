@@ -19,17 +19,22 @@
           <div th:replace="this :: navbarQuickSearch"></div>
         </div>
         <div class="d-flex flex-row justify-content-between align-items-center h-100">
-          <div class="d-none d-lg-flex flex-row justify-content-between align-items-center nav-a-tag-list h-100">
+          <div
+            class="d-none d-xl-flex flex-row justify-content-between align-items-center nav-a-tag-list h-100 text-center">
             <a th:href="@{/member/dashboard}" class="navbar-a navbar-hover px-3 py-2 mx-1">Dashboard</a>
-            <a th:href="@{/member/loans/view}" class="navbar-a navbar-hover px-3 py-2 mx-1">Current Loans</a>
+            <a th:href="@{/member/dashboard#current-loans}" class="navbar-a navbar-hover px-3 py-2 mx-1">Current
+              Loans</a>
+            <a th:href="@{/member/dashboard#reservations}" class="navbar-a navbar-hover px-3 py-2 mx-1">Reservations</a>
+            <a th:href="@{/member/historical}" class="navbar-a navbar-hover px-3 py-2 mx-1">Historical Loans</a>
           </div>
           <div class="d-flex flex-row justify-content-center align-items-center h-100 dropdown mx-3 px-2">
             <div class="d-flex justify-content-center align-items-center navbar-user-avatar-container hover">
               <span class="font-weight-bold" th:text="${memberInitials}"></span>
+              <!-- <span class="font-weight-bold" id="memberAvatarInitials" th:text="${member.getInitials()}"></span> -->
             </div>
             <!-- <img th:src="@{~/images/profile/user64px.png}" class="profile-img hover" /> -->
             <div class="dropdown-content profile-dropdown-content">
-              <a href="#" class="px-4 py-2 dropdown-hover">
+              <a th:href="@{/member/profile/view}" class="px-4 py-2 dropdown-hover">
                 <div class="d-flex flex-row justify-content-start align-items-center dropdown-profile-img hover-no-bg">
                   <div class="d-flex justify-content-center align-items-center navbar-user-avatar-container">
                     <span class="font-weight-bold" th:text="${memberInitials}"></span>
@@ -42,8 +47,9 @@
                 </div>
               </a>
               <a th:href="@{/member/dashboard}" class="px-4 py-2 dropdown-hover">Dashboard</a>
-              <a th:href="@{/member/current-loans}" class="px-4 py-2 dropdown-hover">Current Loans</a>
-              <a th:href="@{/member/historical-loans}" class="px-4 py-2 dropdown-hover">Historical Loans</a>
+              <a th:href="@{/member/dashboard#current-loans}" class="px-4 py-2 dropdown-hover">Current Loans</a>
+              <a th:href="@{/member/dashboard#reservations}" class="px-4 py-2 dropdown-hover">Reservations</a>
+              <a th:href="@{/member/historical}" class="px-4 py-2 dropdown-hover">Historical Loans</a>
               <div class="mx-3 divider"></div>
               <a th:href="@{/logout}" class="px-4 py-2 dropdown-hover">Logout</a>
             </div>

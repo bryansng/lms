@@ -13,7 +13,7 @@
 
   <!-- Import CSS -->
   <link rel="stylesheet" type="text/css" th:href="@{~/css/common.css}" />
-  <title>Home | Wet LMS</title>
+  <title>Historial Loans | Wet LMS</title>
 </head>
 
 <body class="m-0">
@@ -21,77 +21,34 @@
   <header sec:authorize="!isAuthenticated()" th:replace="fragments/header.html :: notSignedIn"></header>
 
   <main class="container mt-5">
-    <div class="row">
-      <div class="col">
-        <div class="title">
-          Historical loans
-        </div>
-      </div>
+    <div class="hello-title w-100 mb-4 d-flex justify-content-between align-items-center"
+      th:text="'Hello ' + ${member.fullName} + '!'">
     </div>
-    <div class="row">
+    <div class="title mb-3 border-bottom border-dark">Historical Loans</div>
+    <!-- <div class="row">
       <div class="col text-right">Sort by: <span>Date</span></div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="loan-year">
-          2019
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="card artifact-card">
-          <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Artifact title</h5>
-            <p class="card-text">
-              Author
-            </p>
-            <h4>Loan period</h4>
-            <div class="view-more">
-              <a href="#" class="my-auto mr-2">Review Artifact</a>
-              <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-              <a href="#" class="btn btn-outline-primary ">View more</a>
-            </div>
+    </div> -->
+    <!-- <div class="loan-year mb-3">2019</div> -->
+    <div class="mb-5">
+      <div class="d-flex flex-wrap justify-content-center">
+        <div class="my-3 mx-2 card artifact-card shadow bg-light border-0" th:each="loan : ${historicalLoans}">
+          <div class="card-img-top d-flex justify-content-center h-50">
+            <img th:src="${#strings.isEmpty(loan.getArtifact().thumbnailLink)} ? @{~/images/placeholder.png} : ${loan.getArtifact().thumbnailLink}" th:alt="${loan.getArtifact().title} + ' image'" />
           </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card artifact-card">
-          <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
           <div class="card-body">
-            <h5 class="card-title">Artifact title</h5>
-            <p class="card-text">
-              Author
-            </p>
-            <h4>Loan period</h4>
-            <div class="view-more">
-              <a href="#" class="my-auto mr-2">Review Artifact</a>
-              <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-              <a href="#" class="btn btn-outline-primary ">View more</a>
-            </div>
+            <h5 class="card-title" th:text="${loan.getArtifact().title}"></h5>
+            <p class="card-text text-muted" th:text="${loan.getArtifact().authors}"></p>
+            <h5 th:text="'Returned on: ' + ${loan.getReturnedOnAsString()}"></h5>
           </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card artifact-card">
-          <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Artifact title</h5>
-            <p class="card-text">
-              Author
-            </p>
-            <h4>Loan period</h4>
-            <div class="view-more">
-              <a href="#" class="my-auto mr-2">Review Artifact</a>
-              <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-              <a href="#" class="btn btn-outline-primary ">View more</a>
-            </div>
+          <div class="d-flex justify-content-end m-3">
+            <!-- <a href="#" class="mr-2 px-3 py-2 btn border border-dark text-dark hover">Review Artifact</a> -->
+            <a href="#" class="mr-2 px-3 py-2 btn border border-dark text-dark hover">Reserve</a>
+            <a th:href="@{/artifacts/view(id=${loan.getArtifact().id})}" class="px-3 py-2 btn border border-dark text-dark hover ">View more</a>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
       <div class="col">
         <div class="loan-year">
           2018
@@ -209,7 +166,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </main>
 

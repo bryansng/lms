@@ -1,6 +1,5 @@
 package ie.ucd.lms.controller;
 
-import ie.ucd.lms.entity.Artifact;
 import ie.ucd.lms.entity.LoanHistory;
 import ie.ucd.lms.entity.Member;
 import ie.ucd.lms.entity.ReserveQueue;
@@ -12,15 +11,11 @@ import ie.ucd.lms.service.MemberService;
 import ie.ucd.lms.service.ReserveQueueService;
 import ie.ucd.lms.dao.MemberRepository;
 import java.util.List;
-import java.util.Optional;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,37 +43,29 @@ public class MemberController {
   @Autowired
   ReserveQueueService reserveQueueService;
 
-  @PostMapping("/member/profile")
-  public String profileView(@Valid @ModelAttribute("member") Member member, BindingResult bindingResult, Model model,
-      Authentication authentication, RedirectAttributes redirectAttrs) {
-    loginService.addMemberToModel(model, authentication);
-    if (bindingResult.hasErrors()) {
-      model.addAttribute("invalid", "invalid");
-    }
+  // @PostMapping("/member/profile")
+  // public String profileView(@Valid @ModelAttribute("member") Member member, BindingResult bindingResult, Model model,
+  //     Authentication authentication, RedirectAttributes redirectAttrs) {
+  //   loginService.addMemberToModel(model, authentication);
+  //   if (bindingResult.hasErrors()) {
+  //     model.addAttribute("invalid", "invalid");
+  //   }
+  //   return "/member/profile";
+  // }
 
-    return "/member/profile";
-  }
+  // @GetMapping("/member/view")
+  // public String artifactView(@RequestParam(name = "id") Long id, Model model, Authentication authentication) {
+  //   loginService.addMemberToModel(model, authentication);
+  //   Optional<Artifact> viewArtifact = artifactService.exists(id);
 
-  @GetMapping("/member/view")
-  public String artifactView(@RequestParam(name = "id") Long id, Model model, Authentication authentication) {
-    loginService.addMemberToModel(model, authentication);
-    Optional<Artifact> viewArtifact = artifactService.exists(id);
+  // //   if (viewArtifact.isPresent()) {
+  // //     model.addAttribute("artifact", viewArtifact.get());
+  // //   }
+  //   return "member/view";
+  // }
 
-    if (viewArtifact.isPresent()) {
-      model.addAttribute("artifact", viewArtifact.get());
-    }
-
-    return "member/view";
-  }
-
-  @GetMapping("/member/historical")
-  public String historicalView(Model model, Authentication authentication) {
-    loginService.addMemberToModel(model, authentication);
-    return "member/historical";
-  }
-
-  @GetMapping("/member/loans")
-  public String loansView(Model model, Authentication authentication) {
+  @GetMapping("/member/dashboard")
+  public String dashboard(Model model, Authentication authentication) {
     loginService.addMemberToModel(model, authentication);
     Member member = loginService.getMemberFromUserObject(authentication);
     List<LoanHistory> loans = LoanHistoryService.findByMember(member);
@@ -89,7 +76,17 @@ public class MemberController {
     model.addAttribute("loans", loans);
     model.addAttribute("historicalLoans", historicalLoans);
     model.addAttribute("reservedLoans", reservedLoans);
-    return "member/loans";
+    return "member/dashboard.html";
+  }
+
+  @GetMapping("/member/historical")
+  public String historicalView(Model model, Authentication authentication) {
+    loginService.addMemberToModel(model, authentication);
+    Member member = loginService.getMemberFromUserObject(authentication);
+    List<LoanHistory> historicalLoans = LoanHistoryService.getHistoricalLoans(member);
+    model.addAttribute("member", member);
+    model.addAttribute("historicalLoans", historicalLoans);
+    return "member/historical";
   }
 
   @GetMapping("/member/profile/view")
@@ -153,6 +150,20 @@ public class MemberController {
       model.addAttribute("previousType", type);
       return "member/profile/edit.html";
     }
+  }
+
+  @GetMapping("/member/renew")
+  public String artifactRenew(@RequestParam(name = "id", value = "id", required = true) Long id,
+      @RequestParam(name = "days", value = "days") String days, Model model, Authentication authentication,
+      RedirectAttributes redirectAttrs) {
+    loginService.addMemberToModel(model, authentication);
+    Member member = loginService.getMemberFromUserObject(authentication);
+    ActionConclusion ac = LoanHistoryService.renew(Long.toString(id), days);
+
+    redirectAttrs.addFlashAttribute("renewalFailed", ac.isSuccess);
+    redirectAttrs.addFlashAttribute("renewal", true);
+    redirectAttrs.addFlashAttribute("renewalMsg", ac.message);
+    return "redirect:/member/loans";
   }
 
   @GetMapping("/member/reserve")

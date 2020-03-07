@@ -14,6 +14,12 @@
   border-radius: 50%;
 }
 
+.artifact_thumbnail img {
+  width: 20vh;
+  max-width: 15rem;
+  margin: 1rem 2rem;
+}
+
 .form__group {
   position: relative;
   padding: 15px 0 0;
