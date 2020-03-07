@@ -1,3 +1,4 @@
+
 package ie.ucd.lms.entity;
 
 import ie.ucd.lms.service.Common;
@@ -157,7 +158,7 @@ public class LoanHistory {
 		this.status = status;
 	}
 
- @Override
+	@Override
 	public String toString() {
 		String buf = " - ";
 		return id + buf + isbn + buf + memberId + buf + issuedOn + buf + fine + buf + status + "\n" + artifact + '\n';

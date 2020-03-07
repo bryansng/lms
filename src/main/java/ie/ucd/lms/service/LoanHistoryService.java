@@ -8,13 +8,13 @@ import ie.ucd.lms.entity.Artifact;
 import ie.ucd.lms.entity.LoanHistory;
 import ie.ucd.lms.entity.Member;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,7 +54,7 @@ public class LoanHistoryService {
     return filterListByStatus(member, new String[] { "issued", "renewed" });
   }
 
-  public List<LoanHistory> getHistoricalLoans(Member member) {
+  public List<LoanHistory> getReturnedOnLoans(Member member) {
     List<LoanHistory> list = filterListByStatus(member, new String[] { "returned" });
 
     Comparator<LoanHistory> compareByTotalLoans = (LoanHistory l1, LoanHistory l2) -> (l1.getReturnedOn())
@@ -78,6 +78,45 @@ public class LoanHistoryService {
     }
 
     return filteredList;
+  }
+
+  public List<List<LoanHistory>> getIssuedOn(Member member, String sortBy) {
+    List<LoanHistory> list = getReturnedOnLoans(member);
+
+    Comparator<LoanHistory> compareByTotalLoans = (LoanHistory l1, LoanHistory l2) -> (l1.getIssuedOn())
+        .compareTo(l2.getIssuedOn());
+
+    Collections.sort(list, compareByTotalLoans);
+
+    List<Integer> years = getLoanYear(list, sortBy);
+
+    List<List<LoanHistory>> newList = new ArrayList<>();
+
+    for (Integer year : years) {
+      List<LoanHistory> temp = new ArrayList<>();
+      for (LoanHistory lh2 : list) {
+        if (year == lh2.getIssuedOn().getYear()) {
+          temp.add(lh2);
+        }
+      }
+      newList.add(temp);
+    }
+
+    return newList;
+  }
+
+  public List<Integer> getLoanYear(List<LoanHistory> list, String sortBy) {
+    List<Integer> years = new ArrayList<>();
+    for (LoanHistory lh : list) {
+      Integer year = lh.getIssuedOn().getYear();
+      if (!years.contains(year)) {
+        years.add(year);
+      }
+    }
+
+    if (sortBy.compareTo("newest") == 0)
+      Collections.reverse(years);
+    return years;
   }
 
   // public Page<LoanHistory> getHistorialLoans(Member member) {

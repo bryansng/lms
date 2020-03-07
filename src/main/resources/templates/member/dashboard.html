@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <main class="container mt-5 pl-5 pr-5">
+  <main class="container mt-5">
     <div class="hello-title w-100 mb-4 d-flex justify-content-between align-items-center"
       th:text="'Hello ' + ${member.fullName} + '!'">
     </div>
@@ -49,7 +49,7 @@
           <div class="card-img-top d-flex justify-content-center h-50">
             <img th:src="${#strings.isEmpty(loan.getArtifact().thumbnailLink)} ? @{~/images/placeholder.png} : ${loan.getArtifact().thumbnailLink}" th:alt="${loan.getArtifact().title} + ' image'" />
           </div>
-          <div class="card-body ">
+          <div class="card-body">
             <h5 class="card-title" th:text="${loan.getArtifact().title}"></h5>
             <p class="card-text text-muted" th:text="${loan.getArtifact().authors}"></p>
             <!-- <p class="card-text" th:text="${#strings.substring(loan.getArtifact().description,0,60)} + '..'"></p> -->

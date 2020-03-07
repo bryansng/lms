@@ -16,6 +16,7 @@ public class Common {
 	public static final int MAX_LOANS_PER_USER = 4;
 	public static final int MAX_RESERVES_PER_USER = 4;
 
+	public static DateTimeFormatter readableDateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 	public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -90,8 +91,16 @@ public class Common {
 	}
 
 	public static String formatDateAsString(LocalDateTime date) {
-		String strDate = String.format("%02d/%02d", date.getDayOfMonth(), date.getMonthValue()) + " @ "
-			+ String.format("%02d:%02d", date.getHour(), date.getMinute());
+		// String strDate = String.format("%02d %s", date.getDayOfMonth(), date.getMonth());
+		// String strDate = String.format("%02d/%02d", date.getDayOfMonth(), date.getMonthValue()) + " @ "
+		// 	+ String.format("%02d:%02d", date.getHour(), date.getMinute());
+		// return strDate;
+		return date.format(readableDateFormatter);
+	}
+
+	public static String formatDateAsStringPeriod(LocalDateTime date1, LocalDateTime date2) {
+		String strDate = String.format("%02d/%02d", date1.getDayOfMonth(), date1.getMonthValue()) + " - "
+				+ String.format("%02d/%02d", date2.getDayOfMonth(), date2.getMonthValue());
 		return strDate;
 	}
 }

@@ -1,19 +1,19 @@
 package ie.ucd.lms.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.ui.Model;
 import ie.ucd.lms.dao.ArtifactRepository;
 import ie.ucd.lms.entity.Artifact;
 import ie.ucd.lms.service.ActionConclusion;
 import ie.ucd.lms.service.ArtifactService;
 import ie.ucd.lms.service.Common;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ie.ucd.lms.service.LoginService;
 import ie.ucd.lms.service.MemberService;
 
@@ -98,10 +98,7 @@ public class ArtifactController {
       Authentication authentication) {
     loginService.addMemberToModel(model, authentication);
     ActionConclusion actionConclusion = artifactService.update(stringId, isbn, type, genre, authors, title, subtitle,
-        description, publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
-    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
-    model.addAttribute("previousSuccessMessage", actionConclusion.message);
-    model.addAttribute("previousFailureMessage", actionConclusion.message);
+        description, publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, "");
     if (actionConclusion.isSuccess) {
       Page<Artifact> artifacts = artifactService.search("", type, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
@@ -111,10 +108,14 @@ public class ArtifactController {
 
       model.addAttribute("previousQuery", "");
       model.addAttribute("previousType", type);
+      model.addAttribute("previousUpdateStatus", "success");
+      model.addAttribute("previousUpdateMessage", "Updated Succesfully.");
+      model.addAttribute("previousErrorMessage", "");
       return "admin/artifact/view.html";
     } else {
       Artifact artifact = artifactRepository.findById(Common.convertStringToLong(stringId)).get();
       model.addAttribute("artifact", artifact);
+      model.addAttribute("publishedOn", publishedOn);
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousType", type);
       model.addAttribute("previousGenre", genre);
@@ -127,7 +128,9 @@ public class ArtifactController {
       model.addAttribute("previousQuantity", quantity);
       model.addAttribute("previousTotalQuantity", totalQuantity);
       model.addAttribute("previousRackLocation", rackLocation);
-      model.addAttribute("previousThumbnailLink", thumbnailLink);
+      model.addAttribute("previousUpdateStatus", "fail");
+      model.addAttribute("previousUpdateMessage", "");
+      model.addAttribute("previousErrorMessage", "Failed to Update Artifact. Please try again.");
       return "admin/artifact/edit.html";
     }
   }
@@ -161,10 +164,7 @@ public class ArtifactController {
     loginService.addMemberToModel(model, authentication);
     publishedOn = publishedOn.length() == 4 ? publishedOn.concat("-01-01") : publishedOn;
     ActionConclusion actionConclusion = artifactService.create(isbn, type, genre, authors, title, subtitle, description,
-        publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
-    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
-    model.addAttribute("previousSuccessMessage", actionConclusion.message);
-    model.addAttribute("previousFailureMessage", actionConclusion.message);
+        publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, "");
     if (actionConclusion.isSuccess) {
       Page<Artifact> artifacts = artifactService.search("", type, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
@@ -174,6 +174,9 @@ public class ArtifactController {
 
       model.addAttribute("previousQuery", "");
       model.addAttribute("previousType", type);
+      model.addAttribute("previousUpdateStatus", "success");
+      model.addAttribute("previousUpdateMessage", "Created Succesfully.");
+      model.addAttribute("previousErrorMessage", "");
       return "admin/artifact/view.html";
     } else {
       model.addAttribute("previousISBN", isbn);
@@ -188,15 +191,17 @@ public class ArtifactController {
       model.addAttribute("previousQuantity", quantity);
       model.addAttribute("previousTotalQuantity", totalQuantity);
       model.addAttribute("previousRackLocation", rackLocation);
-      model.addAttribute("previousThumbnailLink", thumbnailLink);
+      model.addAttribute("previousUpdateStatus", "fail");
+      model.addAttribute("previousUpdateMessage", "");
+      model.addAttribute("previousErrorMessage", "Failed to Create Artifact. Please try again.");
       return "admin/artifact/create.html";
     }
   }
 
   @PostMapping("/admin/artifacts/delete")
   @ResponseBody
-  public ActionConclusion artifactsDelete(@RequestParam(name = "id") String stringId, Model model) {
-    return artifactService.delete(stringId);
+  public String artifactsDelete(@RequestParam(name = "id") String stringId, Model model) {
+    return artifactService.delete(stringId).toString();
   }
 
   @GetMapping("/artifacts/search")

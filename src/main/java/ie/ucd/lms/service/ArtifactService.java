@@ -1,15 +1,15 @@
 package ie.ucd.lms.service;
 
+import ie.ucd.lms.dao.ArtifactRepository;
+import ie.ucd.lms.entity.Artifact;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ie.ucd.lms.dao.ArtifactRepository;
-import ie.ucd.lms.entity.Artifact;
 
 @Service
 public class ArtifactService {
@@ -36,28 +36,28 @@ public class ArtifactService {
 		return res;
 	}
 
-	public ActionConclusion update(String stringId, String isbn, String type, String genre, String authors, String title,
-			String subtitle, String description, String publishers, String publishedOn, String itemPrice, String quantity,
-			String totalQuantity, String rackLocation, String thumbnailLink) {
+	public ActionConclusion update(String stringId, String isbn, String type, String genre, String authors,
+			String title, String subtitle, String description, String publishers, String publishedOn, String itemPrice,
+			String quantity, String totalQuantity, String rackLocation, String thumbnailLink) {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (artifactRepository.existsById(id)) {
 			Artifact artifact = artifactRepository.getOne(id);
-			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
-					quantity, totalQuantity, rackLocation, thumbnailLink);
+			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn,
+					itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
 			artifactRepository.save(artifact);
 			return new ActionConclusion(true, "Updated successfully.");
 		}
 		return new ActionConclusion(false, "Failed to update. Artifact ID does not exist.");
 	}
 
-	public ActionConclusion create(String isbn, String type, String genre, String authors, String title, String subtitle,
-			String description, String publishers, String publishedOn, String itemPrice, String quantity,
-			String totalQuantity, String rackLocation, String thumbnailLink) {
+	public ActionConclusion create(String isbn, String type, String genre, String authors, String title,
+			String subtitle, String description, String publishers, String publishedOn, String itemPrice,
+			String quantity, String totalQuantity, String rackLocation, String thumbnailLink) {
 		if (!artifactRepository.existsByIsbn(isbn)) {
 			Artifact artifact = new Artifact();
-			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
-					quantity, totalQuantity, rackLocation, thumbnailLink);
+			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn,
+					itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
 			artifactRepository.save(artifact);
 			return new ActionConclusion(true, "Created successfully.");
 		}
@@ -77,7 +77,8 @@ public class ArtifactService {
 	public List<Artifact> getLatestArtifacts() {
 		List<Artifact> list = artifactRepository.findAll();
 
-		Comparator<Artifact> compareByDate = (Artifact a1, Artifact a2) -> a1.getCreatedOn().compareTo(a2.getCreatedOn());
+		Comparator<Artifact> compareByDate = (Artifact a1, Artifact a2) -> a1.getCreatedOn()
+				.compareTo(a2.getCreatedOn());
 
 		Collections.sort(list, compareByDate);
 

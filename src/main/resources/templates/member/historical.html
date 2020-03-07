@@ -13,7 +13,7 @@
 
   <!-- Import CSS -->
   <link rel="stylesheet" type="text/css" th:href="@{~/css/common.css}" />
-  <title>Historial Loans | Wet LMS</title>
+  <title>Historical Loans | Wet LMS</title>
 </head>
 
 <body class="m-0">
@@ -25,148 +25,71 @@
       th:text="'Hello ' + ${member.fullName} + '!'">
     </div>
     <div class="title mb-3 border-bottom border-dark">Historical Loans</div>
-    <!-- <div class="row">
-      <div class="col text-right">Sort by: <span>Date</span></div>
-    </div> -->
-    <!-- <div class="loan-year mb-3">2019</div> -->
-    <div class="mb-5">
-      <div class="d-flex flex-wrap justify-content-center">
-        <div class="my-3 mx-2 card artifact-card shadow bg-light border-0" th:each="loan : ${historicalLoans}">
-          <div class="card-img-top d-flex justify-content-center h-50">
-            <img th:src="${#strings.isEmpty(loan.getArtifact().thumbnailLink)} ? @{~/images/placeholder.png} : ${loan.getArtifact().thumbnailLink}" th:alt="${loan.getArtifact().title} + ' image'" />
-          </div>
-          <div class="card-body">
-            <h5 class="card-title" th:text="${loan.getArtifact().title}"></h5>
-            <p class="card-text text-muted" th:text="${loan.getArtifact().authors}"></p>
-            <h5 th:text="'Returned on: ' + ${loan.getReturnedOnAsString()}"></h5>
-          </div>
-          <div class="d-flex justify-content-end m-3">
-            <!-- <a href="#" class="mr-2 px-3 py-2 btn border border-dark text-dark hover">Review Artifact</a> -->
-            <a href="#" class="mr-2 px-3 py-2 btn border border-dark text-dark hover">Reserve</a>
-            <a th:href="@{/artifacts/view(id=${loan.getArtifact().id})}" class="px-3 py-2 btn border border-dark text-dark hover ">View more</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- <div class="row">
-      <div class="col">
-        <div class="loan-year">
-          2018
-        </div>
-      </div>
-    </div>
+
     <div class="row">
-      <div class="col">
-        <div class="card artifact-card">
-          <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Artifact title</h5>
-            <p class="card-text">
-              Author
-            </p>
-            <h4>Loan period</h4>
-            <div class="view-more">
-              <a href="#" class="my-auto mr-2">Review Artifact</a>
-              <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-              <a href="#" class="btn btn-outline-primary ">View more</a>
+      <div class="col text-right">Sort by: <button class="ml-1" data-toggle="modal"
+          data-target="#sortModal"><span>Date</span></button></div>
+      <div class="modal modal-fade text-center" id="sortModal" role="dialog">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title mx-auto">
+                Sort by?
+              </h4>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card artifact-card">
-          <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Artifact title</h5>
-            <p class="card-text">
-              Author
-            </p>
-            <h4>Loan period</h4>
-            <div class="view-more">
-              <a href="#" class="my-auto mr-2">Review Artifact</a>
-              <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-              <a href="#" class="btn btn-outline-primary ">View more</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card artifact-card">
-          <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Artifact title</h5>
-            <p class="card-text">
-              Author
-            </p>
-            <h4>Loan period</h4>
-            <div class="view-more">
-              <a href="#" class="my-auto mr-2">Review Artifact</a>
-              <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-              <a href="#" class="btn btn-outline-primary ">View more</a>
+            <div class="modal-body span1">
+              <a th:href="@{/member/historical(sortBy='newest')}" class="btn btn-block btn-outline-dark">Newest</a>
+              <a th:href="@{/member/historical(sortBy='oldest')}" class="btn btn-block btn-outline-dark">Oldest</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="loan-year">
-          2017
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="card artifact-card">
-          <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Artifact title</h5>
-            <p class="card-text">
-              Author
-            </p>
-            <h4>Loan period</h4>
-            <div class="view-more">
-              <a href="#" class="my-auto mr-2">Review Artifact</a>
-              <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-              <a href="#" class="btn btn-outline-primary ">View more</a>
-            </div>
+    <div th:each="list : ${lists}">
+      <div class="row">
+        <div class="col">
+          <div class="loan-year">
+            <span th:text=${list[0].getIssuedOn().getYear()}></span>
           </div>
         </div>
       </div>
-      <div class="col">
-        <div class="card artifact-card">
-          <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Artifact title</h5>
-            <p class="card-text">
-              Author
-            </p>
-            <h4>Loan period</h4>
-            <div class="view-more">
-              <a href="#" class="my-auto mr-2">Review Artifact</a>
-              <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-              <a href="#" class="btn btn-outline-primary ">View more</a>
+      <div class="mb-5">
+        <div class="d-flex flex-wrap justify-content-center">
+          <div class="my-3 mx-2 card artifact-card shadow bg-light border-0" th:each="loan : ${list}">
+            <div class="card-img-top d-flex justify-content-center h-50">
+              <img th:src="${#strings.isEmpty(loan.getArtifact().thumbnailLink)} ? @{~/images/placeholder.png} : ${loan.getArtifact().thumbnailLink}" th:alt="${loan.getArtifact().title} + ' image'" />
             </div>
+            <div class="card-body">
+              <h5 class="card-title" th:text="${loan.getArtifact().title}"></h5>
+              <p class="card-text text-muted" th:text="${loan.getArtifact().authors}"></p>
+              <h5 th:text="'Returned on: ' + ${loan.getReturnedOnAsString()}"></h5>
+            </div>
+            <div class="d-flex justify-content-end m-3">
+              <button type="button" data-toggle="modal" data-target="#reserveModal"
+                  th:attrappend="data-target=${loan.getArtifact().id}"
+                  class="mr-2 px-3 py-2 btn border border-dark text-dark hover">Reserve</button>
+              <a th:href="@{/artifacts/view(id=${loan.getArtifact().id})}" class="px-3 py-2 btn border border-dark text-dark hover ">View more</a>
+            </div>
+            <div class="modal fade text-center" id="reserveModal" role="dialog"
+              th:attrappend="id=${loan.getArtifact().id}">
+              <div class="modal-dialog modal-dialog-centered">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title mx-auto">
+                      Reserve?
+                    </h4>
+                  </div>
+                  <div class="modal-body span1">
+                    <a th:href="@{/member/reserve(id=${loan.getArtifact().id}, isbn=${loan.isbn})}"
+                      class="btn btn-block border border-dark btn-success">Yes </a>
+                    <button data-dismiss="modal" type="button" class="btn btn-block btn-outline-danger">No</button>
+                  </div>
+                </div>
+              </div>
           </div>
         </div>
       </div>
-      <div class="col">
-        <div class="card artifact-card">
-          <img src="..." class="card-img-top border-bottom border-dark" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Artifact title</h5>
-            <p class="card-text">
-              Author
-            </p>
-            <h4>Loan period</h4>
-            <div class="view-more">
-              <a href="#" class="my-auto mr-2">Review Artifact</a>
-              <a href="#" class="btn btn-outline-primary mr-2">Reserve</a>
-              <a href="#" class="btn btn-outline-primary ">View more</a>
-            </div>
-          </div>
-        </div>
-      </div> -->
     </div>
   </main>
 

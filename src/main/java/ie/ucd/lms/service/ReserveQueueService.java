@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class ReserveQueueService {
@@ -99,14 +99,16 @@ public class ReserveQueueService {
 
     if (reserveQueueRepository.countByMemberId(aMemberId) < Common.MAX_RESERVES_PER_USER) {
       // if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
-      if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
+      if (reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
+        return new ActionConclusion(false, "Artifact already reserved.");
+      } else if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
         Artifact artifact = artifactRepository.findByIsbn(isbn);
         Member member = memberRepository.getOne(aMemberId);
         ReserveQueue reserveQueue = new ReserveQueue();
         reserveQueue.setAll(isbn, memberId, expiredOn, artifact, member);
         reserveQueueRepository.save(reserveQueue);
-        return new ActionConclusion(true, "Created successfully.");
-      }
+        return new ActionConclusion(true, "Artifact reserved successfully.");
+      } 
       // }
       return new ActionConclusion(false, "Failed to create. ISBN or member ID does not exist.");
     }

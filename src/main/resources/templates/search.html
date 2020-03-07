@@ -81,7 +81,8 @@
                   <div class="w-100 d-flex justify-content-end">
                     <button type="button" data-toggle="modal" data-target="#reserveModal"
                       th:attrappend="data-target=${artifact.id}"
-                      class="mr-2 px-4 py-2 btn border border-dark text-dark hover">Reserve</button>
+                      class="mr-2 px-4 py-2 btn border border-dark text-dark hover"><span
+                      >Reserve</button>
                     <a th:href="@{/artifacts/view(id=${artifact.id})}"
                       class="px-4 py-2 btn border border-dark text-dark hover">View</a>
                   </div>
@@ -94,12 +95,12 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <h4 class="modal-title mx-auto">
-                      Reserve? <span th:text=${artifact.id}></span>
+                      Reserve?
                     </h4>
                   </div>
                   <div class="modal-body span1">
                     <a th:href="@{/member/reserve(id=${artifact.id}, isbn=${artifact.isbn})}"
-                      class="btn btn-block border border-dark btn-success">Yes</a>
+                      class="btn btn-block border border-dark btn-success">Yes </a>
                     <button data-dismiss="modal" type="button" class="btn btn-block btn-outline-danger">No</button>
                   </div>
                 </div>

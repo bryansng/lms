@@ -1,5 +1,6 @@
 package ie.ucd.lms.controller;
 
+import ie.ucd.lms.dao.MemberRepository;
 import ie.ucd.lms.entity.LoanHistory;
 import ie.ucd.lms.entity.Member;
 import ie.ucd.lms.entity.ReserveQueue;
@@ -9,7 +10,7 @@ import ie.ucd.lms.service.Common;
 import ie.ucd.lms.service.LoanHistoryService;
 import ie.ucd.lms.service.MemberService;
 import ie.ucd.lms.service.ReserveQueueService;
-import ie.ucd.lms.dao.MemberRepository;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,34 +44,13 @@ public class MemberController {
   @Autowired
   ReserveQueueService reserveQueueService;
 
-  // @PostMapping("/member/profile")
-  // public String profileView(@Valid @ModelAttribute("member") Member member, BindingResult bindingResult, Model model,
-  //     Authentication authentication, RedirectAttributes redirectAttrs) {
-  //   loginService.addMemberToModel(model, authentication);
-  //   if (bindingResult.hasErrors()) {
-  //     model.addAttribute("invalid", "invalid");
-  //   }
-  //   return "/member/profile";
-  // }
-
-  // @GetMapping("/member/view")
-  // public String artifactView(@RequestParam(name = "id") Long id, Model model, Authentication authentication) {
-  //   loginService.addMemberToModel(model, authentication);
-  //   Optional<Artifact> viewArtifact = artifactService.exists(id);
-
-  // //   if (viewArtifact.isPresent()) {
-  // //     model.addAttribute("artifact", viewArtifact.get());
-  // //   }
-  //   return "member/view";
-  // }
-
   @GetMapping("/member/dashboard")
   public String dashboard(Model model, Authentication authentication) {
     loginService.addMemberToModel(model, authentication);
     Member member = loginService.getMemberFromUserObject(authentication);
     List<LoanHistory> loans = LoanHistoryService.findByMember(member);
     List<ReserveQueue> reservedLoans = reserveQueueService.getReservedLoansForMember(member);
-    List<LoanHistory> historicalLoans = LoanHistoryService.getHistoricalLoans(member);
+    List<LoanHistory> historicalLoans = LoanHistoryService.getReturnedOnLoans(member);
     // Page<LoanHistory> historicalLoans = LoanHistoryService.getHistorialLoans(member);
 
     model.addAttribute("loans", loans);
@@ -80,12 +60,14 @@ public class MemberController {
   }
 
   @GetMapping("/member/historical")
-  public String historicalView(Model model, Authentication authentication) {
+  public String historicalView(@RequestParam(defaultValue = "newest") String sortBy, Model model,
+      Authentication authentication) {
     loginService.addMemberToModel(model, authentication);
     Member member = loginService.getMemberFromUserObject(authentication);
-    List<LoanHistory> historicalLoans = LoanHistoryService.getHistoricalLoans(member);
-    model.addAttribute("member", member);
-    model.addAttribute("historicalLoans", historicalLoans);
+    // List<LoanHistory> historicalLoans = LoanHistoryService.getReturnedOnLoans(member);
+    // model.addAttribute("historicalLoans", historicalLoans);
+    List<List<LoanHistory>> list = LoanHistoryService.getIssuedOn(member, sortBy);
+    model.addAttribute("lists", list);
     return "member/historical";
   }
 
@@ -153,7 +135,7 @@ public class MemberController {
   }
 
   @GetMapping("/member/renew")
-  public String artifactRenew(@RequestParam(name = "id", value = "id", required = true) Long id,
+  public String artifactRenew(@RequestParam(name = "id", required = true) Long id,
       @RequestParam(name = "days", value = "days") String days, Model model, Authentication authentication,
       RedirectAttributes redirectAttrs) {
     loginService.addMemberToModel(model, authentication);
@@ -163,21 +145,21 @@ public class MemberController {
     redirectAttrs.addFlashAttribute("renewalFailed", ac.isSuccess);
     redirectAttrs.addFlashAttribute("renewal", true);
     redirectAttrs.addFlashAttribute("renewalMsg", ac.message);
-    return "redirect:/member/loans";
+    return "redirect:/member/dashboard";
   }
 
   @GetMapping("/member/reserve")
-  public String artifactReserve(@RequestParam(name = "id", value = "id", required = true) Long id,
+  public String artifactReserve(@RequestParam(name = "id", required = true) Long id,
       @RequestParam(name = "isbn") String isbn, Model model, Authentication authentication,
       RedirectAttributes redirectAttrs) {
     loginService.addMemberToModel(model, authentication);
     Member member = loginService.getMemberFromUserObject(authentication);
     // finding out what expiredOn is
-    // ActionConclusion ac = reserveQueueService.create(isbn, Long.toString(member.getId()), "21/03/20");
+    ActionConclusion ac = reserveQueueService.create(isbn, Long.toString(member.getId()), LocalDate.now().toString());
     redirectAttrs.addFlashAttribute("reserve", true);
-    // redirectAttrs.addFlashAttribute("reserveMsg", ac.message);
-    // redirectAttrs.addFlashAttribute("reserveFailed", ac.isSuccess);
-    return "redirect:/";
+    redirectAttrs.addFlashAttribute("reserveMsg", ac.message);
+    redirectAttrs.addFlashAttribute("reserveFailed", ac.isSuccess);
+    return "redirect:/search";
   }
 
   @GetMapping("/admin/members/view")
