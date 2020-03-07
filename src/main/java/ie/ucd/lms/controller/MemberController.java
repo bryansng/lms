@@ -70,6 +70,9 @@ public class MemberController {
 
   @GetMapping("/member/historical")
   public String historicalView(Model model) {
+    Member member = memberService.findByEmail("hong.sng@ucdconnect.ie");
+    List<LoanHistory> historicalLoans = LoanHistoryService.getHistoricalLoans(member);
+    model.addAttribute("historicalLoans", historicalLoans);
     return "member/historical";
   }
 
