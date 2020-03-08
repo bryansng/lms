@@ -18,7 +18,7 @@ public class Artifact implements Comparable<Artifact> {
 	private String type;
 	private String genre;
 	// private String edition;
-	@Column(length = 65535)
+	@Column(columnDefinition = "TEXT")
 	private String pdf;
 
 	@Column(length = 512)
@@ -27,10 +27,10 @@ public class Artifact implements Comparable<Artifact> {
 	private String title;
 	private String originalTitle;
 
-	@Column(length = 65535)
+	@Column(columnDefinition = "TEXT")
 	private String subtitle;
 
-	@Column(length = 65535)
+	@Column(columnDefinition = "TEXT")
 	private String description;
 
 	@Column(length = 512)
@@ -41,6 +41,7 @@ public class Artifact implements Comparable<Artifact> {
 	private Integer quantity; // current quantity in stock.
 	private Integer totalQuantity; // how many quantity we should have for this artifact.
 	private String rackLocation;
+	@Column(columnDefinition = "TEXT")
 	private String thumbnailLink = "";
 	private Integer totalLoans = 0;
 

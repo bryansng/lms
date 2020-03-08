@@ -4,7 +4,6 @@ import ie.ucd.lms.dao.MemberRepository;
 import ie.ucd.lms.entity.Login;
 import ie.ucd.lms.entity.Member;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -61,7 +60,6 @@ public class MemberService {
 			login.setAll(email, securityConfig.getPasswordEncoder().encode(password));
 			member.setAll(email, fullName, mobileNumber, address, website, bornOn, bio, type, login);
 			memberRepository.save(member);
-			System.out.println(member);
 			return new ActionConclusion(true, "Created successfully.");
 		}
 		return new ActionConclusion(false, "Failed to create. Member email already exists.");
