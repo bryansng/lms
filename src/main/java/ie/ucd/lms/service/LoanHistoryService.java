@@ -306,10 +306,14 @@ public class LoanHistoryService {
         // ? prompt librarian / member?
         return new ActionConclusion(false, "Unable to renew. Someone else is reserving the same artifact.");
       }
-      loanHistory.setReturnOn(LocalDateTime.now().plusDays(days + 3));
-      loanHistory.setStatus("renewed");
-      loanHistoryRepository.save(loanHistory);
-      return new ActionConclusion(true, "Renewed successfully.");
+      LocalDateTime currentReturnOn = loanHistory.getReturnOn();
+      if (LocalDateTime.now().isAfter(currentReturnOn.minusDays(1))) {
+        loanHistory.setReturnOn(currentReturnOn.plusDays(days));
+        loanHistory.setStatus("renewed");
+        loanHistoryRepository.save(loanHistory);
+        return new ActionConclusion(true, "Renewed successfully.");
+      }
+      return new ActionConclusion(false, "Failed to renew. You can only renew 24 hours before the return date.");
     }
     return new ActionConclusion(false, "Failed to renew. Loan ID does not exist.");
   }

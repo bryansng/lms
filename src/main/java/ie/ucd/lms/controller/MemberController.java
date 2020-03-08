@@ -76,7 +76,7 @@ public class MemberController {
     loginService.addMemberToModel(model, authentication);
     Member member = loginService.getMemberFromUserObject(authentication);
     model.addAttribute("member", member);
-    model.addAttribute("bornOn", member.getBornOn().format(Common.dateFormatter));
+    model.addAttribute("bornOn", member.getBornOn() == null ? "" : member.getBornOn().format(Common.dateFormatter));
     model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
     model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
     return "member/profile/view.html";
@@ -87,7 +87,7 @@ public class MemberController {
     loginService.addMemberToModel(model, authentication);
     Member member = loginService.getMemberFromUserObject(authentication);
     model.addAttribute("member", member);
-    model.addAttribute("bornOn", member.getBornOn().format(Common.dateFormatter));
+    model.addAttribute("bornOn", member.getBornOn() == null ? "" : member.getBornOn().format(Common.dateFormatter));
     model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
     model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
     return "member/profile/edit.html";

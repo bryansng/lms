@@ -67,10 +67,9 @@ public class Member implements Serializable {
 
   public String getInitials() {
     String[] words = fullName.split(" ");
-    // return words.length > 1 ? String.valueOf(words[0].charAt(0)) + String.valueOf(words[words.length - 1].charAt(0))
-    //     : String.valueOf(words[0].charAt(0));
     String initials = "";
-    for (String word : words) {
+    for (int i = 0; i < words.length && i != 5; i++) {
+      String word = words[i];
       initials += String.valueOf(word.charAt(0)).toUpperCase();
     }
     return initials;

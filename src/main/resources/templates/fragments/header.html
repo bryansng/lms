@@ -50,6 +50,8 @@
               <a th:href="@{/member/dashboard#current-loans}" class="px-4 py-2 dropdown-hover">Current Loans</a>
               <a th:href="@{/member/dashboard#reservations}" class="px-4 py-2 dropdown-hover">Reservations</a>
               <a th:href="@{/member/historical}" class="px-4 py-2 dropdown-hover">Historical Loans</a>
+              <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/dashboard}"
+                class="px-4 py-2 dropdown-hover">Admin Site</a>
               <div class="mx-3 divider"></div>
               <a th:href="@{/logout}" class="px-4 py-2 dropdown-hover">Logout</a>
             </div>
@@ -141,6 +143,13 @@
                     <label for="signUpPassword">Password</label>
                   </div>
                 </div>
+                <div class="px-4 py-2">
+                  <div class="form__group">
+                    <input type="password" name="confirmPassword" minlength="8" id="signUpConfirmPassword"
+                      placeholder="&nbsp;" required />
+                    <label for="signUpConfirmPassword">Confirm Password</label>
+                  </div>
+                </div>
                 <div class="px-4 py-3 text-right">
                   <button type="submit" class="px-4 py-2 btn border border-dark text-dark hover">
                     Sign Up
@@ -184,9 +193,6 @@
 
     <!-- Include JavaScript from static folder -->
     <script type="text/javascript" src="/js/navbarSearch.js"></script>
-    <script>
-      $(".toast").toast("show");
-    </script>
   </div>
 </body>
 

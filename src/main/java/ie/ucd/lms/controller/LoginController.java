@@ -7,14 +7,9 @@ import ie.ucd.lms.entity.Login;
 import ie.ucd.lms.entity.Member;
 import ie.ucd.lms.service.ActionConclusion;
 import ie.ucd.lms.service.LoginService;
-import ie.ucd.lms.service.MemberDetailsService;
 import ie.ucd.lms.service.MemberService;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,45 +32,55 @@ public class LoginController {
 	MemberRepository memberRepository;
 
 	@Autowired
-	MemberDetailsService memberDetailsService;
-
-	@Autowired
 	SecurityConfig securityConfig;
 
-	@GetMapping("/cheat")
+	@GetMapping("/cheat/login")
 	public String autoLogin(@RequestParam(defaultValue = "hong.sng@ucdconnect.ie") String email,
 			HttpServletRequest request) {
 		Member member = memberRepository.findByEmail(email);
 		Login login = loginRepository.findByEmail(email);
 		securityConfig.configAuth(login, securityConfig.getAuth(), "ADMIN");
-		authenticateUserAndSetSession(member, request);
+		loginService.authenticateUserAndSetSession(member, request);
 		return "redirect:/";
 	}
 
-	@PostMapping("/register")
-	public String registerMember(@RequestParam(name = "fullName") String fullName,
-			@RequestParam(name = "email") String email, @RequestParam(name = "password") String password, Model model,
-			HttpServletRequest request, RedirectAttributes redirectAttrs) {
+	@GetMapping("/cheat/regis")
+	public String autoRegister(@RequestParam(defaultValue = "d d d d d d d") String fullName,
+			@RequestParam(defaultValue = "d@d.d") String email, @RequestParam(defaultValue = "1234") String password,
+			@RequestParam(defaultValue = "1234") String confirmPassword, HttpServletRequest request) {
 		ActionConclusion acMemberCreate = memberService.create(email, password, fullName, "", "", "", "", "", "member",
 				"USER");
 		if (acMemberCreate.isSuccess) {
 			Member member = memberRepository.findByEmail(email);
 			Login login = loginRepository.findByEmail(email);
 			securityConfig.configAuth(login, securityConfig.getAuth(), "USER");
-			authenticateUserAndSetSession(member, request);
+			loginService.authenticateUserAndSetSession(member, request);
 		}
-
-		redirectAttrs.addFlashAttribute("invalidCredentials", acMemberCreate.isSuccess);
-		redirectAttrs.addFlashAttribute("onClick", true);
-		redirectAttrs.addFlashAttribute("credentialsMsg", acMemberCreate.message);
 		return "redirect:/";
 	}
 
-	private void authenticateUserAndSetSession(Member member, HttpServletRequest request) {
-		UserDetails user = memberDetailsService.toUserDetails(member);
+	@PostMapping("/login")
+	public String loginMember(@RequestParam(name = "email") String email,
+			@RequestParam(name = "password") String password, Model model, HttpServletRequest request,
+			RedirectAttributes redirectAttrs) {
+		ActionConclusion actionConclusion = loginService.login(email, password, request);
 
-		Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+		redirectAttrs.addFlashAttribute("invalidCredentials", actionConclusion.isSuccess);
+		redirectAttrs.addFlashAttribute("onClick", true);
+		redirectAttrs.addFlashAttribute("credentialsMsg", actionConclusion.message);
+		return "redirect:/";
+	}
 
-		SecurityContextHolder.getContext().setAuthentication(auth);
+	@PostMapping("/register")
+	public String registerMember(@RequestParam(name = "fullName") String fullName,
+			@RequestParam(name = "email") String email, @RequestParam(name = "password") String password,
+			@RequestParam(name = "confirmPassword") String confirmPassword, Model model, HttpServletRequest request,
+			RedirectAttributes redirectAttrs) {
+		ActionConclusion actionConclusion = loginService.register(fullName, email, password, confirmPassword, request);
+
+		redirectAttrs.addFlashAttribute("invalidCredentials", actionConclusion.isSuccess);
+		redirectAttrs.addFlashAttribute("onClick", true);
+		redirectAttrs.addFlashAttribute("credentialsMsg", actionConclusion.message);
+		return "redirect:/";
 	}
 }
