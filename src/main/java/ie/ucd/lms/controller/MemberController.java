@@ -10,8 +10,14 @@ import ie.ucd.lms.service.Common;
 import ie.ucd.lms.service.LoanHistoryService;
 import ie.ucd.lms.service.MemberService;
 import ie.ucd.lms.service.ReserveQueueService;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -43,6 +49,11 @@ public class MemberController {
 
   @Autowired
   ReserveQueueService reserveQueueService;
+
+  @GetMapping("/member")
+  public String member() {
+    return "redirect:/member/dashboard";
+  }
 
   @GetMapping("/member/dashboard")
   public String dashboard(Model model, Authentication authentication) {
@@ -151,7 +162,7 @@ public class MemberController {
   @GetMapping("/member/reserve")
   public String artifactReserve(@RequestParam(name = "id", required = true) Long id,
       @RequestParam(name = "isbn") String isbn, Model model, Authentication authentication,
-      RedirectAttributes redirectAttrs) {
+      RedirectAttributes redirectAttrs, HttpServletRequest request) throws URISyntaxException {
     loginService.addMemberToModel(model, authentication);
     Member member = loginService.getMemberFromUserObject(authentication);
     // finding out what expiredOn is
@@ -159,7 +170,21 @@ public class MemberController {
     redirectAttrs.addFlashAttribute("reserve", true);
     redirectAttrs.addFlashAttribute("reserveMsg", ac.message);
     redirectAttrs.addFlashAttribute("reserveFailed", ac.isSuccess);
-    return "redirect:/search";
+    String relativePath = new URI(request.getHeader("referer")).getPath();
+    String query = new URI(request.getHeader("referer")).getQuery();
+    String redirectTo = query == null ? relativePath : relativePath + '?' + query;
+    return "redirect:" + redirectTo;
+  }
+
+  @GetMapping("/member/reserve/remove")
+  public String artifactReserveRemove(@RequestParam(name = "id", required = true) String loanID, Model model,
+      Authentication authentication, RedirectAttributes redirectAttrs) {
+    loginService.addMemberToModel(model, authentication);
+    ActionConclusion ac = reserveQueueService.delete(loanID);
+    redirectAttrs.addFlashAttribute("remove", true);
+    redirectAttrs.addFlashAttribute("removeMsg", ac.message);
+    redirectAttrs.addFlashAttribute("removeFailed", ac.isSuccess);
+    return "redirect:/member/dashboard#reservations";
   }
 
   @GetMapping("/admin/members/view")

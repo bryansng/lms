@@ -20,8 +20,9 @@
   <header sec:authorize="isAuthenticated()" th:replace="fragments/header.html :: signedIn"></header>
   <header sec:authorize="!isAuthenticated()" th:replace="fragments/header.html :: notSignedIn"></header>
 
-  <div th:if="${renewal}" class="toast shadow-lg position-fixed w-50 mb-4 mr-3" data-autohide="false" role="alert"
-    aria-live="assertive" aria-atomic="true" style="z-index: 100; right: 0; bottom: 0; min-height: 100px;">
+  <div th:if="${renewal} or ${reserve} or ${remove}" class="toast shadow-lg position-fixed w-50 mb-4 mr-3"
+    data-autohide="false" role="alert" aria-live="assertive" aria-atomic="true"
+    style="z-index: 100; right: 0; bottom: 0; min-height: 100px;">
     <div class="toast-header">
       <img class="rounded mr-2" style="max-height:25px; max-width: 25px;" th:src="@{~/images/logo/logo.png}" />
       <strong class="mr-auto">Wet LMS Bot</strong>
@@ -30,8 +31,12 @@
       </button>
     </div>
     <div class="toast-body ">
-      <p th:text="${renewalFailed} ? ${renewalMsg} : ${renewalMsg}"
+      <p th:if="${renewal}" th:text="${renewalFailed} ? ${renewalMsg} : ${renewalMsg}"
         th:class="${renewalFailed} ? 'alert alert-success' : 'alert alert-danger'"></p>
+      <p th:if="${reserve}" th:text="${reserveFailed} ? ${reserveMsg} : ${reserveMsg}"
+        th:class="${reserveFailed} ? 'alert alert-success' : 'alert alert-danger'"></p>
+      <p th:if="${remove}" th:text="${removeFailed} ? ${removeMsg} : ${removeMsg}"
+        th:class="${removeFailed} ? 'alert alert-success' : 'alert alert-danger'"></p>
     </div>
   </div>
 
@@ -74,8 +79,8 @@
                 </div>
                 <div class="modal-body ">
                   <a th:href="@{/member/renew(id=${loan.id}, days='1')}" class="btn btn-lg btn-outline-dark">1 Day</a>
-                  <a th:href="@{/member/renew(id=${loan.id}, days='2')}" class="btn btn-lg btn-outline-dark">2 Days</a>
                   <a th:href="@{/member/renew(id=${loan.id}, days='3')}" class="btn btn-lg btn-outline-dark">3 Days</a>
+                  <a th:href="@{/member/renew(id=${loan.id}, days='7')}" class="btn btn-lg btn-outline-dark">7 Days</a>
                 </div>
               </div>
             </div>
@@ -101,8 +106,26 @@
             <h5 th:text="'Expires on: ' + ${loan.getExpiredOnAsString()}"></h5>
           </div>
           <div class="d-flex justify-content-end m-3">
-            <a href="#" class="mr-2 px-3 py-2 btn border border-dark text-dark hover">Remove</a>
+            <button data-toggle="modal" data-target="#reserveModal"
+            th:attrappend="data-target=${loan.id}" class="mr-2 px-3 py-2 btn border border-dark text-dark hover">Remove</button>
             <a th:href="@{/artifacts/view(id=${loan.getArtifact().id})}" class="px-3 py-2 btn border border-dark text-dark hover">View more</a>
+          </div>
+          <div class="modal fade text-center" id="reserveModal" role="dialog" th:attrappend="id=${loan.id}">
+            <div class="modal-dialog modal-dialog-centered">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title mx-auto">
+                    Remove?
+                  </h4>
+                </div>
+                <div class="modal-body span1">
+                  <a th:href="@{/member/reserve/remove(id=${loan.id})}"
+                    class="btn btn-block border border-dark btn-success">Yes </a>
+                  <button data-dismiss="modal" type="button" class="btn btn-block btn-outline-danger">No</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -122,8 +145,26 @@
             <h5 th:text="'Returned on: ' + ${loan.getReturnedOnAsString()}"></h5>
           </div>
           <div class="d-flex justify-content-end m-3">
-            <a href="#" class="mr-2 px-3 py-2 btn border border-dark text-dark hover">Reserve</a>
+            <button data-toggle="modal" data-target="#reserveModal"
+            th:attrappend="data-target=${loan.getArtifact().id}" class="mr-2 px-3 py-2 btn border border-dark text-dark hover">Reserve</button>
             <a th:href="@{/artifacts/view(id=${loan.getArtifact().id})}" class="px-3 py-2 btn border border-dark text-dark hover">View more</a>
+          </div>
+          <div class="modal fade text-center" id="reserveModal" role="dialog" th:attrappend="id=${loan.getArtifact().id}">
+            <div class="modal-dialog modal-dialog-centered">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title mx-auto">
+                    Reserve?
+                  </h4>
+                </div>
+                <div class="modal-body span1">
+                  <a th:href="@{/member/reserve(id=${loan.getArtifact().id}, isbn=${loan.getArtifact().isbn})}"
+                    class="btn btn-block border border-dark btn-success">Yes </a>
+                  <button data-dismiss="modal" type="button" class="btn btn-block btn-outline-danger">No</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
     </div>
@@ -145,9 +186,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
   </script>
-  <script>
-    $(".toast").toast("show");
-  </script>
+  <script type="text/javascript" src="/js/toastFunctions.js"></script>
 </body>
 
 </html>

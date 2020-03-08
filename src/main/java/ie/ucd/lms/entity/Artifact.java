@@ -42,7 +42,7 @@ public class Artifact implements Comparable<Artifact> {
 	private Integer totalQuantity; // how many quantity we should have for this artifact.
 	private String rackLocation;
 	private String thumbnailLink = "";
-	private Integer totalLoans;
+	private Integer totalLoans = 0;
 
 	@OneToMany(mappedBy = "artifact", cascade = CascadeType.ALL)
 	private List<LoanHistory> loanHistories = new ArrayList<>();
