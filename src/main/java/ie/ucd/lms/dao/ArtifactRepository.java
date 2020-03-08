@@ -21,10 +21,6 @@ public interface ArtifactRepository extends JpaRepository<Artifact, Long> {
 
 	Integer countByCreatedOnAfter(LocalDateTime createdOn);
 
-	Page<Artifact> findAllByOrderByCreatedOnDesc(Pageable pageable);
-
-	Page<Artifact> findAllByOrderByCreatedOnAsc(Pageable pageable);
-
 	List<Artifact> findTop6ByOrderByIdDescCreatedOnDesc();
 
 	List<Artifact> findTop6ByOrderByTotalLoansDesc();

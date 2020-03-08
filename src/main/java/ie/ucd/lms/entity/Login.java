@@ -1,13 +1,14 @@
 package ie.ucd.lms.entity;
 
-import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "login")
-public class Login implements Serializable {
+public class Login {
 	// @Id
 	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	// Long id;
@@ -31,6 +32,7 @@ public class Login implements Serializable {
 		setHash(hash);
 	}
 
+	@JsonIgnore
 	public Member getMember() {
 		return member;
 	}

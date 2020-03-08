@@ -1,7 +1,9 @@
 package ie.ucd.lms.entity;
 
-import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.*;
 import java.util.List;
 import javax.persistence.*;
@@ -9,7 +11,7 @@ import ie.ucd.lms.service.Common;
 
 @Entity
 @Table(name = "members")
-public class Member implements Serializable {
+public class Member {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -84,6 +86,7 @@ public class Member implements Serializable {
     return initials;
   }
 
+  @JsonIgnore
   public Login getLogin() {
     return login;
   }
@@ -189,11 +192,8 @@ public class Member implements Serializable {
   }
 
   public String toString() {
-    // String buf = " - ";
-    // return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type;
     String buf = " - ";
-    return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type
-        + "\n" + login.getEmail() + buf + login.getHash();
+    return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type;
   }
 
   public String toStringWithLogin() {
