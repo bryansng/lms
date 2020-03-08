@@ -105,7 +105,25 @@
             </div>
             <div th:replace="admin/fragments/actionMessage.html :: hiddenInputsForActionMessages"></div>
             <div class="d-flex justify-content-end my-5">
-              <button type="submit" class="px-4 py-2 btn btn-lg border border-dark text-dark hover">Reserve Artifact</button>
+              <button data-toggle="modal" data-target="#reserveModal"
+              th:attrappend="data-target=${artifact.id}" sec:authorize="isAuthenticated()" class="px-4 py-2 btn btn-lg border border-dark text-dark hover">Reserve Artifact</button>
+            </div>
+            <div class="modal fade text-center" id="reserveModal" role="dialog" th:attrappend="id=${artifact.id}">
+              <div class="modal-dialog modal-dialog-centered">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title mx-auto">
+                      Reserve?
+                    </h4>
+                  </div>
+                  <div class="modal-body span1">
+                    <a th:href="@{/member/reserve(id=${artifact.id}, isbn=${artifact.isbn})}"
+                      class="btn btn-block border border-dark btn-success">Yes </a>
+                    <button data-dismiss="modal" type="button" class="btn btn-block btn-outline-danger">No</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         <!-- </div> -->
@@ -126,6 +144,9 @@
   </script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+  </script>
+  <script>
+    $(".toast").toast("show");
   </script>
 </body>
 

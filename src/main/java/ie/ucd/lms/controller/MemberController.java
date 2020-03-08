@@ -159,7 +159,20 @@ public class MemberController {
     redirectAttrs.addFlashAttribute("reserve", true);
     redirectAttrs.addFlashAttribute("reserveMsg", ac.message);
     redirectAttrs.addFlashAttribute("reserveFailed", ac.isSuccess);
-    return "redirect:/search";
+    return "redirect:/member/dashboard#reservations";
+  }
+
+  @GetMapping("/member/reserve/remove")
+  public String artifactReserveRemove(@RequestParam(name = "id", required = true) String loanID, Model model,
+      Authentication authentication, RedirectAttributes redirectAttrs) {
+    loginService.addMemberToModel(model, authentication);
+    Member member = loginService.getMemberFromUserObject(authentication);
+    // finding out what expiredOn is
+    ActionConclusion ac = reserveQueueService.delete(loanID);
+    redirectAttrs.addFlashAttribute("remove", true);
+    redirectAttrs.addFlashAttribute("removeMsg", ac.message);
+    redirectAttrs.addFlashAttribute("removeFailed", ac.isSuccess);
+    return "redirect:/member/dashboard#reservations";
   }
 
   @GetMapping("/admin/members/view")
