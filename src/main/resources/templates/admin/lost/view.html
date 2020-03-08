@@ -98,7 +98,7 @@
                 <td class="p-2 text-capitalize" th:text="${loan.artifact.title}"></td>
                 <td class="p-2" th:text="${loan.isbn}"></td>
                 <td class="p-2 text-capitalize" th:text="${loan.member.fullName}"></td>
-                <td class="p-2" th:text="${loan.issuedOn}"></td>
+                <td class="p-2" th:text="${loan.getIssuedOnForAdminView()}"></td>
                 <td class="p-2">&euro;<span th:text="${loan.fine}"></span></td>
                 <td class="p-2">
                   <form th:action="@{/admin/losts/restock}" method="POST" th:id="'restock-form-' + ${loan.id}">

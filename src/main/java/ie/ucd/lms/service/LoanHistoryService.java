@@ -220,7 +220,7 @@ public class LoanHistoryService {
     // if (!loanHistoryRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
     if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
       Artifact artifact = artifactRepository.findByIsbn(isbn);
-      if (artifact.inStock()) {
+      if (artifact.inStock() || status.equals("lost")) {
         artifact.decrementQuantity();
         LoanHistory loanHistory = new LoanHistory();
         Member member = memberRepository.getOne(aMemberId);

@@ -21,8 +21,8 @@ INSERT INTO members(full_name, email, mobile_number, address, type, born_on, joi
 	('James Bond', 'bond.james@ucdconnect.ie', '007', 'MI6', 'member', NOW() - 7665, NOW(), NOW(), '', 'USER', 'bond.james@ucdconnect.ie'),
 	('Obi Wan', 'wan.obi@ucdconnect.ie', '69', 'The High Ground', 'member', NOW() - 7665, NOW(), NOW(), '', 'USER', 'wan.obi@ucdconnect.ie'),
 	('Steve Jobs', 'jobs.steve@ucdconnect.ie', '1234', 'Silicon Valley', 'member', NOW() - 7665, NOW(), NOW(), '', 'USER', 'jobs.steve@ucdconnect.ie'),
-	('Emily Liew Xuan', 'xuan.liew@ucdconnect.ie', '6954', 'Somewhere in the Universe', 'member', NOW() - 7665, NOW(), NOW(), 'https://lxemily.com/', 'ADMIN', 'xuan.liew@ucdconnect.ie'),
-	('Braddy Yeoh', 'braddy.yeoh@ucdconnect.ie', '7749', 'Somewhere in Ireland', 'member', NOW() - 7665, NOW(), NOW(), 'https://www.yeohbraddy.com/', 'ADMIN', 'braddy.yeoh@ucdconnect.ie'),
+	('Emily Liew Xuan', 'xuan.liew@ucdconnect.ie', '6954', 'Somewhere in the Universe', 'librarian', NOW() - 7665, NOW(), NOW(), 'https://lxemily.com/', 'ADMIN', 'xuan.liew@ucdconnect.ie'),
+	('Braddy Yeoh', 'braddy.yeoh@ucdconnect.ie', '7749', 'Somewhere in Ireland', 'librarian', NOW() - 7665, NOW(), NOW(), 'https://www.yeohbraddy.com/', 'ADMIN', 'braddy.yeoh@ucdconnect.ie'),
 	('A A', 'a@a.com', '7749', 'Somewhere in Ireland', 'librarian', NOW() - 7665, NOW(), NOW(), '', 'ADMIN', 'a@a.com'),
 	('U U', 'u@u.com', '7749', 'Somewhere in Ireland', 'member', NOW() - 7665, NOW(), NOW(), '', 'USER', 'u@u.com');
 

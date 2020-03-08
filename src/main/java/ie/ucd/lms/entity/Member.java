@@ -86,6 +86,26 @@ public class Member {
     return initials;
   }
 
+  public String processLastActiveOn() {
+    LocalDateTime now = LocalDateTime.now();
+    Duration diff = Duration.between(lastActiveOn, now);
+    if (diff.getSeconds() == 0) {
+      return "Currently online";
+    }
+
+    if (diff.getSeconds() < 60) {
+      return diff.getSeconds() + " seconds ago";
+    } else {
+      long minutes = diff.toMinutes();
+      if (minutes < 60) {
+        return minutes + " minutes ago";
+      } else if (minutes >= 1440) {
+        return (minutes / 1440) + " days ago";
+      }
+    }
+    return "Currently online";
+  }
+
   @JsonIgnore
   public Login getLogin() {
     return login;
@@ -193,7 +213,8 @@ public class Member {
 
   public String toString() {
     String buf = " - ";
-    return id + buf + fullName + buf + getInitials() + buf + email + buf + mobileNumber + buf + address + buf + type;
+    return id + buf + fullName + buf + getInitials() + buf + processLastActiveOn() + buf + email + buf + mobileNumber
+        + buf + address + buf + type;
   }
 
   public String toStringWithLogin() {

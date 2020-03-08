@@ -97,7 +97,7 @@
                 <td class="p-2 text-capitalize" th:text="${reserve.artifact.title}"></td>
                 <td class="p-2" th:text="${reserve.isbn}"></td>
                 <td class="p-2 text-capitalize" th:text="${reserve.member.fullName}"></td>
-                <td class="p-2" th:text="${reserve.expiredOn}"></td>
+                <td class="p-2" th:text="${reserve.getExpiredOnForAdminView()}"></td>
                 <td class="p-2 text-center" th:text="${reserve.id - positionInQueue.get(reserve.artifact.id) + 1}"></td>
                 <td class="p-2">
                   <form th:action="@{/admin/reserves/loan}" method="POST" th:id="'loan-form-' + ${reserve.id}">

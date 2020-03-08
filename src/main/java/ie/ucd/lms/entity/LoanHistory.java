@@ -98,12 +98,20 @@ public class LoanHistory {
 		return issuedOn;
 	}
 
+	public String getIssuedOnForAdminView() {
+		return issuedOn.format(Common.dateFormatter);
+	}
+
 	public void setIssuedOn(LocalDateTime issuedOn) {
 		this.issuedOn = issuedOn;
 	}
 
 	public LocalDateTime getReturnOn() {
 		return returnOn;
+	}
+
+	public String getReturnOnForAdminView() {
+		return returnOn == null ? "" : returnOn.format(Common.dateFormatter);
 	}
 
 	public void setReturnOn(LocalDateTime returnOn) {

@@ -84,6 +84,10 @@ public class ReserveQueue {
 		return Common.formatDateAsString(expiredOn);
 	}
 
+	public String getExpiredOnForAdminView() {
+		return expiredOn.format(Common.dateFormatter);
+	}
+
 	@Override
 	public String toString() {
 		String buf = " - ";
