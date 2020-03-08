@@ -23,7 +23,8 @@
   <div th:if="${onClick}" class="toast shadow-lg position-fixed w-50 mt-1 mr-1" data-autohide="false" role="alert"
     aria-live="assertive" aria-atomic="true" style="z-index: 100; right: 0; top: 10; min-height: 100px;">
     <div class="toast-header">
-      <img class="rounded mr-2" style="max-height:25px; max-width: 25px;" th:src="@{~/images/logo/logo.png}" />
+      <img class="rounded mr-2" style="max-height:25px; max-width: 25px;" th:src="@{~/images/logo/logo.png}"
+        alt="Wet LMS Logo" />
       <strong class="mr-auto">Wet LMS Bot</strong>
       <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -45,7 +46,7 @@
       <div class="d-flex flex-wrap justify-content-center">
         <div class="my-3 mx-2 card artifact-card shadow bg-light border-0" th:each="artifact : ${latestArtifacts}">
           <div class="card-img-top d-flex justify-content-center h-50">
-            <img th:src="${#strings.isEmpty(artifact.thumbnailLink)} ? @{~/images/placeholder.png} : ${artifact.thumbnailLink}" th:alt="${artifact.title} + ' image'" />
+            <img th:src="${#strings.isEmpty(artifact.thumbnailLink)} ? @{~/images/placeholder.png} : ${artifact.thumbnailLink}" th:alt="${#strings.isEmpty(artifact.thumbnailLink)} ? 'Artifact Placeholder Image for ' + ${artifact.title} : 'Image for ' + ${artifact.title}" th:title="${#strings.isEmpty(artifact.thumbnailLink)} ? 'Artifact Placeholder Image for ' + ${artifact.title} : 'Image for ' + ${artifact.title}"/>
           </div>
           <div class="card-body">
             <h5 class="card-title" th:text="${artifact.title}"></h5>
@@ -69,7 +70,7 @@
         <div class="my-3 mx-2 card artifact-card shadow bg-light border-0" th:each="artifact : ${popularArtifacts}">
           <div class="card-img-top d-flex justify-content-center h-50">
             <img
-              th:src="${#strings.isEmpty(artifact.thumbnailLink)} ? @{~/images/placeholder.png} : ${artifact.thumbnailLink}" alt="${artifact.title} + ' image'" />
+              th:src="${#strings.isEmpty(artifact.thumbnailLink)} ? @{~/images/placeholder.png} : ${artifact.thumbnailLink}" th:alt="${#strings.isEmpty(artifact.thumbnailLink)} ? 'Artifact Placeholder Image for ' + ${artifact.title} : 'Image for ' + ${artifact.title}" th:title="${#strings.isEmpty(artifact.thumbnailLink)} ? 'Artifact Placeholder Image for ' + ${artifact.title} : 'Image for ' + ${artifact.title}" />
           </div>
           <div class="card-body">
             <h5 class="card-title" th:text="${artifact.title}"></h5>
@@ -92,7 +93,7 @@
       <div class="d-flex flex-wrap justify-content-center">
         <div class="my-3 mx-2 card artifact-card shadow bg-light border-0" th:each="artifact : ${latestArtifacts}">
           <div class="card-img-top d-flex justify-content-center h-50">
-            <img th:src="${#strings.isEmpty(artifact.thumbnailLink)} ? @{~/images/placeholder.png} : ${artifact.thumbnailLink}" class="card-img-top" th:alt="${artifact.title} + ' image'" />
+            <img th:src="${#strings.isEmpty(artifact.thumbnailLink)} ? @{~/images/placeholder.png} : ${artifact.thumbnailLink}" class="card-img-top" th:alt="'Image for ' + ${artifact.title}" />
           </div>
           <div class="card-body">
             <h5 class="card-title" th:text="${artifact.title}"></h5>

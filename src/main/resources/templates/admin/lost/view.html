@@ -24,7 +24,8 @@
       <div class="d-flex flex-row justify-content-between align-items-start">
         <h3 class="mb-4">Lost</h3>
         <a th:href="@{~/admin/losts/create}" class="d-flex flex-column justify-content-center align-items-center">
-          <img th:src="@{~/images/add_v1.png}" class="create-new-img" />
+          <img th:src="@{~/images/add_v1.png}" class="create-new-img" alt="Create new artifact icon"
+            title="Create new artifact" />
         </a>
       </div>
       <div th:classappend="${#strings.isEmpty(previousIsSuccess)} ? mb-5 : mb-1">
@@ -104,7 +105,7 @@
                   <form th:action="@{/admin/losts/restock}" method="POST" th:id="'restock-form-' + ${loan.id}">
                     <div class="d-flex flex-row justify-content-center align-items-center">
                       <button type="button" th:onclick="'restockForm(' + ${loan.id} + ')'" class="d-flex flex-row justify-content-center align-items-center table-link">
-                        <img th:src="@{~/images/restock.png}" class="table-img" />
+                        <img th:src="@{~/images/restock.png}" class="table-img" alt="Restock artifact icon" title="Restock artifact"/>
                         <div>&nbsp;Restocked</div>
                       </button>
                       <input type="text" class="d-none" name="id" th:value="${loan.id}" />
@@ -114,14 +115,14 @@
                 <td class="p-2">
                   <a th:href="@{~/admin/losts/edit(id=${loan.id})}"
                     class="d-flex flex-row justify-content-center align-items-center table-link">
-                    <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
+                    <img th:src="@{~/images/edit_pencil.png}" class="table-img" alt="Edit artifact icon" title="Edit artifact" />
                   </a>
                 </td>
                 <td class="p-2">
                   <form th:action="@{/admin/losts/delete}" method="POST" th:id="'delete-form-' + ${loan.id}">
                     <div class="d-flex flex-row justify-content-center align-items-center">
                       <button type="button" th:onclick="'deleteForm(' + ${loan.id} + ')'" class="d-flex flex-row justify-content-center align-items-center table-link">
-                        <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
+                        <img th:src="@{~/images/red_trash_can.png}" class="table-img"  alt="Delete artifact icon" title="Delete artifact"/>
                       </button>
                       <input type="text" class="d-none" name="id" th:value="${loan.id}" />
                     </div>

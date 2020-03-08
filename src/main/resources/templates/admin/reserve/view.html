@@ -24,7 +24,8 @@
       <div class="d-flex flex-row justify-content-between align-items-start">
         <h3 class="mb-4">Reserve</h3>
         <a th:href="@{~/admin/reserves/create}" class="d-flex flex-column justify-content-center align-items-center">
-          <img th:src="@{~/images/add_v1.png}" class="create-new-img" />
+          <img th:src="@{~/images/add_v1.png}" class="create-new-img" alt="Create new artifact icon"
+            title="Create new artifact" />
         </a>
       </div>
       <div th:classappend="${#strings.isEmpty(previousIsSuccess)} ? mb-5 : mb-1">
@@ -103,7 +104,7 @@
                   <form th:action="@{/admin/reserves/loan}" method="POST" th:id="'loan-form-' + ${reserve.id}">
                     <div class="d-flex flex-row justify-content-center align-items-center">
                       <button type="button" th:onclick="'loanForm(' + ${reserve.id} + ')'" class="d-flex flex-row justify-content-center align-items-center table-link">
-                        <img th:src="@{~/images/offer.png}" class="table-img" />
+                        <img th:src="@{~/images/offer.png}" class="table-img" alt="Loan artifact icon" title="Loan artifact"/>
                         <div>&nbsp;Loan&nbsp;</div>
                       </button>
                       <input type="text" class="form-control border border-dark rounded-0 text-dark text-center table-input" name="daysToLoan" th:placeholder="${daysToLoan}" th:value="${daysToLoan}" />
@@ -115,14 +116,14 @@
                 <td class="p-2">
                   <a th:href="@{~/admin/reserves/edit(id=${reserve.id})}"
                     class="d-flex flex-row justify-content-center align-items-center table-link">
-                    <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
+                    <img th:src="@{~/images/edit_pencil.png}" class="table-img" alt="Edit artifact icon" title="Edit artifact"/>
                   </a>
                 </td>
                 <td class="p-2">
                   <form th:action="@{/admin/reserves/delete}" method="POST" th:id="'delete-form-' + ${reserve.id}">
                     <div class="d-flex flex-row align-items-center">
                       <button type="button" th:onclick="'deleteForm(' + ${reserve.id} + ')'" class="d-flex flex-row align-items-center table-link">
-                        <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
+                        <img th:src="@{~/images/red_trash_can.png}" class="table-img"  alt="Delete artifact icon" title="Delete artifact"/>
                       </button>
                       <input type="text" class="d-none" name="id" th:value="${reserve.id}" />
                     </div>
