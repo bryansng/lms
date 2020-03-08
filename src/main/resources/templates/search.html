@@ -26,7 +26,8 @@
   <div th:if="${reserve}" class="toast shadow-lg position-fixed w-50 mb-4 mr-3" data-autohide="false" role="alert"
     aria-live="assertive" aria-atomic="true" style="z-index: 100; right: 0; bottom: 0; min-height: 100px;">
     <div class="toast-header">
-      <img class="rounded mr-2" style="max-height:25px; max-width: 25px;" th:src="@{~/images/logo/logo.png}" />
+      <img class="rounded mr-2" style="max-height:25px; max-width: 25px;" th:src="@{~/images/logo/logo.png}"
+        alt="Wet LMS Logo" />
       <strong class="mr-auto">Wet LMS Bot</strong>
       <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -63,8 +64,7 @@
             <div href="#" class="w-100-ns w-60-l py-3 border-bottom">
               <div class="mx-3 d-flex justify-content-start align-items-center">
                 <div class="h-100">
-                  <img th:src="@{~/images/placeholder.png}" th:if="${#strings.isEmpty(artifact.thumbnailLink)}" style="width: 11rem; height: 11rem; object-fit: contain;" />
-                  <img th:src="@{${artifact.thumbnailLink}}" th:unless="${#strings.isEmpty(artifact.thumbnailLink)}" style="width: 11rem; height: 11rem; object-fit: contain;" />
+                  <img th:src="${#strings.isEmpty(artifact.thumbnailLink)} ? @{~/images/placeholder.png} : ${artifact.thumbnailLink}" th:alt="${#strings.isEmpty(artifact.thumbnailLink)} ? 'Artifact Placeholder Image for ' + ${artifact.title} : 'Image for ' + ${artifact.title}" th:title="${#strings.isEmpty(artifact.thumbnailLink)} ? 'Artifact Placeholder Image for ' + ${artifact.title} : 'Image for ' + ${artifact.title}" style="width: 11rem; height: 11rem; object-fit: contain;" />
                 </div>
                 <div class="w-100 ml-3 d-flex flex-column justify-content-center align-items-start">
                   <p class="m-0 font-weight-bolder text-truncate text-capitalize" style="width: 90%;" th:text="'' + ${#strings.abbreviate(artifact.title, 100)}"></p>
