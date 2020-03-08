@@ -185,7 +185,7 @@ public class LoanController {
   @ResponseBody
   public ActionConclusion loansRenew(@RequestParam(name = "id") String stringId,
       @RequestParam(required = false) String daysToRenew) {
-    return loanHistoryService.renew(stringId, daysToRenew);
+    return loanHistoryService.renew(stringId, daysToRenew, true);
   }
 
   @PostMapping("/admin/loans/lost")

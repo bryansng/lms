@@ -4,6 +4,8 @@ import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.springframework.security.core.parameters.P;
+
 import java.time.*;
 import java.util.List;
 import javax.persistence.*;
@@ -113,6 +115,14 @@ public class Member {
 
   public void setLogin(Login login) {
     this.login = login;
+  }
+
+  public Boolean isAdmin() {
+    return type.equals("librarian");
+  }
+
+  public Boolean isMember() {
+    return type.equals("member");
   }
 
   public Long getId() {

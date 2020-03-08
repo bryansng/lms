@@ -84,22 +84,6 @@ public class MemberService {
 		return new ActionConclusion(false, "Failed to delete. Member ID does not exist.");
 	}
 
-	public Boolean isMember(String stringToSearch) {
-		return !isLibrarian(stringToSearch);
-	}
-
-	public Boolean isLibrarian(String stringToSearch) {
-		Long id = Common.convertStringToLong(stringToSearch);
-
-		Optional<Member> member = memberRepository.findById(id);
-		if (member.isPresent()) {
-			if (member.get().getType().toLowerCase().equals("librarian")) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public void printMe(List<Member> arr) {
 		System.out.println("\n\nPrinting search result:");
 		for (Member member : arr) {

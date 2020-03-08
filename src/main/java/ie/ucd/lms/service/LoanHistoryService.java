@@ -294,7 +294,7 @@ public class LoanHistoryService {
   /**
    * @return false if exists in reserveQueue, or id does not exist.
    */
-  public ActionConclusion renew(String stringId, String daysToRenew) {
+  public ActionConclusion renew(String stringId, String daysToRenew, Boolean isAdmin) {
     Long id = Common.convertStringToLong(stringId);
     Long days = Common.convertStringToLong(daysToRenew);
 
@@ -307,7 +307,7 @@ public class LoanHistoryService {
         return new ActionConclusion(false, "Unable to renew. Someone else is reserving the same artifact.");
       }
       LocalDateTime currentReturnOn = loanHistory.getReturnOn();
-      if (LocalDateTime.now().isAfter(currentReturnOn.minusDays(1))) {
+      if (LocalDateTime.now().isAfter(currentReturnOn.minusDays(1)) || isAdmin) {
         loanHistory.setReturnOn(currentReturnOn.plusDays(days));
         loanHistory.setStatus("renewed");
         loanHistoryRepository.save(loanHistory);

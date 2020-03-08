@@ -140,7 +140,7 @@ public class MemberController {
       RedirectAttributes redirectAttrs) {
     loginService.addMemberToModel(model, authentication);
     Member member = loginService.getMemberFromUserObject(authentication);
-    ActionConclusion ac = LoanHistoryService.renew(Long.toString(id), days);
+    ActionConclusion ac = LoanHistoryService.renew(Long.toString(id), days, member.isAdmin());
 
     redirectAttrs.addFlashAttribute("renewalFailed", ac.isSuccess);
     redirectAttrs.addFlashAttribute("renewal", true);
