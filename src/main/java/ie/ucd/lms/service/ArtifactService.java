@@ -36,28 +36,28 @@ public class ArtifactService {
 		return res;
 	}
 
-	public ActionConclusion update(String stringId, String isbn, String type, String genre, String authors,
-			String title, String subtitle, String description, String publishers, String publishedOn, String itemPrice,
-			String quantity, String totalQuantity, String rackLocation, String thumbnailLink) {
+	public ActionConclusion update(String stringId, String isbn, String type, String genre, String authors, String title,
+			String subtitle, String description, String publishers, String publishedOn, String itemPrice, String quantity,
+			String totalQuantity, String rackLocation, String thumbnailLink) {
 		Long id = Common.convertStringToLong(stringId);
 
 		if (artifactRepository.existsById(id)) {
 			Artifact artifact = artifactRepository.getOne(id);
-			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn,
-					itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
+			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
+					quantity, totalQuantity, rackLocation, thumbnailLink);
 			artifactRepository.save(artifact);
 			return new ActionConclusion(true, "Updated successfully.");
 		}
 		return new ActionConclusion(false, "Failed to update. Artifact ID does not exist.");
 	}
 
-	public ActionConclusion create(String isbn, String type, String genre, String authors, String title,
-			String subtitle, String description, String publishers, String publishedOn, String itemPrice,
-			String quantity, String totalQuantity, String rackLocation, String thumbnailLink) {
+	public ActionConclusion create(String isbn, String type, String genre, String authors, String title, String subtitle,
+			String description, String publishers, String publishedOn, String itemPrice, String quantity,
+			String totalQuantity, String rackLocation, String thumbnailLink) {
 		if (!artifactRepository.existsByIsbn(isbn)) {
 			Artifact artifact = new Artifact();
-			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn,
-					itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
+			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
+					quantity, totalQuantity, rackLocation, thumbnailLink);
 			artifactRepository.save(artifact);
 			return new ActionConclusion(true, "Created successfully.");
 		}
@@ -75,25 +75,11 @@ public class ArtifactService {
 	}
 
 	public List<Artifact> getLatestArtifacts() {
-		List<Artifact> list = artifactRepository.findAll();
-
-		Comparator<Artifact> compareByDate = (Artifact a1, Artifact a2) -> a1.getCreatedOn()
-				.compareTo(a2.getCreatedOn());
-
-		Collections.sort(list, compareByDate);
-
-		return list;
+		return artifactRepository.findTop6ByOrderByIdDescCreatedOnDesc();
 	}
 
 	public List<Artifact> getPopularArtifacts() {
-		List<Artifact> list = artifactRepository.findAll();
-
-		Comparator<Artifact> compareByTotalLoans = (Artifact a1, Artifact a2) -> a1.getTotalLoans()
-				.compareTo(a2.getTotalLoans());
-
-		Collections.sort(list, compareByTotalLoans);
-
-		return list;
+		return artifactRepository.findTop6ByOrderByTotalLoansDesc();
 	}
 
 	public void printMe(List<Artifact> arr) {

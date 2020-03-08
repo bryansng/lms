@@ -96,9 +96,10 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Long> 
 
 	List<LoanHistory> findByMember(Member member);
 
+	// ? why pass in member when it is not used?
+	// ? find out where this is used.
 	@Query("SELECT LH " + "FROM LoanHistory LH " + "ORDER BY " + "(LH.issuedOn)")
 	Page<LoanHistory> findAllByLoanIssuedOn(Member member, Pageable pageable);
-
 
 	/* 	Page<LoanHistory> findByArtifact_IdOrArtifact_TitleContainsIgnoreCaseOrIsbnContainsOrMember_FullNameContainsIgnoreCaseOrMember_EmailContainsIgnoreCaseOrMemberId(
 				Long ArtifactId, String ArtifactTitle, String isbn, String memberFullName, String email, Long memberId,

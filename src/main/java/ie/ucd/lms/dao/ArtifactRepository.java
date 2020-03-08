@@ -1,6 +1,8 @@
 package ie.ucd.lms.dao;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +20,12 @@ public interface ArtifactRepository extends JpaRepository<Artifact, Long> {
 	Artifact findByIsbn(String isbn);
 
 	Integer countByCreatedOnAfter(LocalDateTime createdOn);
+
+	Page<Artifact> findAllByOrderByCreatedOnDesc(Pageable pageable);
+
+	Page<Artifact> findAllByOrderByCreatedOnAsc(Pageable pageable);
+
+	List<Artifact> findTop6ByOrderByIdDescCreatedOnDesc();
+
+	List<Artifact> findTop6ByOrderByTotalLoansDesc();
 }
