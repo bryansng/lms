@@ -102,8 +102,8 @@
                 <td class="p-2">&euro;<span th:text="${loan.fine}"></span></td>
                 <td class="p-2">
                   <form th:action="@{/admin/losts/restock}" method="POST" th:id="'restock-form-' + ${loan.id}">
-                    <div class="d-flex flex-row align-items-center">
-                      <button type="button" th:onclick="'restockForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                    <div class="d-flex flex-row justify-content-center align-items-center">
+                      <button type="button" th:onclick="'restockForm(' + ${loan.id} + ')'" class="d-flex flex-row justify-content-center align-items-center table-link">
                         <img th:src="@{~/images/restock.png}" class="table-img" />
                         <div>&nbsp;Restocked</div>
                       </button>
@@ -113,14 +113,14 @@
                 </td>
                 <td class="p-2">
                   <a th:href="@{~/admin/losts/edit(id=${loan.id})}"
-                    class="d-flex flex-column justify-content-center align-items-center table-link">
+                    class="d-flex flex-row justify-content-center align-items-center table-link">
                     <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
                   </a>
                 </td>
                 <td class="p-2">
                   <form th:action="@{/admin/losts/delete}" method="POST" th:id="'delete-form-' + ${loan.id}">
-                    <div class="d-flex flex-row align-items-center">
-                      <button type="button" th:onclick="'deleteForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                    <div class="d-flex flex-row justify-content-center align-items-center">
+                      <button type="button" th:onclick="'deleteForm(' + ${loan.id} + ')'" class="d-flex flex-row justify-content-center align-items-center table-link">
                         <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
                       </button>
                       <input type="text" class="d-none" name="id" th:value="${loan.id}" />

@@ -42,14 +42,15 @@
       <div class="row no-gutters">
         <div class="col-12">
           <table class="w-100 divtable">
-            <col width="5%">
+            <!-- <col width="5%">
             <col width="17%">
             <col width="23%">
             <col width="15%">
-            <col width="25%">
+            <col width="18%">
+            <col width="7%">
             <col width="7%">
             <col width="4%">
-            <col width="4%">
+            <col width="4%"> -->
             <thead class="border-top border-dark">
               <tr>
                 <th class="p-2">ID</th>
@@ -58,6 +59,7 @@
                 <th class="p-2">Phone</th>
                 <th class="p-2">Address</th>
                 <th class="p-2">Type</th>
+                <th class="p-2"></th>
                 <th class="p-2"></th>
                 <th class="p-2"></th>
               </tr>
@@ -71,16 +73,31 @@
                 <td class="p-2" th:text="${member.mobileNumber}"></td>
                 <td class="p-2 text-capitalize" th:text="${#strings.abbreviate(member.address, 70)}"></td>
                 <td class="p-2 text-capitalize" th:text="${member.type}"></td>
+                <!-- <td class="p-2">
+                  <a th:href="@{~/admin/loans/view(memberQuery=${member.email}, previousMember=${member.email})}"
+                    class="d-flex flex-column justify-content-center align-items-center table-link">
+                    <img th:src="@{~/images/view_loan.png}" class="table-img" />
+                    <div>&nbsp;View Loans</div>
+                  </a>
+                </td> -->
+                <td class="p-2">
+                  <div class="d-flex flex-row justify-content-center align-items-center">
+                    <a th:href="@{~/admin/loans/view(memberQuery=${member.email})}" class="d-flex flex-row justify-content-center align-items-center table-link">
+                      <img th:src="@{~/images/view_loan.png}" class="table-img" />
+                      <div>&nbsp;View Loans</div>
+                    </a>
+                  </div>
+                </td>
                 <td class="p-2">
                   <a th:href="@{~/admin/members/edit(id=${member.id})}"
-                    class="d-flex flex-column justify-content-center align-items-center table-link">
+                    class="d-flex flex-row justify-content-center align-items-center table-link">
                     <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
                   </a>
                 </td>
                 <td class="p-2">
                   <form th:action="@{/admin/members/delete}" method="POST" th:id="'delete-form-' + ${member.id}">
-                    <div class="d-flex flex-row align-items-center">
-                      <button type="button" th:onclick="'deleteForm(' + ${member.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                    <div class="d-flex flex-row justify-content-center align-items-center">
+                      <button type="button" th:onclick="'deleteForm(' + ${member.id} + ')'" class="d-flex flex-row justify-content-center align-items-center table-link">
                         <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
                       </button>
                       <input type="text" class="d-none" name="id" th:value="${member.id}" />
@@ -90,6 +107,7 @@
               </tr>
               <tr th:each="i: ${#numbers.sequence(1, totalEmptyRows)}">
                 <td class="p-2">&nbsp;</td>
+                <td class="p-2"></td>
                 <td class="p-2"></td>
                 <td class="p-2"></td>
                 <td class="p-2"></td>

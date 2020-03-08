@@ -63,6 +63,15 @@ public class Member implements Serializable {
     setBio(bio);
     setType(type);
     setLogin(login);
+
+    switch (type.toLowerCase()) {
+      case "member":
+        setRoles("USER");
+        break;
+      case "librarian":
+        setRoles("ADMIN");
+        break;
+    }
   }
 
   public String getInitials() {

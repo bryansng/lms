@@ -117,8 +117,8 @@
                 <td class="p-2">
                   <div th:unless="${loan.status == 'returned' OR loan.status == 'restocked'}">
                     <form th:action="@{/admin/loans/return}" method="POST" th:id="'return-form-' + ${loan.id}">
-                      <div class="d-flex flex-row align-items-center">
-                        <button type="button" th:onclick="'returnForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                      <div class="d-flex flex-row justify-content-center align-items-center">
+                        <button type="button" th:onclick="'returnForm(' + ${loan.id} + ')'" class="d-flex flex-row justify-content-center align-items-center table-link">
                           <img th:src="@{~/images/return.png}" class="table-img" />
                           <div>&nbsp;Return</div>
                         </button>
@@ -130,8 +130,8 @@
                 <td class="p-2">
                   <div th:unless="${loan.status == 'returned' OR loan.status == 'restocked' OR loan.status == 'delayed'}">
                     <form th:action="@{/admin/loans/renew}" method="POST" th:id="'renew-form-' + ${loan.id}">
-                      <div class="d-flex flex-row align-items-center">
-                        <button type="button" th:onclick="'renewForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                      <div class="d-flex flex-row justify-content-center align-items-center">
+                        <button type="button" th:onclick="'renewForm(' + ${loan.id} + ')'" class="d-flex flex-row justify-content-center align-items-center table-link">
                           <img th:src="@{~/images/reuse.png}" class="table-img" />
                           <div>&nbsp;Renew&nbsp;</div>
                         </button>
@@ -145,8 +145,8 @@
                 <td class="p-2">
                   <div th:unless="${loan.status == 'returned' OR loan.status == 'restocked'}">
                     <form th:action="@{/admin/loans/lost}" method="POST" th:id="'lost-form-' + ${loan.id}">
-                      <div class="d-flex flex-row align-items-center">
-                        <button type="button" th:onclick="'lostForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                      <div class="d-flex flex-row justify-content-center align-items-center">
+                        <button type="button" th:onclick="'lostForm(' + ${loan.id} + ')'" class="d-flex flex-row justify-content-center align-items-center table-link">
                           <img th:src="@{~/images/lost_item.png}" class="table-img" />
                           <div>&nbsp;Lost</div>
                         </button>
@@ -157,14 +157,14 @@
                 </td>
                 <td class="p-2">
                   <a th:href="@{~/admin/loans/edit(id=${loan.id})}"
-                    class="d-flex flex-column justify-content-center align-items-center table-link">
+                    class="d-flex flex-row justify-content-center align-items-center table-link">
                     <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
                   </a>
                 </td>
                 <td class="p-2">
                   <form th:action="@{/admin/loans/delete}" method="POST" th:id="'delete-form-' + ${loan.id}">
-                    <div class="d-flex flex-row align-items-center">
-                      <button type="button" th:onclick="'deleteForm(' + ${loan.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                    <div class="d-flex flex-row justify-content-center align-items-center">
+                      <button type="button" th:onclick="'deleteForm(' + ${loan.id} + ')'" class="d-flex flex-row justify-content-center align-items-center table-link">
                         <img th:src="@{~/images/red_trash_can.png}" class="table-img" />
                       </button>
                       <input type="text" class="d-none" name="id" th:value="${loan.id}" />

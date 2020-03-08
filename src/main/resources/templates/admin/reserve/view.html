@@ -98,11 +98,11 @@
                 <td class="p-2" th:text="${reserve.isbn}"></td>
                 <td class="p-2 text-capitalize" th:text="${reserve.member.fullName}"></td>
                 <td class="p-2" th:text="${reserve.expiredOn}"></td>
-                <td class="p-2"><span th:text="${reserve.id - positionInQueue.get(reserve.artifact.id) + 1}"></span></td>
+                <td class="p-2 text-center" th:text="${reserve.id - positionInQueue.get(reserve.artifact.id) + 1}"></td>
                 <td class="p-2">
                   <form th:action="@{/admin/reserves/loan}" method="POST" th:id="'loan-form-' + ${reserve.id}">
-                    <div class="d-flex flex-row align-items-center">
-                      <button type="button" th:onclick="'loanForm(' + ${reserve.id} + ')'" class="d-flex flex-row align-items-center table-link">
+                    <div class="d-flex flex-row justify-content-center align-items-center">
+                      <button type="button" th:onclick="'loanForm(' + ${reserve.id} + ')'" class="d-flex flex-row justify-content-center align-items-center table-link">
                         <img th:src="@{~/images/offer.png}" class="table-img" />
                         <div>&nbsp;Loan&nbsp;</div>
                       </button>
@@ -114,7 +114,7 @@
                 </td>
                 <td class="p-2">
                   <a th:href="@{~/admin/reserves/edit(id=${reserve.id})}"
-                    class="d-flex flex-column justify-content-center align-items-center table-link">
+                    class="d-flex flex-row justify-content-center align-items-center table-link">
                     <img th:src="@{~/images/edit_pencil.png}" class="table-img" />
                   </a>
                 </td>
