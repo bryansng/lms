@@ -163,10 +163,15 @@ public class MemberController {
   public String artifactReserve(@RequestParam(name = "id", required = true) Long id,
       @RequestParam(name = "isbn") String isbn, Model model, Authentication authentication,
       RedirectAttributes redirectAttrs, HttpServletRequest request) throws URISyntaxException {
-    loginService.addMemberToModel(model, authentication);
-    Member member = loginService.getMemberFromUserObject(authentication);
-    // finding out what expiredOn is
-    ActionConclusion ac = reserveQueueService.create(isbn, Long.toString(member.getId()), LocalDate.now().toString());
+    ActionConclusion ac;
+    if (!loginService.isAuthenticated(authentication)) {
+      ac = new ActionConclusion(false, "Unable to reserve. Please log in to start reserving.");
+    } else {
+      loginService.addMemberToModel(model, authentication);
+      Member member = loginService.getMemberFromUserObject(authentication);
+      ac = reserveQueueService.create(isbn, Long.toString(member.getId()),
+          LocalDate.now().plusDays(Common.DAYS_TILL_EXPIRED).toString());
+    }
     redirectAttrs.addFlashAttribute("reserve", true);
     redirectAttrs.addFlashAttribute("reserveMsg", ac.message);
     redirectAttrs.addFlashAttribute("reserveFailed", ac.isSuccess);

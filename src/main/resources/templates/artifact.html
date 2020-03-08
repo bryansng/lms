@@ -121,7 +121,7 @@
             <div th:replace="admin/fragments/actionMessage.html :: hiddenInputsForActionMessages"></div>
             <div class="d-flex justify-content-end my-5">
               <button data-toggle="modal" data-target="#reserveModal"
-              th:attrappend="data-target=${artifact.id}" sec:authorize="isAuthenticated()" class="px-4 py-2 btn btn-lg border border-dark text-dark hover">Reserve Artifact</button>
+              th:attrappend="data-target=${artifact.id}" class="px-4 py-2 btn btn-lg border border-dark text-dark hover">Reserve Artifact</button>
             </div>
             <div class="modal fade text-center" id="reserveModal" role="dialog" th:attrappend="id=${artifact.id}">
               <div class="modal-dialog modal-dialog-centered">

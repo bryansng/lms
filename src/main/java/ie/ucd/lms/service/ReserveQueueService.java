@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class ReserveQueueService {
   @Autowired
@@ -99,21 +98,21 @@ public class ReserveQueueService {
 
     if (reserveQueueRepository.countByMemberId(aMemberId) < Common.MAX_RESERVES_PER_USER) {
       // if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
-      if (reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
-        return new ActionConclusion(false, "Artifact already reserved.");
-      } else if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
+      // if (reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
+      //   return new ActionConclusion(false, "Artifact already reserved.");
+      if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
         Artifact artifact = artifactRepository.findByIsbn(isbn);
         Member member = memberRepository.getOne(aMemberId);
         ReserveQueue reserveQueue = new ReserveQueue();
         reserveQueue.setAll(isbn, memberId, expiredOn, artifact, member);
         reserveQueueRepository.save(reserveQueue);
         return new ActionConclusion(true, "Artifact reserved successfully.");
-      } 
+      }
       // }
       return new ActionConclusion(false, "Failed to create. ISBN or member ID does not exist.");
     }
     return new ActionConclusion(false,
-        "Unable to create. Member has exceeded the maximum reserve amount: " + Common.MAX_RESERVES_PER_USER);
+        "Unable to create. Member has exceeded the maximum reserve amount: " + Common.MAX_RESERVES_PER_USER + ".");
   }
 
   public ActionConclusion delete(String stringId) {

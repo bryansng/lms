@@ -78,7 +78,7 @@ public class LoginService {
     }
 
     public void addMemberToModel(Model model, Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
+        if (isAuthenticated(authentication)) {
             Member member = getMemberFromUserObject(authentication);
             setMemberActiveOn(member);
             // System.out.println("is authenticated");
@@ -87,6 +87,10 @@ public class LoginService {
         } else {
             // System.out.println("not authenticated");
         }
+    }
+
+    public Boolean isAuthenticated(Authentication authentication) {
+        return authentication != null && authentication.isAuthenticated();
     }
 
     /**

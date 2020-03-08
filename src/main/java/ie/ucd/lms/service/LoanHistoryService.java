@@ -214,7 +214,7 @@ public class LoanHistoryService {
     if (negativeStatus.contains(status) && loanHistoryRepository.countAllByMemberIdAndStatus(aMemberId, "issued",
         "renewed", "delayed") >= Common.MAX_LOANS_PER_USER) {
       return new ActionConclusion(false,
-          "Unable to create. Member has exceeded the maximum loan amount: " + Common.MAX_LOANS_PER_USER);
+          "Unable to create. Member has exceeded the maximum loan amount: " + Common.MAX_LOANS_PER_USER + ".");
     }
 
     // if (!loanHistoryRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {

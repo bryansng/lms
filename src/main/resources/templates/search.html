@@ -80,7 +80,7 @@
                   </p>
                   <div class="w-100 d-flex justify-content-end">
                     <button type="button" data-toggle="modal" data-target="#reserveModal"
-                      th:attrappend="data-target=${artifact.id}" sec:authorize="isAuthenticated()"
+                      th:attrappend="data-target=${artifact.id}"
                       class="mr-2 px-4 py-2 btn border border-dark text-dark hover"><span
                       >Reserve</button>
                     <a th:href="@{/artifacts/view(id=${artifact.id})}"
