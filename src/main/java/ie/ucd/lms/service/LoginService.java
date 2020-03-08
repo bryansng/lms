@@ -81,11 +81,11 @@ public class LoginService {
         if (authentication != null && authentication.isAuthenticated()) {
             Member member = getMemberFromUserObject(authentication);
             setMemberActiveOn(member);
-            System.out.println("is authenticated");
+            // System.out.println("is authenticated");
             model.addAttribute("member", member);
             model.addAttribute("memberInitials", member.getInitials());
         } else {
-            System.out.println("not authenticated");
+            // System.out.println("not authenticated");
         }
     }
 

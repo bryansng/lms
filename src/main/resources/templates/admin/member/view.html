@@ -71,7 +71,7 @@
                 <td class="p-2 text-capitalize" th:text="${member.fullName}"></td>
                 <td class="p-2" th:text="${member.email}"></td>
                 <td class="p-2" th:text="${member.mobileNumber}"></td>
-                <td class="p-2 text-capitalize" th:text="${#strings.abbreviate(member.address, 70)}"></td>
+                <td class="p-2 text-capitalize" th:text="${#strings.abbreviate(member.address, 50)}"></td>
                 <td class="p-2 text-capitalize" th:text="${member.type}"></td>
                 <!-- <td class="p-2">
                   <a th:href="@{~/admin/loans/view(memberQuery=${member.email}, previousMember=${member.email})}"

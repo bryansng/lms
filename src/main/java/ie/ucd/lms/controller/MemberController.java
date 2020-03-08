@@ -251,7 +251,6 @@ public class MemberController {
   @GetMapping("/members/search")
   @ResponseBody
   public Page<Member> membersSearch(@RequestParam(defaultValue = "", required = false) String searchQuery) {
-    System.out.println("looking for " + searchQuery);
     return memberService.search(searchQuery, 0, Common.QUICK_SEARCH_ROWS);
   }
 }

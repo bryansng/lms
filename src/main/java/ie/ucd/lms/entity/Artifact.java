@@ -73,8 +73,8 @@ public class Artifact implements Comparable<Artifact> {
 	public void setAll(String isbn, String type, String genre, String authors, String title, String subtitle,
 			String description, String publishers, String publishedOn, String itemPrice, String quantity,
 			String totalQuantity, String rackLocation, String thumbnailLink) {
-		this.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
-				quantity, totalQuantity, rackLocation, thumbnailLink, this.totalLoans);
+		this.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice, quantity,
+				totalQuantity, rackLocation, thumbnailLink, this.totalLoans);
 	}
 
 	public boolean inStock() {
@@ -235,6 +235,10 @@ public class Artifact implements Comparable<Artifact> {
 
 	public Integer getTotalLoans() {
 		return this.totalLoans;
+	}
+
+	public void incrementTotalLoans() {
+		this.totalLoans += 1;
 	}
 
 	public void setTotalLoans(Integer totalLoans) {

@@ -222,6 +222,7 @@ public class LoanHistoryService {
       Artifact artifact = artifactRepository.findByIsbn(isbn);
       if (artifact.inStock() || status.equals("lost")) {
         artifact.decrementQuantity();
+        artifact.incrementTotalLoans();
         LoanHistory loanHistory = new LoanHistory();
         Member member = memberRepository.getOne(aMemberId);
         loanHistory.setAll(isbn, memberId, issuedOn, returnOn, fine, status, artifact, member);
