@@ -20,6 +20,21 @@
   <header sec:authorize="isAuthenticated()" th:replace="fragments/header.html :: signedIn"></header>
   <header sec:authorize="!isAuthenticated()" th:replace="fragments/header.html :: notSignedIn"></header>
 
+  <div th:if="${reserve}" class="toast shadow-lg position-fixed w-50 mb-4 mr-3" data-autohide="false" role="alert"
+    aria-live="assertive" aria-atomic="true" style="z-index: 100; right: 0; bottom: 0; min-height: 100px;">
+    <div class="toast-header">
+      <img class="rounded mr-2" style="max-height:25px; max-width: 25px;" th:src="@{~/images/logo/logo.png}" />
+      <strong class="mr-auto">Wet LMS Bot</strong>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body ">
+      <p th:if="${reserve}" th:text="${reserveFailed} ? ${reserveMsg} : ${reserveMsg}"
+        th:class="${reserveFailed} ? 'alert alert-success' : 'alert alert-danger'"></p>
+    </div>
+  </div>
+
   <main>
     <div class="my-4 mx-auto container">
       <div th:classappend="${#strings.isEmpty(previousIsSuccess)} ? mb-3 : mb-0" class="d-flex flex-row justify-content-between align-items-start">
@@ -145,9 +160,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
   </script>
-  <script>
-    $(".toast").toast("show");
-  </script>
+  <script type="text/javascript" src="/js/toastFunctions.js"></script>
 </body>
 
 </html>
