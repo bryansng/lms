@@ -274,7 +274,11 @@ public class MemberController {
 
   @PostMapping("/admin/members/delete")
   @ResponseBody
-  public ActionConclusion membersDelete(@RequestParam(name = "id") String stringId) {
+  public ActionConclusion membersDelete(@RequestParam(name = "id") String stringId, Authentication authentication) {
+    Member member = loginService.getMemberFromUserObject(authentication);
+    if (member != null && stringId.equals(member.getId().toString())) {
+      return new ActionConclusion(false, "Failed to delete. You cannot delete yourself.");
+    }
     return memberService.delete(stringId);
   }
 
