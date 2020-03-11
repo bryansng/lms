@@ -16,7 +16,7 @@ public class Login {
 	@Id
 	@NotEmpty
 	// @Column(name = "email", nullable = false, unique = true)
-	@Column(name = "email", insertable = false, updatable = false)
+	// @Column(name = "email", insertable = false, updatable = false)
 	private String email;
 
 	@NotEmpty

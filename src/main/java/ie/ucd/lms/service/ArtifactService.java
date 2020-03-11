@@ -45,6 +45,7 @@ public class ArtifactService {
 			Artifact artifact = artifactRepository.getOne(id);
 			artifact.setAll(isbn, type, genre, authors, title, subtitle, description, publishers, publishedOn, itemPrice,
 					quantity, totalQuantity, rackLocation, thumbnailLink);
+			artifact.cascadeISBNManuallyOnEdit();
 			artifactRepository.save(artifact);
 			return new ActionConclusion(true, "Updated successfully.");
 		}

@@ -78,6 +78,25 @@ public class Artifact implements Comparable<Artifact> {
 				totalQuantity, rackLocation, thumbnailLink, this.totalLoans);
 	}
 
+	public void cascadeISBNManuallyOnEdit() {
+		setAllLoanHistoriesISBNManually();
+		setAllReserveQueuesISBNManually();
+	}
+
+	// if artifact edited, its loanHistory will cascade, but the loanHistories' isbn variable itself wont, so this deals with it.
+	// fixing this issue will require architectural change, i.e. all loan history and reserve queue need not have isbn variable, just artifact variable is enough.
+	private void setAllLoanHistoriesISBNManually() {
+		for (LoanHistory LH : loanHistories) {
+			LH.setIsbn(this.isbn);
+		}
+	}
+
+	private void setAllReserveQueuesISBNManually() {
+		for (ReserveQueue RQ : reserveQueues) {
+			RQ.setIsbn(this.isbn);
+		}
+	}
+
 	public boolean inStock() {
 		return quantity > 0;
 	}
