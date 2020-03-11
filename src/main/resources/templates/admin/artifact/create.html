@@ -27,7 +27,7 @@
       <div th:replace="admin/fragments/actionMessage.html :: showActionMessage"></div>
       <div class="d-flex flex-row justify-content-between w-100 mx-auto py-3 px-0 container">
         <div class="w-25 container mx-2">
-          <img th:src="@{~/images/placeholder.png}" id="imgThumbnailLink" style="width: 100%;" alt="Artifact Placeholder Image" title="Artifact Placeholder Image"/> <!-- STAND IN IMAGE - CANNOT ADD/CHANGE  -->
+          <img th:src="${#strings.isEmpty(previousThumbnailLink)} ? @{~/images/placeholder.png} : @{${previousThumbnailLink}}" th:alt="${#strings.isEmpty(previousThumbnailLink)} ? 'Artifact Placeholder Image for ' + ${previousTitle} : 'Image for ' + ${previousTitle}" id="imgThumbnailLink" style="width: 100%;" />
         </div>
         <div class="w-75 container mx-2">
           <form th:action="@{/admin/artifacts/create}" method="POST" th:id="createForm">
@@ -58,7 +58,7 @@
 
               <div class="form__group my-1">
                 <textarea type="text" name="description"
-                id="description" style="min-height: 110px;" placeholder="SISTEM is Ireland's largest tech conference for students, with the mission to inspire the next generation of tech. SISTEM 2020 will take place in University College Dublin. This is our third year organising this conference and the event has grown in scale and ambition since our first edition in 2018. Over 200 of Ireland's most engaged students in computing are expected to attend this event." th:value="${previousDescription}"></textarea>
+                id="description" style="min-height: 110px;" placeholder="SISTEM is Ireland's largest tech conference for students, with the mission to inspire the next generation of tech. SISTEM 2020 will take place in University College Dublin. This is our third year organising this conference and the event has grown in scale and ambition since our first edition in 2018. Over 200 of Ireland's most engaged students in computing are expected to attend this event." th:text="${previousDescription}"></textarea>
                 <label for="description">Description</label>
               </div>
 

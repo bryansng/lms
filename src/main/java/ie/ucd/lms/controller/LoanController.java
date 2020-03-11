@@ -62,7 +62,7 @@ public class LoanController {
   @GetMapping("/admin/loans/create")
   public String loansCreateGet(Model model, Authentication authentication) {
     loginService.addMemberToModel(model, authentication);
-    String returnOn = LocalDate.now().plusDays(7).format(Common.dateFormatter);
+    String returnOn = LocalDate.now().plusDays(Common.DAYS_TILL_RETURNED).format(Common.dateFormatter);
     model.addAttribute("returnOn", returnOn);
     return "admin/loan/create.html";
   }
@@ -72,7 +72,7 @@ public class LoanController {
     loginService.addMemberToModel(model, authentication);
     LoanHistory loan = loanHistoryRepository.getOne(Common.convertStringToLong(stringId));
     model.addAttribute("loan", loan);
-    model.addAttribute("returnOn", loan.getReturnOn().format(Common.dateFormatter));
+    model.addAttribute("returnOn", loan.getReturnOnForAdminView());
     return "admin/loan/edit.html";
   }
 

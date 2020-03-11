@@ -91,14 +91,18 @@ public class ArtifactController {
       @RequestParam(name = "quantity", required = true) String quantity,
       @RequestParam(name = "totalQuantity", required = true) String totalQuantity,
       @RequestParam(name = "rackLocation", required = false) String rackLocation,
-      @RequestParam(name = "thumbnailLink", required = false) String thumbnailLink,
+      @RequestParam(defaultValue = "", required = false) String thumbnailLink,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
       @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
       Authentication authentication) {
     loginService.addMemberToModel(model, authentication);
+    publishedOn = publishedOn.length() == 4 ? publishedOn.concat("-01-01") : publishedOn;
     ActionConclusion actionConclusion = artifactService.update(stringId, isbn, type, genre, authors, title, subtitle,
-        description, publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, "");
+        description, publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<Artifact> artifacts = artifactService.search("", type, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
@@ -108,19 +112,15 @@ public class ArtifactController {
 
       model.addAttribute("previousQuery", "");
       model.addAttribute("previousType", type);
-      model.addAttribute("previousUpdateStatus", "success");
-      model.addAttribute("previousUpdateMessage", "Updated Succesfully.");
-      model.addAttribute("previousErrorMessage", "");
       return "admin/artifact/view.html";
     } else {
       Artifact artifact = artifactRepository.findById(Common.convertStringToLong(stringId)).get();
       model.addAttribute("artifact", artifact);
-      model.addAttribute("publishedOn", publishedOn);
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousType", type);
       model.addAttribute("previousGenre", genre);
-      model.addAttribute("previouseAuthors", authors);
-      model.addAttribute("previouseTitle", title);
+      model.addAttribute("previousAuthors", authors);
+      model.addAttribute("previousTitle", title);
       model.addAttribute("previousDescription", description);
       model.addAttribute("previousPublishers", publishers);
       model.addAttribute("previousPublishedOn", publishedOn);
@@ -128,9 +128,7 @@ public class ArtifactController {
       model.addAttribute("previousQuantity", quantity);
       model.addAttribute("previousTotalQuantity", totalQuantity);
       model.addAttribute("previousRackLocation", rackLocation);
-      model.addAttribute("previousUpdateStatus", "fail");
-      model.addAttribute("previousUpdateMessage", "");
-      model.addAttribute("previousErrorMessage", "Failed to Update Artifact. Please try again.");
+      model.addAttribute("previousThumbnailLink", thumbnailLink);
       return "admin/artifact/edit.html";
     }
   }
@@ -156,7 +154,7 @@ public class ArtifactController {
       @RequestParam(name = "quantity", defaultValue = "1", required = true) String quantity,
       @RequestParam(name = "totalQuantity", defaultValue = "1", required = true) String totalQuantity,
       @RequestParam(name = "rackLocation", required = false) String rackLocation,
-      @RequestParam(name = "thumbnailLink", required = false) String thumbnailLink,
+      @RequestParam(defaultValue = "", required = false) String thumbnailLink,
       @RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
       @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
@@ -164,7 +162,10 @@ public class ArtifactController {
     loginService.addMemberToModel(model, authentication);
     publishedOn = publishedOn.length() == 4 ? publishedOn.concat("-01-01") : publishedOn;
     ActionConclusion actionConclusion = artifactService.create(isbn, type, genre, authors, title, subtitle, description,
-        publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, "");
+        publishers, publishedOn, itemPrice, quantity, totalQuantity, rackLocation, thumbnailLink);
+    model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
+    model.addAttribute("previousSuccessMessage", actionConclusion.message);
+    model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<Artifact> artifacts = artifactService.search("", type, page - 1);
       model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
@@ -174,16 +175,13 @@ public class ArtifactController {
 
       model.addAttribute("previousQuery", "");
       model.addAttribute("previousType", type);
-      model.addAttribute("previousUpdateStatus", "success");
-      model.addAttribute("previousUpdateMessage", "Created Succesfully.");
-      model.addAttribute("previousErrorMessage", "");
       return "admin/artifact/view.html";
     } else {
       model.addAttribute("previousISBN", isbn);
       model.addAttribute("previousType", type);
       model.addAttribute("previousGenre", genre);
-      model.addAttribute("previouseAuthors", authors);
-      model.addAttribute("previouseTitle", title);
+      model.addAttribute("previousAuthors", authors);
+      model.addAttribute("previousTitle", title);
       model.addAttribute("previousDescription", description);
       model.addAttribute("previousPublishers", publishers);
       model.addAttribute("previousPublishedOn", publishedOn);
@@ -191,17 +189,15 @@ public class ArtifactController {
       model.addAttribute("previousQuantity", quantity);
       model.addAttribute("previousTotalQuantity", totalQuantity);
       model.addAttribute("previousRackLocation", rackLocation);
-      model.addAttribute("previousUpdateStatus", "fail");
-      model.addAttribute("previousUpdateMessage", "");
-      model.addAttribute("previousErrorMessage", "Failed to Create Artifact. Please try again.");
+      model.addAttribute("previousThumbnailLink", thumbnailLink);
       return "admin/artifact/create.html";
     }
   }
 
   @PostMapping("/admin/artifacts/delete")
   @ResponseBody
-  public String artifactsDelete(@RequestParam(name = "id") String stringId, Model model) {
-    return artifactService.delete(stringId).toString();
+  public ActionConclusion artifactsDelete(@RequestParam(name = "id") String stringId) {
+    return artifactService.delete(stringId);
   }
 
   @GetMapping("/artifacts/search")

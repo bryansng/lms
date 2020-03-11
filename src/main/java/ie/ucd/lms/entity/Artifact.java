@@ -67,7 +67,7 @@ public class Artifact implements Comparable<Artifact> {
 		setQuantity(Common.convertStringToInteger(quantity));
 		setTotalQuantity(Common.convertStringToInteger(totalQuantity));
 		setRackLocation(rackLocation);
-		setThumbnailLink(thumbnailLink);
+		setThumbnailLink(thumbnailLink.equals("") ? this.thumbnailLink : thumbnailLink);
 		setTotalLoans(totalLoans);
 	}
 

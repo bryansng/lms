@@ -106,7 +106,7 @@ public class ReserveQueueService {
         ReserveQueue reserveQueue = new ReserveQueue();
         reserveQueue.setAll(isbn, memberId, expiredOn, artifact, member);
         reserveQueueRepository.save(reserveQueue);
-        return new ActionConclusion(true, "Artifact reserved successfully.");
+        return new ActionConclusion(true, "Reserved successfully.");
       }
       // }
       return new ActionConclusion(false, "Failed to create. ISBN or member ID does not exist.");
