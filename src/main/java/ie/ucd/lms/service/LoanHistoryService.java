@@ -299,24 +299,27 @@ public class LoanHistoryService {
     Long id = Common.convertStringToLong(stringId);
     Long days = Common.convertStringToLong(daysToRenew);
 
-    if (loanHistoryRepository.existsById(id)) {
-      LoanHistory loanHistory = loanHistoryRepository.getOne(id);
-      if (reserveQueueRepository.existsByIsbn(loanHistory.getIsbn())) {
-        // returnn(stringId); // ? why did I put return here again? (assumed they renew in person, if so, they cant renew if is reserved, so return the book, and set up reservation if required)
-        // ? maybe add isbn + member_id to reserve list?
-        // ? prompt librarian / member?
-        return new ActionConclusion(false, "Unable to renew. Someone else is reserving the same artifact.");
+    if (!daysToRenew.equals("") && Integer.parseInt(daysToRenew) > 0) {
+      if (loanHistoryRepository.existsById(id)) {
+        LoanHistory loanHistory = loanHistoryRepository.getOne(id);
+        if (reserveQueueRepository.existsByIsbn(loanHistory.getIsbn())) {
+          // returnn(stringId); // ? why did I put return here again? (assumed they renew in person, if so, they cant renew if is reserved, so return the book, and set up reservation if required)
+          // ? maybe add isbn + member_id to reserve list?
+          // ? prompt librarian / member?
+          return new ActionConclusion(false, "Unable to renew. Someone else is reserving the same artifact.");
+        }
+        LocalDateTime currentReturnOn = loanHistory.getReturnOn();
+        if (LocalDateTime.now().isAfter(currentReturnOn.minusDays(1)) || isAdmin) {
+          loanHistory.setReturnOn(currentReturnOn.plusDays(days));
+          loanHistory.setStatus("renewed");
+          loanHistoryRepository.save(loanHistory);
+          return new ActionConclusion(true, "Renewed successfully.");
+        }
+        return new ActionConclusion(false, "Failed to renew. You can only renew 24 hours before the return date.");
       }
-      LocalDateTime currentReturnOn = loanHistory.getReturnOn();
-      if (LocalDateTime.now().isAfter(currentReturnOn.minusDays(1)) || isAdmin) {
-        loanHistory.setReturnOn(currentReturnOn.plusDays(days));
-        loanHistory.setStatus("renewed");
-        loanHistoryRepository.save(loanHistory);
-        return new ActionConclusion(true, "Renewed successfully.");
-      }
-      return new ActionConclusion(false, "Failed to renew. You can only renew 24 hours before the return date.");
+      return new ActionConclusion(false, "Failed to renew. Loan ID does not exist.");
     }
-    return new ActionConclusion(false, "Failed to renew. Loan ID does not exist.");
+    return new ActionConclusion(false, "Failed to renew. Days to renew must be non-negative and not empty.");
   }
 
   /**

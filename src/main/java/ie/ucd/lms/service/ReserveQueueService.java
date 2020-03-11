@@ -98,8 +98,6 @@ public class ReserveQueueService {
 
     if (reserveQueueRepository.countByMemberId(aMemberId) < Common.MAX_RESERVES_PER_USER) {
       // if (!reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
-      // if (reserveQueueRepository.existsByIsbnAndMemberId(isbn, aMemberId)) {
-      //   return new ActionConclusion(false, "Artifact already reserved.");
       if (artifactRepository.existsByIsbn(isbn) && memberRepository.existsById(aMemberId)) {
         Artifact artifact = artifactRepository.findByIsbn(isbn);
         Member member = memberRepository.getOne(aMemberId);
@@ -131,19 +129,22 @@ public class ReserveQueueService {
   public ActionConclusion loan(String stringId, String daysToLoan) {
     Long id = Common.convertStringToLong(stringId);
 
-    if (reserveQueueRepository.existsById(id)) {
-      ReserveQueue rQ = reserveQueueRepository.getOne(id);
-      Artifact artifact = artifactRepository.findByIsbn(rQ.getIsbn());
-      if (artifact.inStock()) {
-        if (loanHistoryService.create(rQ.getIsbn(), Long.toString(rQ.getMemberId()), "",
-            Common.getStringNowPlusDays(daysToLoan), "0.0", "issued").isSuccess) {
-          reserveQueueRepository.deleteById(id);
-          return new ActionConclusion(true, "Added to Loan successfully.");
+    if (!daysToLoan.equals("") && Integer.parseInt(daysToLoan) > 0) {
+      if (reserveQueueRepository.existsById(id)) {
+        ReserveQueue rQ = reserveQueueRepository.getOne(id);
+        Artifact artifact = artifactRepository.findByIsbn(rQ.getIsbn());
+        if (artifact.inStock()) {
+          if (loanHistoryService.create(rQ.getIsbn(), Long.toString(rQ.getMemberId()), "",
+              Common.getStringNowPlusDays(daysToLoan), "0.0", "issued").isSuccess) {
+            reserveQueueRepository.deleteById(id);
+            return new ActionConclusion(true, "Added to Loan successfully.");
+          }
         }
+        return new ActionConclusion(false, "Failed to add to Loan. Artifact not in stock.");
       }
-      return new ActionConclusion(false, "Failed to add to Loan. Artifact not in stock.");
+      return new ActionConclusion(false, "Failed to add to Loan. Reserve ID does not exist.");
     }
-    return new ActionConclusion(false, "Failed to add to Loan. Reserve ID does not exist.");
+    return new ActionConclusion(false, "Failed to add to Loan. Days to loan must be non-negative and not empty.");
   }
 
   private void printMe(List<ReserveQueue> arr) {
