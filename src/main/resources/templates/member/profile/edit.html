@@ -58,19 +58,19 @@
 
               <div class="form__group my-1">
                 <input type="text" name="mobileNumber"
-                id="mobileNumber" th:placeholder="${member.mobileNumber}" th:value="${#strings.isEmpty(previousMobileNumber)} ? ${member.mobileNumber} : ${previousMobileNumber}" required />
+                id="mobileNumber" th:placeholder="${member.mobileNumber}" th:value="${#strings.isEmpty(previousMobileNumber)} ? ${member.mobileNumber} : ${previousMobileNumber}" />
                 <label for="mobileNumber">Mobile Number</label>
               </div>
 
               <div class="form__group my-1">
                 <input type="text" name="bornOn" onfocus="(this.type='date')" onblur="(this.type='text')"
-                id="bornOn" th:placeholder="${bornOn}" th:value="${#strings.isEmpty(previousBornOn)} ? ${bornOn} : ${previousBornOn}" required />
+                id="bornOn" th:placeholder="${bornOn}" th:value="${#strings.isEmpty(previousBornOn)} ? ${bornOn} : ${previousBornOn}" />
                 <label for="bornOn">Birthdate</label>
               </div>
 
               <div class="form__group my-1">
                 <input type="text" name="address"
-                id="address" th:value="${#strings.isEmpty(previousAddress)} ? ${member.address} : ${previousAddress}" th:placeholder="${member.address}" required>
+                id="address" th:value="${#strings.isEmpty(previousAddress)} ? ${member.address} : ${previousAddress}" th:placeholder="${member.address}">
                 <label for="address">Address</label>
               </div>
 
@@ -82,7 +82,7 @@
 
               <div class="form__group my-1">
                 <input type="text" name="website"
-                id="website" th:value="${#strings.isEmpty(previousWebsite)} ? ${member.website} : ${previousWebsite}" th:placeholder="${member.website}" required>
+                id="website" th:value="${#strings.isEmpty(previousWebsite)} ? ${member.website} : ${previousWebsite}" th:placeholder="${member.website}">
                 <label for="website">Website</label>
               </div>
 

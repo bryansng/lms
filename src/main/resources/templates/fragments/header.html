@@ -28,10 +28,11 @@
             <a th:href="@{/member/historical}" class="navbar-a navbar-hover px-3 py-2 mx-1">Historical Loans</a>
           </div>
           <div class="d-flex flex-row justify-content-center align-items-center h-100 dropdown mx-3 px-2">
-            <div class="d-flex justify-content-center align-items-center navbar-user-avatar-container hover">
+            <a th:href="@{/member/profile/view}"
+              class="d-flex justify-content-center align-items-center navbar-user-avatar-container hover">
               <span class="font-weight-bold" th:text="${memberInitials}"></span>
               <!-- <span class="font-weight-bold" id="memberAvatarInitials" th:text="${member.getInitials()}"></span> -->
-            </div>
+            </a>
             <!-- <img th:src="@{~/images/profile/user64px.png}" class="profile-img hover" /> -->
             <div class="dropdown-content profile-dropdown-content">
               <a th:href="@{/member/profile/view}" class="px-4 py-2 dropdown-hover">

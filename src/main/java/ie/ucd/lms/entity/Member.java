@@ -1,11 +1,7 @@
 package ie.ucd.lms.entity;
 
 import javax.validation.constraints.NotEmpty;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import org.springframework.security.core.parameters.P;
-
 import java.time.*;
 import java.util.List;
 import javax.persistence.*;
@@ -34,9 +30,8 @@ public class Member {
   private String bio;
   private String type = "member";
 
-  // @OneToOne(cascade = CascadeType.ALL)
-  // @JoinColumn(referencedColumnName = "email")
   @OneToOne(cascade = CascadeType.ALL)
+  // @JoinColumn(referencedColumnName = "email")
   private Login login;
 
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)

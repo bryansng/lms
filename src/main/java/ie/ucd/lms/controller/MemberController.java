@@ -86,7 +86,6 @@ public class MemberController {
   public String profileView(Model model, Authentication authentication) {
     loginService.addMemberToModel(model, authentication);
     Member member = loginService.getMemberFromUserObject(authentication);
-    model.addAttribute("member", member);
     model.addAttribute("bornOn", member.getBornOn() == null ? "" : member.getBornOn().format(Common.dateFormatter));
     model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
     model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
@@ -97,7 +96,6 @@ public class MemberController {
   public String profileEditGet(Model model, Authentication authentication) {
     loginService.addMemberToModel(model, authentication);
     Member member = loginService.getMemberFromUserObject(authentication);
-    model.addAttribute("member", member);
     model.addAttribute("bornOn", member.getBornOn() == null ? "" : member.getBornOn().format(Common.dateFormatter));
     model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
     model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
@@ -108,7 +106,7 @@ public class MemberController {
   public String profileEditPost(@RequestParam(defaultValue = "", required = false) String isSuccess,
       @RequestParam(defaultValue = "", required = false) String successMessage,
       @RequestParam(defaultValue = "", required = false) String failureMessage,
-      @RequestParam(name = "id", defaultValue = "1", required = false) String stringId,
+      @RequestParam(name = "id", defaultValue = "", required = false) String stringId,
       @RequestParam(name = "email", defaultValue = "", required = false) String email,
       @RequestParam(name = "fullName", defaultValue = "", required = false) String fullName,
       @RequestParam(name = "mobileNumber", defaultValue = "", required = false) String mobileNumber,
@@ -116,16 +114,15 @@ public class MemberController {
       @RequestParam(name = "website", defaultValue = "", required = false) String website,
       @RequestParam(name = "bornOn", defaultValue = "", required = false) String bornOn,
       @RequestParam(name = "bio", required = false) String bio,
-      @RequestParam(name = "type", defaultValue = "member", required = false) String type,
+      @RequestParam(name = "type", defaultValue = "", required = false) String type,
       @RequestParam(name = "joinedOn", required = false) String joinedOn,
       @RequestParam(name = "lastActiveOn", required = false) String lastActiveOn, Model model,
       Authentication authentication) {
+    Member member = loginService.getMemberFromUserObject(authentication);
+    ActionConclusion actionConclusion = memberService.update(member.getId().toString(), email, fullName, mobileNumber,
+        address, website, bornOn, bio, member.getType());
     loginService.addMemberToModel(model, authentication);
-    ActionConclusion actionConclusion = memberService.update(stringId, email, fullName, mobileNumber, address, website,
-        bornOn, bio, type);
-    Member member = memberRepository.findById(Common.convertStringToLong(stringId)).get();
-    model.addAttribute("member", member);
-    model.addAttribute("bornOn", member.getBornOn().format(Common.dateFormatter));
+    model.addAttribute("bornOn", member.getBornOn() == null ? "" : member.getBornOn().format(Common.dateFormatter));
     model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
     model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
     model.addAttribute("previousIsSuccess", actionConclusion.isSuccess.toString());
@@ -149,9 +146,9 @@ public class MemberController {
   public String artifactRenew(@RequestParam(name = "id", required = true) Long id,
       @RequestParam(name = "days", value = "days") String days, Model model, Authentication authentication,
       RedirectAttributes redirectAttrs) {
-    loginService.addMemberToModel(model, authentication);
     Member member = loginService.getMemberFromUserObject(authentication);
     ActionConclusion ac = LoanHistoryService.renew(Long.toString(id), days, member.isAdmin());
+    loginService.addMemberToModel(model, authentication);
 
     redirectAttrs.addFlashAttribute("renewalFailed", ac.isSuccess);
     redirectAttrs.addFlashAttribute("renewal", true);
@@ -167,10 +164,10 @@ public class MemberController {
     if (!loginService.isAuthenticated(authentication)) {
       ac = new ActionConclusion(false, "Unable to reserve. Please log in to start reserving.");
     } else {
-      loginService.addMemberToModel(model, authentication);
       Member member = loginService.getMemberFromUserObject(authentication);
       ac = reserveQueueService.create(isbn, Long.toString(member.getId()),
           LocalDate.now().plusDays(Common.DAYS_TILL_EXPIRED).toString());
+      loginService.addMemberToModel(model, authentication);
     }
     redirectAttrs.addFlashAttribute("reserve", true);
     redirectAttrs.addFlashAttribute("reserveMsg", ac.message);
@@ -184,8 +181,8 @@ public class MemberController {
   @GetMapping("/member/reserve/remove")
   public String artifactReserveRemove(@RequestParam(name = "id", required = true) String loanID, Model model,
       Authentication authentication, RedirectAttributes redirectAttrs) {
-    loginService.addMemberToModel(model, authentication);
     ActionConclusion ac = reserveQueueService.delete(loanID);
+    loginService.addMemberToModel(model, authentication);
     redirectAttrs.addFlashAttribute("remove", true);
     redirectAttrs.addFlashAttribute("removeMsg", ac.message);
     redirectAttrs.addFlashAttribute("removeFailed", ac.isSuccess);
@@ -220,7 +217,7 @@ public class MemberController {
     model.addAttribute("member", member);
     model.addAttribute("joinedOn", member.getJoinedOn().format(Common.dateFormatter));
     model.addAttribute("lastActiveOn", member.getLastActiveOn().format(Common.dateFormatter));
-    model.addAttribute("bornOn", member.getBornOn().format(Common.dateFormatter));
+    model.addAttribute("bornOn", member.getBornOn() == null ? "" : member.getBornOn().format(Common.dateFormatter));
     return "admin/member/edit.html";
   }
 
