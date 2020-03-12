@@ -103,4 +103,12 @@ public class Common {
 				+ String.format("%02d/%02d", date2.getDayOfMonth(), date2.getMonthValue());
 		return strDate;
 	}
+
+	public static int getTotalEmptyRows(int total) {
+		if (total == 0) {
+			return PAGINATION_ROWS;
+		}
+		int remainder = total % PAGINATION_ROWS;
+		return remainder > 0 ? PAGINATION_ROWS - remainder : 0;
+	}
 }

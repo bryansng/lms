@@ -43,7 +43,7 @@ public class ReserveController {
     Map<Long, Long> positionInQueue = reserveQueueService.searchFirstInQueueByArtifact(artifactQuery, memberQuery,
         fromDate, toDate, page - 1);
     // reserveQueueService.nextInLine(isbn);
-    model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - reserves.getTotalElements());
+    model.addAttribute("totalEmptyRows", Common.getTotalEmptyRows(reserves.getNumberOfElements()));
     model.addAttribute("totalPages", reserves.getTotalPages());
     model.addAttribute("currentPage", page);
     model.addAttribute("reserves", reserves);
@@ -104,7 +104,7 @@ public class ReserveController {
       Page<ReserveQueue> reserves = reserveQueueService.search(artifactQuery, memberQuery, fromDate, toDate, page - 1);
       Map<Long, Long> positionInQueue = reserveQueueService.searchFirstInQueueByArtifact(artifactQuery, memberQuery,
           fromDate, toDate, page - 1);
-      model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - reserves.getTotalElements());
+      model.addAttribute("totalEmptyRows", Common.getTotalEmptyRows(reserves.getNumberOfElements()));
       model.addAttribute("totalPages", reserves.getTotalPages());
       model.addAttribute("currentPage", page);
       model.addAttribute("reserves", reserves);
@@ -152,7 +152,7 @@ public class ReserveController {
       Page<ReserveQueue> reserves = reserveQueueService.search(artifactQuery, memberQuery, fromDate, toDate, page - 1);
       Map<Long, Long> positionInQueue = reserveQueueService.searchFirstInQueueByArtifact(artifactQuery, memberQuery,
           fromDate, toDate, page - 1);
-      model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - reserves.getTotalElements());
+      model.addAttribute("totalEmptyRows", Common.getTotalEmptyRows(reserves.getNumberOfElements()));
       model.addAttribute("totalPages", reserves.getTotalPages());
       model.addAttribute("currentPage", page);
       model.addAttribute("reserves", reserves);

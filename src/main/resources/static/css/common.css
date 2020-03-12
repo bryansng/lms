@@ -23,6 +23,19 @@ u {
   display: block;
 }
 
+.links a {
+  padding: 2px 6px;
+}
+
+.links a.active {
+  color: grey;
+}
+
+.links a.active:hover {
+  text-decoration: none;
+  cursor: text;
+}
+
 .no-underline {
   text-decoration: none;
 }

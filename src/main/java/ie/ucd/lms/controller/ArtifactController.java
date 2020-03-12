@@ -51,7 +51,7 @@ public class ArtifactController {
       @RequestParam(defaultValue = "", required = false) String failureMessage, Model model,
       Authentication authentication) {
     Page<Artifact> artifacts = artifactService.search(searchQuery, type, page - 1);
-    model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
+    model.addAttribute("totalEmptyRows", Common.getTotalEmptyRows(artifacts.getNumberOfElements()));
     model.addAttribute("totalPages", artifacts.getTotalPages());
     model.addAttribute("currentPage", page);
     model.addAttribute("artifacts", artifacts);
@@ -105,7 +105,7 @@ public class ArtifactController {
     model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<Artifact> artifacts = artifactService.search("", type, page - 1);
-      model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
+      model.addAttribute("totalEmptyRows", Common.getTotalEmptyRows(artifacts.getNumberOfElements()));
       model.addAttribute("totalPages", artifacts.getTotalPages());
       model.addAttribute("currentPage", page + 1);
       model.addAttribute("artifacts", artifacts);
@@ -168,7 +168,7 @@ public class ArtifactController {
     model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<Artifact> artifacts = artifactService.search("", type, page - 1);
-      model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - artifacts.getTotalElements());
+      model.addAttribute("totalEmptyRows", Common.getTotalEmptyRows(artifacts.getNumberOfElements()));
       model.addAttribute("totalPages", artifacts.getTotalPages());
       model.addAttribute("currentPage", page + 1);
       model.addAttribute("artifacts", artifacts);

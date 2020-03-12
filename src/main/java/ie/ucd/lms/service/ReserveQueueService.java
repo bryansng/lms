@@ -54,10 +54,9 @@ public class ReserveQueueService {
     Long memberId = Common.convertStringToLong(member);
     LocalDateTime fromDateTime = Common.getLowerBoundOfDate(fromDate);
     LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
-    PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
     List<Object> artifactIdAndPositionInQueue = reserveQueueRepository.findAllFirstPositionInQueueByArtifact(artifactId,
-        artifact, memberId, member, fromDateTime, toDateTime, pRequest).getContent();
+        artifact, memberId, member, fromDateTime, toDateTime);
 
     Map<Long, Long> hm = new HashMap<Long, Long>();
     for (Object data : artifactIdAndPositionInQueue) {

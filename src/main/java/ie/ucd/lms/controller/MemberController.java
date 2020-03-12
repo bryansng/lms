@@ -198,7 +198,7 @@ public class MemberController {
       Authentication authentication) {
     loginService.addMemberToModel(model, authentication);
     Page<Member> members = memberService.search(searchQuery, page - 1);
-    model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - members.getTotalElements());
+    model.addAttribute("totalEmptyRows", Common.getTotalEmptyRows(members.getNumberOfElements()));
     model.addAttribute("totalPages", members.getTotalPages());
     model.addAttribute("currentPage", page);
     model.addAttribute("members", members);
@@ -248,7 +248,7 @@ public class MemberController {
     if (actionConclusion.isSuccess) {
       Page<Member> members = memberService.search("", page - 1);
 
-      model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - members.getTotalElements());
+      model.addAttribute("totalEmptyRows", Common.getTotalEmptyRows(members.getNumberOfElements()));
       model.addAttribute("totalPages", members.getTotalPages());
       model.addAttribute("currentPage", page);
       model.addAttribute("members", members);

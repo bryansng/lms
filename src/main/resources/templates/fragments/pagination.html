@@ -4,13 +4,12 @@
 <head> </head>
 
 <body>
-  <div th:fragment="pagination">
-    <div class="links mt-4">
-      <a th:if="${totalPages &gt; 1}" th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})"
-        th:href="@{${currentUrl}(page=1)}">
-        &laquo;</a>
-      <!-- <a th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})" th:href="@{${currentUrl}(page=${currentPage &gt; 1} ? ${currentPage-1})}">❮</a> -->
-      <span th:each="pageNum: ${#numbers.sequence(currentPage-2, currentPage+2)}"
+  <div th:fragment="pagination" class="links mt-4 d-flex justify-content-around align-items-center">
+    <a th:if="${totalPages &gt; 1}" th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})"
+      th:href="@{${currentUrl}(page=1)}">
+      &laquo;</a>
+    <!-- <a th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})" th:href="@{${currentUrl}(page=${currentPage &gt; 1} ? ${currentPage-1})}">❮</a> -->
+    <span th:each="pageNum: ${#numbers.sequence(currentPage-2, currentPage+2)}"
         >
         <a
           th:if="${pageNum &gt;= 1 AND pageNum &lt;= totalPages}"
@@ -31,6 +30,5 @@
       <!-- th:with="currentUrl=(${#httpServletRequest.requestURI + '?' + #strings.defaultString(#httpServletRequest.queryString, '')})" -->
       <!-- https://stackoverflow.com/questions/27623405/thymeleaf-add-parameter-to-current-url -->
     </div>
-  </div>
 </body>
 </html>

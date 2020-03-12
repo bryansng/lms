@@ -79,3 +79,12 @@ table.divtable tfoot .links a {
   padding: 2px 8px;
   border-radius: 5px;
 }
+
+table.divtable tfoot .links a.active {
+  color: grey;
+}
+
+table.divtable tfoot .links a.active:hover {
+  text-decoration: none;
+  cursor: text;
+}

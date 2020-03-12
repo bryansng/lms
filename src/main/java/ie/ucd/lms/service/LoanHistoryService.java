@@ -72,7 +72,6 @@ public class LoanHistoryService {
 
     for (LoanHistory loan : list) {
       if (arr.contains(loan.getStatus())) {
-        // logger.info("entry " + loan.toString());
         filteredList.add(loan);
       }
     }

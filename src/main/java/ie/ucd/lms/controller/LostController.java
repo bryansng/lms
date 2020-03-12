@@ -42,7 +42,7 @@ public class LostController {
       Authentication authentication) {
     loginService.addMemberToModel(model, authentication);
     Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
-    model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
+    model.addAttribute("totalEmptyRows", Common.getTotalEmptyRows(loans.getNumberOfElements()));
     model.addAttribute("totalPages", loans.getTotalPages());
     model.addAttribute("currentPage", page);
     model.addAttribute("loans", loans);
@@ -92,7 +92,7 @@ public class LostController {
     model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
-      model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
+      model.addAttribute("totalEmptyRows", Common.getTotalEmptyRows(loans.getNumberOfElements()));
       model.addAttribute("totalPages", loans.getTotalPages());
       model.addAttribute("currentPage", page + 1);
       model.addAttribute("loans", loans);
@@ -149,7 +149,7 @@ public class LostController {
     model.addAttribute("previousFailureMessage", actionConclusion.message);
     if (actionConclusion.isSuccess) {
       Page<LoanHistory> loans = loanHistoryService.searchLost(artifactQuery, memberQuery, fromDate, toDate, page - 1);
-      model.addAttribute("totalEmptyRows", Common.PAGINATION_ROWS - loans.getTotalElements());
+      model.addAttribute("totalEmptyRows", Common.getTotalEmptyRows(loans.getNumberOfElements()));
       model.addAttribute("totalPages", loans.getTotalPages());
       model.addAttribute("currentPage", page + 1);
       model.addAttribute("loans", loans);
