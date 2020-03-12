@@ -14,14 +14,14 @@ INSERT INTO artifacts(isbn, type, genre, authors, title, original_title, subtitl
 	('9780307353139', 'book', 'Business & Economics', 'Timothy Ferriss', 'The 4-Hour Work Week', 'The 4-Hour Work Week', 'Escape 9-5, Live Anywhere, and Join the New Rich', 'Offers techniques and strategies for increasing income while cutting work time in half, and includes advice for leading a more fulfilling life.', 'Crown Business', PARSEDATETIME('2007','yyyy','en'), 10.00, 0, 1, '339', NOW() + 1, 'http://books.google.com/books/content?id=E3HVzZQh88wC&printsec=frontcover&img=1&zoom=1&source=gbs_api', 2); */
 
 INSERT INTO login(email, hash) VALUES
-	('hong.sng@ucdconnect.ie', 'root'),
-	('bond.james@ucdconnect.ie', 'root'),
-	('wan.obi@ucdconnect.ie', 'root'),
-	('jobs.steve@ucdconnect.ie', 'root'),
-	('xuan.liew@ucdconnect.ie', 'root'),
-	('braddy.yeoh@ucdconnect.ie', 'root'),
-	('a@a.com', '1234'),
-	('u@u.com', '1234');
+	('hong.sng@ucdconnect.ie', '$2a$10$9d4mara/LTmT97YLHGLU3.8phlLxcCTTuO5LX2PwqGn22jDOjKIWa'),
+	('bond.james@ucdconnect.ie', '$2a$10$9d4mara/LTmT97YLHGLU3.8phlLxcCTTuO5LX2PwqGn22jDOjKIWa'),
+	('wan.obi@ucdconnect.ie', '$2a$10$9d4mara/LTmT97YLHGLU3.8phlLxcCTTuO5LX2PwqGn22jDOjKIWa'),
+	('jobs.steve@ucdconnect.ie', '$2a$10$9d4mara/LTmT97YLHGLU3.8phlLxcCTTuO5LX2PwqGn22jDOjKIWa'),
+	('xuan.liew@ucdconnect.ie', '$2a$10$9d4mara/LTmT97YLHGLU3.8phlLxcCTTuO5LX2PwqGn22jDOjKIWa'),
+	('braddy.yeoh@ucdconnect.ie', '$2a$10$9d4mara/LTmT97YLHGLU3.8phlLxcCTTuO5LX2PwqGn22jDOjKIWa'),
+	('a@a.com', '$2a$10$vEnY95B1hUYQFhz5TXYxCeAmSO/ZxDC792kGmID0p8LnYwnjAwJIG'),
+	('u@u.com', '$2a$10$vEnY95B1hUYQFhz5TXYxCeAmSO/ZxDC792kGmID0p8LnYwnjAwJIG');
 
 INSERT INTO members(full_name, email, mobile_number, address, type, born_on, joined_on, last_active_on, website, roles, login_email) VALUES
 	('Bryan Sng', 'hong.sng@ucdconnect.ie', '339', 'Somewhere on Earth', 'librarian', '1998-01-01', NOW(), NOW(), 'https://www.bryansng.com/', 'ADMIN', 'hong.sng@ucdconnect.ie'),

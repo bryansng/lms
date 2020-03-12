@@ -1,12 +1,6 @@
 #!/bin/bash
 
 find . -name "desktop.ini" -type f -delete		# remove all desktop.ini files.
-# docker stop lms
-# docker rm lms
-# docker stop lms_project_1
-# docker rm lms_project_1
-# docker stop lms_db_1
-# docker rm lms_db_1
 
 ## Create JAR file, where docker will install Java in a container to run it.
 if [ "$1" == "dev" ]; then

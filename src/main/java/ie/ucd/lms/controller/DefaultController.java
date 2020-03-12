@@ -5,6 +5,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import ie.ucd.lms.configuration.SecurityConfig;
 import ie.ucd.lms.service.ArtifactService;
 import ie.ucd.lms.service.LoginService;
 import ie.ucd.lms.service.MemberService;
@@ -19,6 +21,9 @@ public class DefaultController {
 
   @Autowired
   ArtifactService artifactService;
+
+  @Autowired
+  SecurityConfig securityConfig;
 
   @GetMapping("/")
   public String indexView(Model model, Authentication authentication) {

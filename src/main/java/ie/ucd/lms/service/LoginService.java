@@ -40,8 +40,9 @@ public class LoginService {
         Member member = memberRepository.findByEmail(email);
         Login login = loginRepository.findByEmail(email);
         if (member != null && login != null) {
-            if (login.getEmail().equals(email) && login.getHash().equals(password)) {
-                securityConfig.configAuth(login, securityConfig.getAuth(), "ADMIN");
+            if (login.getEmail().equals(email)
+                    && securityConfig.getPasswordEncoder().matches(password, login.getHash())) {
+                securityConfig.configAuth(login, securityConfig.getAuth(), member.getRoles());
                 authenticateUserAndSetSession(member, request);
                 return new ActionConclusion(true, "Logged in successfully.");
             }

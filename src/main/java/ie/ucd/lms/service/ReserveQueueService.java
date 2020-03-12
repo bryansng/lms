@@ -40,8 +40,8 @@ public class ReserveQueueService {
     LocalDateTime toDateTime = Common.getUpperBoundOfDate(toDate);
     PageRequest pRequest = PageRequest.of(pageNum, Common.PAGINATION_ROWS);
 
-    Page<ReserveQueue> res = reserveQueueRepository.findAllByArtifactAndMemberAndBothDatesAndStatus(artifactId,
-        artifact, memberId, member, fromDateTime, toDateTime, pRequest);
+    Page<ReserveQueue> res = reserveQueueRepository.findAllByArtifactAndMemberAndBothDates(artifactId, artifact,
+        memberId, member, fromDateTime, toDateTime, pRequest);
     // Page<ReserveQueue> res = reserveQueueRepository.findAllByArtifactAndMemberAndBothDatesAndStatus(artifactId,
     //     artifact, memberId, member, fromDateTime, toDateTime, pRequest);
     // Page<ReserveQueue> res = reserveQueueRepository.findByExpiredOnBetween(fromDateTime, toDateTime, pRequest);
