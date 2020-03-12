@@ -63,9 +63,15 @@ public class MemberController {
     List<ReserveQueue> reservedLoans = reserveQueueService.getReservedLoansForMember(member);
     List<LoanHistory> historicalLoans = LoanHistoryService.getReturnedOnLoans(member);
     // Page<LoanHistory> historicalLoans = LoanHistoryService.getHistorialLoans(member);
+    List<LoanHistory> historicalLoansSubList;
+    if (historicalLoans.size() > 3) {
+      historicalLoansSubList = historicalLoans.subList(historicalLoans.size() - 3, historicalLoans.size());
+    } else {
+      historicalLoansSubList = historicalLoans;
+    }
 
     model.addAttribute("loans", loans);
-    model.addAttribute("historicalLoans", historicalLoans);
+    model.addAttribute("historicalLoans", historicalLoansSubList);
     model.addAttribute("reservedLoans", reservedLoans);
     return "member/dashboard.html";
   }
