@@ -73,13 +73,6 @@
                 <td class="p-2" th:text="${member.mobileNumber}"></td>
                 <td class="p-2 text-capitalize" th:text="${#strings.abbreviate(member.address, 50)}"></td>
                 <td class="p-2 text-capitalize" th:text="${member.type}"></td>
-                <!-- <td class="p-2">
-                  <a th:href="@{~/admin/loans/view(memberQuery=${member.email}, previousMember=${member.email})}"
-                    class="d-flex flex-column justify-content-center align-items-center table-link">
-                    <img th:src="@{~/images/view_loan.png}" class="table-img" />
-                    <div>&nbsp;View Loans</div>
-                  </a>
-                </td> -->
                 <td class="p-2">
                   <div class="d-flex flex-row justify-content-center align-items-center">
                     <a th:href="@{~/admin/loans/view(memberQuery=${member.email})}" class="d-flex flex-row justify-content-center align-items-center table-link">

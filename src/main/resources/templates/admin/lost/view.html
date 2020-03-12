@@ -97,8 +97,12 @@
               <tr th:each="loan : ${loans}" th:id="'tr-' + ${loan.id}">
                 <td class="p-2" th:text="${loan.id}"></td>
                 <td class="p-2 text-capitalize" th:text="${loan.artifact.title}"></td>
-                <td class="p-2" th:text="${loan.isbn}"></td>
-                <td class="p-2 text-capitalize" th:text="${loan.member.fullName}"></td>
+                <td class="p-2">
+                  <a th:href="@{~/admin/artifacts/view(searchQuery=${loan.artifact.isbn})}" class="table-link" style="color: #21252B;" th:text="${loan.isbn}"></a>
+                </td>
+                <td class="p-2 text-capitalize">
+                  <a th:href="@{~/admin/members/view(searchQuery=${loan.member.email})}" class="table-link" style="color: #21252B;" th:text="${loan.member.fullName}"></a>
+                </td>
                 <td class="p-2" th:text="${loan.getIssuedOnForAdminView()}"></td>
                 <td class="p-2">&euro;<span th:text="${loan.fine}"></span></td>
                 <td class="p-2">

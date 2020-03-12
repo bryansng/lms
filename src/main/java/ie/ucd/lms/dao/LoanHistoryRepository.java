@@ -40,7 +40,8 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Long> 
 			+ "(LH.artifact.id = ?1 or UPPER(LH.artifact.title) like UPPER(CONCAT('%', UPPER(?2), '%')) or UPPER(LH.isbn) like UPPER(CONCAT('%', UPPER(?2), '%'))) and "
 			+ "(LH.memberId = ?3 or UPPER(LH.member.fullName) like UPPER(CONCAT('%', UPPER(?4), '%')) or UPPER(LH.member.email) like UPPER(CONCAT('%', UPPER(?4), '%'))) and "
 			+ "((LH.issuedOn between ?5 and ?6) or (LH.returnOn between ?5 and ?6)) and "
-			+ "UPPER(LH.status) not like UPPER(CONCAT('%', UPPER(?7), '%')) " + "ORDER BY LH.status ASC, LH.issuedOn ASC")
+			+ "UPPER(LH.status) not like UPPER(CONCAT('%', UPPER(?7), '%')) "
+			+ "ORDER BY LH.status ASC, LH.issuedOn ASC, LH.id DESC")
 	Page<LoanHistory> findAllByArtifactAndMemberAndBothDatesAndStatusNot(Long artifactId, String artifactDetails,
 			Long memberId, String memberDetails, LocalDateTime dateFrom, LocalDateTime dateTo, String status,
 			Pageable pageable);
@@ -57,7 +58,7 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Long> 
 			+ "(LH.artifact.id = ?1 or UPPER(LH.artifact.title) like UPPER(CONCAT('%', UPPER(?2), '%')) or UPPER(LH.isbn) like UPPER(CONCAT('%', UPPER(?2), '%'))) and "
 			+ "(LH.memberId = ?3 or UPPER(LH.member.fullName) like UPPER(CONCAT('%', UPPER(?4), '%')) or UPPER(LH.member.email) like UPPER(CONCAT('%', UPPER(?4), '%'))) and "
 			+ "(LH.issuedOn between ?5 and ?6) and " + "UPPER(LH.status) not like UPPER(CONCAT('%', UPPER(?7), '%')) "
-			+ "ORDER BY LH.status ASC, LH.issuedOn ASC")
+			+ "ORDER BY LH.status ASC, LH.issuedOn ASC, LH.id DESC")
 	Page<LoanHistory> findAllByArtifactAndMemberAndIssuedDateAndStatusNot(Long artifactId, String artifactDetails,
 			Long memberId, String memberDetails, LocalDateTime dateFrom, LocalDateTime dateTo, String status,
 			Pageable pageable);
@@ -74,7 +75,7 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Long> 
 			+ "(LH.artifact.id = ?1 or UPPER(LH.artifact.title) like UPPER(CONCAT('%', UPPER(?2), '%')) or UPPER(LH.isbn) like UPPER(CONCAT('%', UPPER(?2), '%'))) and "
 			+ "(LH.memberId = ?3 or UPPER(LH.member.fullName) like UPPER(CONCAT('%', UPPER(?4), '%')) or UPPER(LH.member.email) like UPPER(CONCAT('%', UPPER(?4), '%'))) and "
 			+ "(LH.returnOn between ?5 and ?6) and " + "UPPER(LH.status) not like UPPER(CONCAT('%', UPPER(?7), '%')) "
-			+ "ORDER BY LH.status ASC, LH.issuedOn ASC")
+			+ "ORDER BY LH.status ASC, LH.issuedOn ASC, LH.id DESC")
 	Page<LoanHistory> findAllByArtifactAndMemberAndReturnDateAndStatusNot(Long artifactId, String artifactDetails,
 			Long memberId, String memberDetails, LocalDateTime dateFrom, LocalDateTime dateTo, String status,
 			Pageable pageable);
