@@ -28,6 +28,19 @@ A class 19/20 COMP30860 Web Developemnt Project made from Mid-February to Mid-Ma
 
 &nbsp;
 
+## Documentation
+- D1: [Wireframes](https://projects.invisionapp.com/freehand/document/vyz9CgQxT)
+  - View only
+  - Made with Invision Freehand
+  - Please sign in as guest and insert your email to view
+- D2: User Stories
+  - View in [this repo](D2 - User stories.pdf)
+  - View on [Google Sheets](https://docs.google.com/spreadsheets/d/18pMZtvUNLpWZUMnb0lwLpYSHUXSmgnb6d4v7hfIXoXM/edit?usp=sharing)
+- D3: This Website (See Running the application above)
+- D4: [Final Report](D4 - Final Report.pdf)
+
+&nbsp;
+
 ## Authors
 
 - [bryansng](https://github.com/bryansng)
@@ -54,7 +67,6 @@ A class 19/20 COMP30860 Web Developemnt Project made from Mid-February to Mid-Ma
 ### **Instant Search** via _Backend_ and **Instant Fill**
 
 - ### Navbar Search
-
   ![Navbar Search](https://j.gifs.com/6XvD89.gif "Navbar Search")
 
 - ### Create Loans / Losts / Reserves
@@ -66,7 +78,7 @@ A class 19/20 COMP30860 Web Developemnt Project made from Mid-February to Mid-Ma
 
 ### Homepage
 
-![Homepage](./readme-resources/img/public_1_homepage.png "Homepage")
+![Homepage](readme-resources/img/public_1_homepage.png "Homepage")
 
 &nbsp;
 
