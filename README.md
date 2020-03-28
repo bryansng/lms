@@ -34,10 +34,10 @@ A class 19/20 COMP30860 Web Developemnt Project made from Mid-February to Mid-Ma
   - Made with Invision Freehand
   - Please sign in as guest and insert your email to view
 - D2: User Stories
-  - View in [this repo](D2 - User stories.pdf)
+  - View in [D2 - User stories.pdf](./D2%20-%20User%20stories.pdf)
   - View on [Google Sheets](https://docs.google.com/spreadsheets/d/18pMZtvUNLpWZUMnb0lwLpYSHUXSmgnb6d4v7hfIXoXM/edit?usp=sharing)
-- D3: This Website (See Running the application above)
-- D4: [Final Report](D4 - Final Report.pdf)
+- D3: This Website [(See Running the application above)](#running-the-application)
+- D4: [D4 - Final Report.pdf](./D4%20-%20Final%20Report.pdf)
 
 &nbsp;
 
