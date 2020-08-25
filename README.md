@@ -29,6 +29,7 @@ A class 19/20 COMP30860 Web Developemnt Project made from Mid-February to Mid-Ma
 &nbsp;
 
 ## Documentation
+
 - D1: [Wireframes](https://projects.invisionapp.com/freehand/document/vyz9CgQxT)
   - View only
   - Made with Invision Freehand
@@ -67,12 +68,13 @@ A class 19/20 COMP30860 Web Developemnt Project made from Mid-February to Mid-Ma
 ### **Instant Search** via _Backend_ and **Instant Fill**
 
 - ### Navbar Search
+
   ![Navbar Search](https://j.gifs.com/6XvD89.gif "Navbar Search")
 
 - ### Create Loans / Losts / Reserves
   ![Create Loans / Losts / Reserves](https://j.gifs.com/L72KM4.gif "Create Loans / Losts / Reserves")
 
-<!-- &nbsp;
+&nbsp;
 
 ## Public site
 
@@ -208,4 +210,4 @@ A class 19/20 COMP30860 Web Developemnt Project made from Mid-February to Mid-Ma
 
 ### Edit Losts
 
-![Edit Losts](./readme-resources/img/admin_4c_edit_losts.png "Edit Losts") -->
+![Edit Losts](./readme-resources/img/admin_4c_edit_losts.png "Edit Losts")
